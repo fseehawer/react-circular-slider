@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {StyleSheet, css} from 'aphrodite';
+import CircularSlider from "./CircularSlider";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const styles = StyleSheet.create({
+        wrapper: {
+            padding: '2rem'
+        }
+    });
+
+    return (
+        <div className={css(styles.wrapper)}>
+            <CircularSlider />
+        </div>
+    );
+};
 
 export default App;
