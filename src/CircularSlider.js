@@ -12,6 +12,7 @@ const SLIDER_EVENT = {
 const CircularSlider = () => {
     const [state, setState] = useState({
         isDragging: false,
+        width: 0,
         radius: 0,
         indicator: {
             scale: 1,
@@ -92,6 +93,13 @@ const CircularSlider = () => {
         }));
     };
 
+    const onResize = (event) => {
+        setState(prevState => ({
+            ...prevState,
+            width: event.currentTarget.innerWidth
+        }));
+    };
+
     useEffect(() => {
         const sliderOffset = offsetRelativeToDocument();
         const pathLength = svgFullPath.current.getTotalLength();
@@ -108,9 +116,11 @@ const CircularSlider = () => {
                 y: 0,
             },
         }));
-    }, [offsetRelativeToDocument]);
+    }, [offsetRelativeToDocument, state.width]);
 
     useEffect( () => {
+        window.addEventListener("resize", onResize);
+
         if(state.isDragging) {
             window.addEventListener(SLIDER_EVENT.MOVE, onMouseMove, {passive: false});
             window.addEventListener(SLIDER_EVENT.UP, onMouseUp, {passive: false});
@@ -118,6 +128,10 @@ const CircularSlider = () => {
                 window.removeEventListener(SLIDER_EVENT.MOVE, onMouseMove);
                 window.removeEventListener(SLIDER_EVENT.UP, onMouseUp);
             }
+        }
+
+        return () => {
+            window.removeEventListener("resize", onResize);
         }
     }, [state.isDragging, onMouseMove]);
 
