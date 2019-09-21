@@ -38,7 +38,8 @@ const CircularSlider = () => {
             position: 'absolute',
             left: '-16px',
             top: '-16px',
-            cursor: 'grab'
+            cursor: 'grab',
+            touchAction: 'none'
         },
 
         drag: {
@@ -94,14 +95,11 @@ const CircularSlider = () => {
             ...prevState,
             isDragging: true
         }));
-        event.preventDefault();
 
     }, []);
 
     const onMouseMove = useCallback((event) => {
         if(!state.isDragging) return;
-        event.stopPropagation();
-        event.preventDefault();
 
         let touch;
         if (event.type === 'touchmove') {
@@ -172,12 +170,16 @@ const CircularSlider = () => {
                         a -193,-193 0 0,1 0,-386
                     "/>
             </svg>
-            <div style={{transform: `translate(${state.indicator.x}px, ${state.indicator.y}px)`}} className={css(styles.indicator, styles.drag, state.isDragging && styles.pause)}>
+            <div
+                style={{transform: `translate(${state.indicator.x}px, ${state.indicator.y}px)`}}
+                className={css(styles.indicator, state.isDragging && styles.drag, state.isDragging && styles.pause)}
+                onMouseDown={onMouseDown}
+                onTouchStart={onMouseDown}
+            >
                 <svg
                     width="36px"
                     height="36px"
                     viewBox="0 0 36 36"
-                    onMouseDown={onMouseDown}
                 >
                     <circle fill="#5C4BEA" fillOpacity="0.2" stroke="none" cx="18" cy="18" r="18" className={css(!state.isDragging && styles.animation)} />
                     <circle fill="#5C4BEA" stroke="none" cx="18" cy="18" r="12" />
