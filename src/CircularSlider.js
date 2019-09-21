@@ -91,6 +91,9 @@ const CircularSlider = () => {
     }, [state.dashFullArray, state.radius]);
 
     const onMouseDown = useCallback((event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
         setState(prevState => ({
             ...prevState,
             isDragging: true
