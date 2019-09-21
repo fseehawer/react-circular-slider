@@ -100,6 +100,8 @@ const CircularSlider = () => {
 
     const onMouseMove = useCallback((event) => {
         if(!state.isDragging) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
         let touch;
         if (event.type === 'touchmove') {
