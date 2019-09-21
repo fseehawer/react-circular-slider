@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {StyleSheet, css} from 'aphrodite';
 
 const touchSupported = ('ontouchstart' in window);
@@ -23,49 +23,7 @@ const CircularSlider = () => {
         dashFullOffset: 0
     });
 
-    const pulse_animation = {
-        "0%": {transform: "scale(1)"},
-        "50%": {transform: "scale(0.8)"},
-        "100%": {transform: "scale(1)"}
-    };
-
-    const styles = StyleSheet.create({
-        circularSlider: {
-            position: 'relative',
-        },
-
-        indicator: {
-            position: 'absolute',
-            left: '-16px',
-            top: '-16px',
-            cursor: 'grab',
-            touchAction: 'none'
-        },
-
-        svg: {
-          width: '100%',
-          height: 'auto'
-        },
-
-        drag: {
-            cursor: 'grabbing'
-        },
-
-        pause: {
-            animationPlayState: 'paused',
-        },
-
-        animation: {
-            animationDuration: '1500ms',
-            transformOrigin: '50% 50%',
-            animationIterationCount: 'infinite',
-            animationTimingFunction: 'ease-out',
-            animationName: [pulse_animation]
-        }
-    });
-
     let circularSlider = useRef(null);
-    let mainSvg = useRef(null);
     let svgFullPath = useRef(null);
 
     const offsetRelativeToDocument = useCallback(() => {
@@ -107,8 +65,9 @@ const CircularSlider = () => {
     }, []);
 
     const onMouseMove = useCallback((event) => {
-        if(!state.isDragging) return;
         event.preventDefault();
+
+        if(!state.isDragging) return;
 
         let touch;
         if (event.type === 'touchmove') {
@@ -125,6 +84,8 @@ const CircularSlider = () => {
     }, [state.isDragging, state.radius, indicatorPosition, offsetRelativeToDocument]);
 
     const onMouseUp = (event) => {
+        event.preventDefault();
+
         setState(prevState => ({
             ...prevState,
             isDragging: false
@@ -133,12 +94,13 @@ const CircularSlider = () => {
 
     useEffect(() => {
         const sliderOffset = offsetRelativeToDocument();
+        const pathLength = svgFullPath.current.getTotalLength();
 
         setState(prevState => ({
             ...prevState,
-            dashFullArray: svgFullPath.current.getTotalLength(),
-            dashFullOffset: svgFullPath.current.getTotalLength(),
-            radius: sliderOffset.radius - 3,
+            dashFullArray: pathLength,
+            dashFullOffset: pathLength,
+            radius: sliderOffset.radius,
             indicator: {
                 scale: 1,
                 radians: 0,
@@ -146,22 +108,22 @@ const CircularSlider = () => {
                 y: 0,
             },
         }));
-    }, []);
+    }, [offsetRelativeToDocument]);
 
     useEffect( () => {
         if(state.isDragging) {
-            document.addEventListener(SLIDER_EVENT.MOVE, onMouseMove);
-            document.addEventListener(SLIDER_EVENT.UP, onMouseUp);
+            window.addEventListener(SLIDER_EVENT.MOVE, onMouseMove, {passive: false});
+            window.addEventListener(SLIDER_EVENT.UP, onMouseUp, {passive: false});
             return () => {
-                document.removeEventListener(SLIDER_EVENT.MOVE, onMouseMove);
-                document.removeEventListener(SLIDER_EVENT.UP, onMouseUp);
+                window.removeEventListener(SLIDER_EVENT.MOVE, onMouseMove);
+                window.removeEventListener(SLIDER_EVENT.UP, onMouseUp);
             }
         }
     }, [state.isDragging, onMouseMove]);
 
     return (
         <div className={css(styles.circularSlider)} ref={circularSlider}>
-            <svg width="390px" height="390px" viewBox="0 0 390 390" className={css(styles.svg)} ref={mainSvg}>
+            <svg width="390px" height="390px" viewBox="0 0 390 390" overflow="visible" className={css(styles.svg)}>
                 <defs>
                     <linearGradient id="gradient" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="#80C3F3"/>
@@ -172,7 +134,7 @@ const CircularSlider = () => {
                         <stop offset="100%" stopColor="#80C3F3"/>
                     </linearGradient>
                 </defs>
-                <circle strokeWidth={4} fill="none" stroke="#DDDEFB" cx={195} cy={195} r={193} />
+                <circle strokeWidth={4} fill="none" stroke="#DDDEFB" cx={195} cy={195} r={195} />
                 <path
                     ref={svgFullPath}
                     strokeDasharray={state.dashFullArray}
@@ -183,9 +145,9 @@ const CircularSlider = () => {
                     stroke="url(#gradient)"
                     d="
                         M 195, 195
-                        m 0, -193
-                        a 193,193 0 0,1 0,386
-                        a -193,-193 0 0,1 0,-386
+                        m 0, -195
+                        a 195,195 0 0,1 0,390
+                        a -195,-195 0 0,1 0,-390
                     "/>
             </svg>
             <div
@@ -209,5 +171,45 @@ const CircularSlider = () => {
         </div>
     );
 };
+
+const pulse_animation = {
+    "0%": {transform: "scale(1)"},
+    "50%": {transform: "scale(0.8)"},
+    "100%": {transform: "scale(1)"}
+};
+
+const styles = StyleSheet.create({
+    circularSlider: {
+        position: 'relative',
+    },
+
+    indicator: {
+        position: 'absolute',
+        left: '-18px',
+        top: '-18px',
+        cursor: 'grab',
+    },
+
+    svg: {
+        width: '100%',
+        height: 'auto'
+    },
+
+    drag: {
+        cursor: 'grabbing',
+    },
+
+    pause: {
+        animationPlayState: 'paused',
+    },
+
+    animation: {
+        animationDuration: '1500ms',
+        transformOrigin: '50% 50%',
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'ease-out',
+        animationName: [pulse_animation]
+    }
+});
 
 export default CircularSlider;
