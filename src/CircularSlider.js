@@ -12,11 +12,11 @@ const SLIDER_EVENT = {
 const CircularSlider = () => {
     const [state, setState] = useState({
         isDragging: false,
-        radius: 193,
+        radius: 0,
         indicator: {
             scale: 1,
             radians: -1,
-            x: 191,
+            x: 0,
             y: 0,
         },
         dashFullArray: 0,
@@ -42,6 +42,11 @@ const CircularSlider = () => {
             touchAction: 'none'
         },
 
+        svg: {
+          width: '100%',
+          height: 'auto'
+        },
+
         drag: {
             cursor: 'grabbing'
         },
@@ -60,13 +65,14 @@ const CircularSlider = () => {
     });
 
     let circularSlider = useRef(null);
+    let mainSvg = useRef(null);
     let svgFullPath = useRef(null);
 
     const offsetRelativeToDocument = useCallback(() => {
         const rect = circularSlider.current.getBoundingClientRect();
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+        return { top: rect.top + scrollTop, left: rect.left + scrollLeft, radius: rect.width / 2 };
     }, []);
 
     const indicatorPosition = useCallback((radians) => {
@@ -92,7 +98,6 @@ const CircularSlider = () => {
 
     const onMouseDown = useCallback((event) => {
         event.preventDefault();
-        event.stopImmediatePropagation();
 
         setState(prevState => ({
             ...prevState,
@@ -104,7 +109,6 @@ const CircularSlider = () => {
     const onMouseMove = useCallback((event) => {
         if(!state.isDragging) return;
         event.preventDefault();
-        event.stopImmediatePropagation();
 
         let touch;
         if (event.type === 'touchmove') {
@@ -127,11 +131,20 @@ const CircularSlider = () => {
         }));
     };
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        const sliderOffset = offsetRelativeToDocument();
+
         setState(prevState => ({
             ...prevState,
             dashFullArray: svgFullPath.current.getTotalLength(),
             dashFullOffset: svgFullPath.current.getTotalLength(),
+            radius: sliderOffset.radius - 3,
+            indicator: {
+                scale: 1,
+                radians: 0,
+                x: sliderOffset.radius,
+                y: 0,
+            },
         }));
     }, []);
 
@@ -148,7 +161,7 @@ const CircularSlider = () => {
 
     return (
         <div className={css(styles.circularSlider)} ref={circularSlider}>
-            <svg width="390px" height="390px" viewBox="0 0 390 390">
+            <svg width="390px" height="390px" viewBox="0 0 390 390" className={css(styles.svg)} ref={mainSvg}>
                 <defs>
                     <linearGradient id="gradient" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="#80C3F3"/>
@@ -159,7 +172,7 @@ const CircularSlider = () => {
                         <stop offset="100%" stopColor="#80C3F3"/>
                     </linearGradient>
                 </defs>
-                <circle strokeWidth={4} fill="none" stroke="#DDDEFB" cx={195} cy={195} r={state.radius} />
+                <circle strokeWidth={4} fill="none" stroke="#DDDEFB" cx={195} cy={195} r={193} />
                 <path
                     ref={svgFullPath}
                     strokeDasharray={state.dashFullArray}
