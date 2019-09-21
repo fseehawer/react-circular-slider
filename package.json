@@ -1,6 +1,7 @@
 {
   "name": "react-circular-slider",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "aphrodite": "^2.4.0",
