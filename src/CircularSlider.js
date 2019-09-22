@@ -11,12 +11,14 @@ const SLIDER_EVENT = {
 
 const CircularSlider = (props) => {
     const {
+        label = 'Degrees',
         width = 280,
         labelColor = '#322777',
         progressColors = { from: '#80C3F3' , to: '#4990E2'},
-        progressSize = 4,
         trackColor = '#DDDEFB',
-        trackSize = 4
+        progressSize = 4,
+        trackSize = 4,
+        onChange
     } = props;
     const [state, setState] = useState({
         mounted: false,
@@ -52,6 +54,9 @@ const CircularSlider = (props) => {
 
         const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
 
+        // props callback for parent
+        onChange(Math.round(degrees));
+
         setState(prevState => ({
             ...prevState,
             dashFullOffset: dashOffset,
@@ -62,11 +67,9 @@ const CircularSlider = (props) => {
                 y: (radius * Math.sin(radians) + radius),
             }
         }));
-    }, [state.dashFullArray, state.radius]);
+    }, [state.dashFullArray, state.radius, onChange]);
 
     const onMouseDown = useCallback((event) => {
-        event.preventDefault();
-
         setState(prevState => ({
             ...prevState,
             isDragging: true
@@ -94,8 +97,6 @@ const CircularSlider = (props) => {
     }, [state.isDragging, state.radius, indicatorPosition, offsetRelativeToDocument]);
 
     const onMouseUp = (event) => {
-        event.preventDefault();
-
         setState(prevState => ({
             ...prevState,
             isDragging: false
@@ -219,7 +220,7 @@ const CircularSlider = (props) => {
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
             <svg width={`${width}px`} height={`${width}px`} viewBox={`0 0 ${width} ${width}`} overflow="visible" className={css(styles.svg)}>
                 <defs>
-                    <linearGradient id="gradient" x2="0%" y2="100%">
+                    <linearGradient id="gradient" x1="100%" x2="0%">
                         <stop offset="0%" stopColor={progressColors.from}/>
                         <stop offset="100%" stopColor={progressColors.to}/>
                     </linearGradient>
@@ -259,7 +260,7 @@ const CircularSlider = (props) => {
                 </svg>
             </div>
             <div className={css(styles.labels)}>
-                <div className={css(styles.description)}>Degrees</div>
+                <div className={css(styles.description)}>{label}</div>
                 <div className={css(styles.value)}><code>{state.degrees}°</code></div>
             </div>
         </div>

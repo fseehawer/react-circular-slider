@@ -10,9 +10,14 @@ const App = () => {
         }
     });
 
+    const onChange = (deg) => {
+      console.log(deg);
+    };
+
     return (
         <div className={css(styles.wrapper)}>
             <CircularSlider
+                onChange={onChange}
             />
         </div>
     );
