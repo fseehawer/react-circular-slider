@@ -5,14 +5,15 @@ import CircularSlider from "./CircularSlider";
 const App = () => {
     const styles = StyleSheet.create({
         wrapper: {
-            margin: '4rem auto',
-            maxWidth: '20rem'
+            marginTop: '4rem',
+            textAlign: 'center'
         }
     });
 
     return (
         <div className={css(styles.wrapper)}>
-            <CircularSlider />
+            <CircularSlider
+            />
         </div>
     );
 };

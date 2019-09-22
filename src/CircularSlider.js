@@ -9,8 +9,17 @@ const SLIDER_EVENT = {
     MOVE: touchSupported ? 'touchmove' : 'mousemove',
 };
 
-const CircularSlider = () => {
+const CircularSlider = (props) => {
+    const {
+        width = 280,
+        labelColor = '#322777',
+        progressColors = { from: '#80C3F3' , to: '#4990E2'},
+        progressSize = 4,
+        trackColor = '#DDDEFB',
+        trackSize = 4
+    } = props;
     const [state, setState] = useState({
+        mounted: false,
         isDragging: false,
         width: 0,
         radius: 0,
@@ -106,6 +115,7 @@ const CircularSlider = () => {
 
         setState(prevState => ({
             ...prevState,
+            mounted: true,
             dashFullArray: pathLength,
             dashFullOffset: pathLength,
             radius: sliderOffset.radius,
@@ -133,34 +143,102 @@ const CircularSlider = () => {
         }
     }, [state.isDragging, onMouseMove]);
 
+    const pulse_animation = {
+        "0%": {transform: "scale(1)"},
+        "50%": {transform: "scale(0.8)"},
+        "100%": {transform: "scale(1)"}
+    };
+
+    const styles = StyleSheet.create({
+        circularSlider: {
+            position: 'relative',
+            display: 'inline-block',
+            opacity: 0,
+            transition: 'opacity 1s ease-in'
+        },
+
+        mounted: {
+            opacity: 1
+        },
+
+        indicator: {
+            position: 'absolute',
+            left: '-18px',
+            top: '-18px',
+            cursor: 'grab',
+            zIndex: 3
+        },
+
+        svg: {
+            position: 'relative',
+            zIndex: 2
+        },
+
+        drag: {
+            cursor: 'grabbing',
+        },
+
+        pause: {
+            animationPlayState: 'paused',
+        },
+
+        animation: {
+            animationDuration: '1500ms',
+            transformOrigin: '50% 50%',
+            animationIterationCount: 'infinite',
+            animationTimingFunction: 'ease-out',
+            animationName: [pulse_animation]
+        },
+
+        labels: {
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: `${labelColor}`,
+            zIndex: 1,
+        },
+
+        value: {
+            fontSize: '4rem',
+            marginBottom: '2rem'
+        },
+
+        description: {
+            fontSize: '1rem',
+            textTransform: 'uppercase'
+        }
+    });
+
     return (
-        <div className={css(styles.circularSlider)} ref={circularSlider}>
-            <svg width="390px" height="390px" viewBox="0 0 390 390" overflow="visible" className={css(styles.svg)}>
+        <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
+            <svg width={`${width}px`} height={`${width}px`} viewBox={`0 0 ${width} ${width}`} overflow="visible" className={css(styles.svg)}>
                 <defs>
                     <linearGradient id="gradient" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#80C3F3"/>
-                        <stop offset="100%" stopColor="#4990E2"/>
-                    </linearGradient>
-                    <linearGradient id="gradient2" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#4990E2"/>
-                        <stop offset="100%" stopColor="#80C3F3"/>
+                        <stop offset="0%" stopColor={progressColors.from}/>
+                        <stop offset="100%" stopColor={progressColors.to}/>
                     </linearGradient>
                 </defs>
-                <circle strokeWidth={4} fill="none" stroke="#DDDEFB" cx={195} cy={195} r={195} />
+                <circle strokeWidth={trackSize} fill="none" stroke={trackColor} cx={width/2} cy={width/2} r={width/2} />
                 <path
                     ref={svgFullPath}
                     strokeDasharray={state.dashFullArray}
                     strokeDashoffset={state.dashFullOffset}
-                    strokeWidth="4"
+                    strokeWidth={progressSize}
                     strokeLinecap="round"
                     fill="none"
                     stroke="url(#gradient)"
-                    d="
-                        M 195, 195
-                        m 0, -195
-                        a 195,195 0 0,1 0,390
-                        a -195,-195 0 0,1 0,-390
-                    "/>
+                    d={`
+                        M ${width/2}, ${width/2}
+                        m 0, -${width/2}
+                        a ${width/2},${width/2} 0 0,1 0,${width}
+                        a -${width/2},-${width/2} 0 0,1 0,-${width}
+                    `} />
             </svg>
             <div
                 style={{transform: `translate(${state.indicator.x}px, ${state.indicator.y}px)`}}
@@ -187,72 +265,5 @@ const CircularSlider = () => {
         </div>
     );
 };
-
-const pulse_animation = {
-    "0%": {transform: "scale(1)"},
-    "50%": {transform: "scale(0.8)"},
-    "100%": {transform: "scale(1)"}
-};
-
-const styles = StyleSheet.create({
-    circularSlider: {
-        position: 'relative',
-    },
-
-    indicator: {
-        position: 'absolute',
-        left: '-18px',
-        top: '-18px',
-        cursor: 'grab',
-        zIndex: 3
-    },
-
-    svg: {
-        position: 'relative',
-        width: '100%',
-        height: 'auto',
-        zIndex: 2
-    },
-
-    drag: {
-        cursor: 'grabbing',
-    },
-
-    pause: {
-        animationPlayState: 'paused',
-    },
-
-    animation: {
-        animationDuration: '1500ms',
-        transformOrigin: '50% 50%',
-        animationIterationCount: 'infinite',
-        animationTimingFunction: 'ease-out',
-        animationName: [pulse_animation]
-    },
-
-    labels: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: '#322777',
-        zIndex: 1,
-    },
-
-    value: {
-        fontSize: '4rem',
-        marginBottom: '2rem'
-    },
-
-    description: {
-        fontSize: '1rem',
-        textTransform: 'uppercase'
-    }
-});
 
 export default CircularSlider;
