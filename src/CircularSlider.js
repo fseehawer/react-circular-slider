@@ -14,8 +14,8 @@ const CircularSlider = () => {
         isDragging: false,
         width: 0,
         radius: 0,
+        degrees: 0,
         indicator: {
-            scale: 1,
             radians: -1,
             x: 0,
             y: 0,
@@ -46,8 +46,8 @@ const CircularSlider = () => {
         setState(prevState => ({
             ...prevState,
             dashFullOffset: dashOffset,
+            degrees: Math.round(degrees),
             indicator: {
-                scale: 1,
                 radians: radians,
                 x: (radius * Math.cos(radians) + radius),
                 y: (radius * Math.sin(radians) + radius),
@@ -110,7 +110,6 @@ const CircularSlider = () => {
             dashFullOffset: pathLength,
             radius: sliderOffset.radius,
             indicator: {
-                scale: 1,
                 radians: 0,
                 x: sliderOffset.radius,
                 y: 0,
@@ -181,6 +180,10 @@ const CircularSlider = () => {
                     <rect fill="#FFFFFF" x="13" y="20" width="9" height="1" />
                 </svg>
             </div>
+            <div className={css(styles.labels)}>
+                <div className={css(styles.description)}>Degrees</div>
+                <div className={css(styles.value)}><code>{state.degrees}°</code></div>
+            </div>
         </div>
     );
 };
@@ -201,11 +204,14 @@ const styles = StyleSheet.create({
         left: '-18px',
         top: '-18px',
         cursor: 'grab',
+        zIndex: 3
     },
 
     svg: {
+        position: 'relative',
         width: '100%',
-        height: 'auto'
+        height: 'auto',
+        zIndex: 2
     },
 
     drag: {
@@ -222,6 +228,30 @@ const styles = StyleSheet.create({
         animationIterationCount: 'infinite',
         animationTimingFunction: 'ease-out',
         animationName: [pulse_animation]
+    },
+
+    labels: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: '#322777',
+        zIndex: 1,
+    },
+
+    value: {
+        fontSize: '4rem',
+        marginBottom: '2rem'
+    },
+
+    description: {
+        fontSize: '1rem',
+        textTransform: 'uppercase'
     }
 });
 
