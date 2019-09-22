@@ -129,7 +129,6 @@ const CircularSlider = () => {
                 window.removeEventListener(SLIDER_EVENT.UP, onMouseUp);
             }
         }
-
         return () => {
             window.removeEventListener("resize", onResize);
         }

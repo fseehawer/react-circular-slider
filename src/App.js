@@ -5,7 +5,8 @@ import CircularSlider from "./CircularSlider";
 const App = () => {
     const styles = StyleSheet.create({
         wrapper: {
-            margin: '2rem'
+            margin: '4rem auto',
+            maxWidth: '25rem'
         }
     });
 
