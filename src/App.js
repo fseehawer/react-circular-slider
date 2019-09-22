@@ -6,7 +6,7 @@ const App = () => {
     const styles = StyleSheet.create({
         wrapper: {
             margin: '4rem auto',
-            maxWidth: '25rem'
+            maxWidth: '20rem'
         }
     });
 
