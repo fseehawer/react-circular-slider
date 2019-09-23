@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {StyleSheet, css} from 'aphrodite';
 
 const touchSupported = ('ontouchstart' in window);
@@ -13,8 +13,11 @@ const CircularSlider = (props) => {
     const {
         label = 'Degrees',
         width = 280,
+        draggerSize = 36,
+        draggerRadius = 12,
+        draggerColor = '#5C4BEA',
         labelColor = '#322777',
-        progressColors = { from: '#80C3F3' , to: '#4990E2'},
+        progressColors = {from: '#80C3F3', to: '#4990E2'},
         trackColor = '#DDDEFB',
         progressSize = 4,
         trackSize = 4,
@@ -24,7 +27,7 @@ const CircularSlider = (props) => {
         mounted: false,
         isDragging: false,
         width: 0,
-        radius: 0,
+        radius: width / 2,
         degrees: 0,
         indicator: {
             radians: -1,
@@ -42,7 +45,7 @@ const CircularSlider = (props) => {
         const rect = circularSlider.current.getBoundingClientRect();
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        return { top: rect.top + scrollTop, left: rect.left + scrollLeft, radius: rect.width / 2 };
+        return {top: rect.top + scrollTop, left: rect.left + scrollLeft, radius: rect.width / 2};
     }, []);
 
     const indicatorPosition = useCallback((radians) => {
@@ -80,7 +83,7 @@ const CircularSlider = (props) => {
     const onMouseMove = useCallback((event) => {
         event.preventDefault();
 
-        if(!state.isDragging) return;
+        if (!state.isDragging) return;
 
         let touch;
         if (event.type === 'touchmove') {
@@ -128,10 +131,10 @@ const CircularSlider = (props) => {
         }));
     }, [offsetRelativeToDocument, state.width]);
 
-    useEffect( () => {
+    useEffect(() => {
         window.addEventListener("resize", onResize);
 
-        if(state.isDragging) {
+        if (state.isDragging) {
             window.addEventListener(SLIDER_EVENT.MOVE, onMouseMove, {passive: false});
             window.addEventListener(SLIDER_EVENT.UP, onMouseUp, {passive: false});
             return () => {
@@ -218,14 +221,27 @@ const CircularSlider = (props) => {
 
     return (
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
-            <svg width={`${width}px`} height={`${width}px`} viewBox={`0 0 ${width} ${width}`} overflow="visible" className={css(styles.svg)}>
+            <svg
+                width={`${width}px`}
+                height={`${width}px`}
+                viewBox={`0 0 ${width} ${width}`}
+                overflow="visible"
+                className={css(styles.svg)}
+            >
                 <defs>
                     <linearGradient id="gradient" x1="100%" x2="0%">
                         <stop offset="0%" stopColor={progressColors.from}/>
                         <stop offset="100%" stopColor={progressColors.to}/>
                     </linearGradient>
                 </defs>
-                <circle strokeWidth={trackSize} fill="none" stroke={trackColor} cx={width/2} cy={width/2} r={width/2} />
+                <circle
+                    strokeWidth={trackSize}
+                    fill="none"
+                    stroke={trackColor}
+                    cx={width / 2}
+                    cy={width / 2}
+                    r={width / 2}
+                />
                 <path
                     ref={svgFullPath}
                     strokeDasharray={state.dashFullArray}
@@ -235,11 +251,11 @@ const CircularSlider = (props) => {
                     fill="none"
                     stroke="url(#gradient)"
                     d={`
-                        M ${width/2}, ${width/2}
-                        m 0, -${width/2}
-                        a ${width/2},${width/2} 0 0,1 0,${width}
-                        a -${width/2},-${width/2} 0 0,1 0,-${width}
-                    `} />
+                        M ${width / 2}, ${width / 2}
+                        m 0, -${width / 2}
+                        a ${width / 2},${width / 2} 0 0,1 0,${width}
+                        a -${width / 2},-${width / 2} 0 0,1 0,-${width}
+                    `}/>
             </svg>
             <div
                 style={{transform: `translate(${state.indicator.x}px, ${state.indicator.y}px)`}}
@@ -248,15 +264,29 @@ const CircularSlider = (props) => {
                 onTouchStart={onMouseDown}
             >
                 <svg
-                    width="36px"
-                    height="36px"
-                    viewBox="0 0 36 36"
+                    width={`${draggerSize}px`}
+                    height={`${draggerSize}px`}
+                    viewBox={`0 0 ${draggerSize} ${draggerSize}`}
                 >
-                    <circle fill="#5C4BEA" fillOpacity="0.2" stroke="none" cx="18" cy="18" r="18" className={css(!state.isDragging && styles.animation)} />
-                    <circle fill="#5C4BEA" stroke="none" cx="18" cy="18" r="12" />
-                    <rect fill="#FFFFFF" x="13" y="14" width="9" height="1" />
-                    <rect fill="#FFFFFF" x="13" y="17" width="9" height="1" />
-                    <rect fill="#FFFFFF" x="13" y="20" width="9" height="1" />
+                    <circle
+                        className={css(!state.isDragging && styles.animation)}
+                        fill={draggerColor}
+                        fillOpacity="0.2"
+                        stroke="none"
+                        cx={draggerSize / 2}
+                        cy={draggerSize / 2}
+                        r={draggerSize / 2}
+                    />
+                    <circle
+                        fill={draggerColor}
+                        stroke="none"
+                        cx={draggerSize / 2}
+                        cy={draggerSize / 2}
+                        r={draggerRadius}
+                    />
+                    <rect fill="#FFFFFF" x="12" y="14" width="10" height="1"/>
+                    <rect fill="#FFFFFF" x="12" y="17" width="10" height="1"/>
+                    <rect fill="#FFFFFF" x="12" y="20" width="10" height="1"/>
                 </svg>
             </div>
             <div className={css(styles.labels)}>
