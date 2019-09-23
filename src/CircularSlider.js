@@ -284,9 +284,9 @@ const CircularSlider = (props) => {
                         cy={draggerSize / 2}
                         r={draggerRadius}
                     />
-                    <rect fill="#FFFFFF" x="12" y="14" width="10" height="1"/>
-                    <rect fill="#FFFFFF" x="12" y="17" width="10" height="1"/>
-                    <rect fill="#FFFFFF" x="12" y="20" width="10" height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="14" width="8" height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="17" width="8" height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="20" width="8" height="1"/>
                 </svg>
             </div>
             <div className={css(styles.labels)}>
