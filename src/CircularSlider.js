@@ -19,8 +19,8 @@ const CircularSlider = (props) => {
         labelColor = '#272b77',
         progressColors = {from: '#80C3F3', to: '#4990E2'},
         trackColor = '#DDDEFB',
-        progressSize = 4,
-        trackSize = 4,
+        progressSize = 6,
+        trackSize = 6,
         onChange
     } = props;
     const [state, setState] = useState({
