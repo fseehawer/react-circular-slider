@@ -15,8 +15,8 @@ const CircularSlider = (props) => {
         width = 280,
         draggerSize = 36,
         draggerRadius = 12,
-        draggerColor = '#5C4BEA',
-        labelColor = '#322777',
+        draggerColor = '#4e63ea',
+        labelColor = '#272b77',
         progressColors = {from: '#80C3F3', to: '#4990E2'},
         trackColor = '#DDDEFB',
         progressSize = 4,
@@ -167,8 +167,8 @@ const CircularSlider = (props) => {
 
         indicator: {
             position: 'absolute',
-            left: '-18px',
-            top: '-18px',
+            left: `-${draggerSize/2}px`,
+            top: `-${draggerSize/2}px`,
             cursor: 'grab',
             zIndex: 3
         },
@@ -284,9 +284,9 @@ const CircularSlider = (props) => {
                         cy={draggerSize / 2}
                         r={draggerRadius}
                     />
-                    <rect fill="#FFFFFF" x="14" y="14" width="8" height="1"/>
-                    <rect fill="#FFFFFF" x="14" y="17" width="8" height="1"/>
-                    <rect fill="#FFFFFF" x="14" y="20" width="8" height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="14" width={draggerSize / 4.5} height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="17" width={draggerSize / 4.5} height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="20" width={draggerSize / 4.5} height="1"/>
                 </svg>
             </div>
             <div className={css(styles.labels)}>
