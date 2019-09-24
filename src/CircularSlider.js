@@ -13,9 +13,9 @@ const CircularSlider = (props) => {
     const {
         label = 'Degrees',
         width = 280,
-        draggerSize = 36,
-        draggerRadius = 12,
-        draggerColor = '#4e63ea',
+        knobSize = 36,
+        knobRadius = 12,
+        knobColor = '#4e63ea',
         labelColor = '#272b77',
         progressColors = {from: '#80C3F3', to: '#4990E2'},
         trackColor = '#DDDEFB',
@@ -29,7 +29,7 @@ const CircularSlider = (props) => {
         width: 0,
         radius: width / 2,
         degrees: 0,
-        indicator: {
+        knob: {
             radians: -1,
             x: 0,
             y: 0,
@@ -48,7 +48,7 @@ const CircularSlider = (props) => {
         return {top: rect.top + scrollTop, left: rect.left + scrollLeft, radius: rect.width / 2};
     }, []);
 
-    const indicatorPosition = useCallback((radians) => {
+    const knobPosition = useCallback((radians) => {
         const radius = state.radius;
         const offsetRadians = radians + 1.5708; // offset by 90 degrees
         const degrees = (offsetRadians > 0 ? offsetRadians
@@ -64,7 +64,7 @@ const CircularSlider = (props) => {
             ...prevState,
             dashFullOffset: dashOffset,
             degrees: Math.round(degrees),
-            indicator: {
+            knob: {
                 radians: radians,
                 x: (radius * Math.cos(radians) + radius),
                 y: (radius * Math.sin(radians) + radius),
@@ -96,8 +96,8 @@ const CircularSlider = (props) => {
             (offsetRelativeToDocument().top + state.radius);
 
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
-        indicatorPosition(radians);
-    }, [state.isDragging, state.radius, indicatorPosition, offsetRelativeToDocument]);
+        knobPosition(radians);
+    }, [state.isDragging, state.radius, knobPosition, offsetRelativeToDocument]);
 
     const onMouseUp = (event) => {
         setState(prevState => ({
@@ -123,7 +123,7 @@ const CircularSlider = (props) => {
             dashFullArray: pathLength,
             dashFullOffset: pathLength,
             radius: sliderOffset.radius,
-            indicator: {
+            knob: {
                 radians: 0,
                 x: sliderOffset.radius,
                 y: 0,
@@ -165,10 +165,10 @@ const CircularSlider = (props) => {
             opacity: 1
         },
 
-        indicator: {
+        knob: {
             position: 'absolute',
-            left: `-${draggerSize/2}px`,
-            top: `-${draggerSize/2}px`,
+            left: `-${knobSize/2}px`,
+            top: `-${knobSize/2}px`,
             cursor: 'grab',
             zIndex: 3
         },
@@ -258,35 +258,35 @@ const CircularSlider = (props) => {
                     `}/>
             </svg>
             <div
-                style={{transform: `translate(${state.indicator.x}px, ${state.indicator.y}px)`}}
-                className={css(styles.indicator, state.isDragging && styles.drag, state.isDragging && styles.pause)}
+                style={{transform: `translate(${state.knob.x}px, ${state.knob.y}px)`}}
+                className={css(styles.knob, state.isDragging && styles.drag, state.isDragging && styles.pause)}
                 onMouseDown={onMouseDown}
                 onTouchStart={onMouseDown}
             >
                 <svg
-                    width={`${draggerSize}px`}
-                    height={`${draggerSize}px`}
-                    viewBox={`0 0 ${draggerSize} ${draggerSize}`}
+                    width={`${knobSize}px`}
+                    height={`${knobSize}px`}
+                    viewBox={`0 0 ${knobSize} ${knobSize}`}
                 >
                     <circle
                         className={css(!state.isDragging && styles.animation)}
-                        fill={draggerColor}
+                        fill={knobColor}
                         fillOpacity="0.2"
                         stroke="none"
-                        cx={draggerSize / 2}
-                        cy={draggerSize / 2}
-                        r={draggerSize / 2}
+                        cx={knobSize / 2}
+                        cy={knobSize / 2}
+                        r={knobSize / 2}
                     />
                     <circle
-                        fill={draggerColor}
+                        fill={knobColor}
                         stroke="none"
-                        cx={draggerSize / 2}
-                        cy={draggerSize / 2}
-                        r={draggerRadius}
+                        cx={knobSize / 2}
+                        cy={knobSize / 2}
+                        r={knobRadius}
                     />
-                    <rect fill="#FFFFFF" x="14" y="14" width={draggerSize / 4.5} height="1"/>
-                    <rect fill="#FFFFFF" x="14" y="17" width={draggerSize / 4.5} height="1"/>
-                    <rect fill="#FFFFFF" x="14" y="20" width={draggerSize / 4.5} height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="14" width={knobSize / 4.5} height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="17" width={knobSize / 4.5} height="1"/>
+                    <rect fill="#FFFFFF" x="14" y="20" width={knobSize / 4.5} height="1"/>
                 </svg>
             </div>
             <div className={css(styles.labels)}>
