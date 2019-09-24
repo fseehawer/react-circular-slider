@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {StyleSheet, css} from 'aphrodite';
-import Knob from "../knob";
+import Knob from "../Knob";
 import Labels from "../Labels";
 import Svg from "../Svg";
 
@@ -14,7 +14,7 @@ const SLIDER_EVENT = {
 
 const CircularSlider = (props) => {
     const {
-        label = 'Degrees',
+        label = 'Degrees°',
         width = 280,
         knobColor = '#4e63ea',
         labelColor = '#272b77',
@@ -169,7 +169,7 @@ const CircularSlider = (props) => {
             <Labels
                 labelColor={labelColor}
                 label={label}
-                value={`${state.degrees}°`}
+                value={`${state.degrees}`}
             />
         </div>
     );
