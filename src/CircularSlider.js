@@ -26,11 +26,11 @@ const CircularSlider = (props) => {
     const [state, setState] = useState({
         mounted: false,
         isDragging: false,
-        width: 0,
+        width: width,
         radius: width / 2,
         degrees: 0,
         knob: {
-            radians: -1,
+            radians: 0,
             x: 0,
             y: 0,
         },
@@ -45,7 +45,7 @@ const CircularSlider = (props) => {
         const rect = circularSlider.current.getBoundingClientRect();
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        return {top: rect.top + scrollTop, left: rect.left + scrollLeft, radius: rect.width / 2};
+        return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
     }, []);
 
     const knobPosition = useCallback((radians) => {
@@ -106,13 +106,6 @@ const CircularSlider = (props) => {
         }));
     };
 
-    const onResize = (event) => {
-        setState(prevState => ({
-            ...prevState,
-            width: event.currentTarget.innerWidth
-        }));
-    };
-
     useEffect(() => {
         const sliderOffset = offsetRelativeToDocument();
         const pathLength = svgFullPath.current.getTotalLength();
@@ -129,11 +122,9 @@ const CircularSlider = (props) => {
                 y: 0,
             },
         }));
-    }, [offsetRelativeToDocument, state.width]);
+    }, [offsetRelativeToDocument]);
 
     useEffect(() => {
-        window.addEventListener("resize", onResize);
-
         if (state.isDragging) {
             window.addEventListener(SLIDER_EVENT.MOVE, onMouseMove, {passive: false});
             window.addEventListener(SLIDER_EVENT.UP, onMouseUp, {passive: false});
@@ -141,9 +132,6 @@ const CircularSlider = (props) => {
                 window.removeEventListener(SLIDER_EVENT.MOVE, onMouseMove);
                 window.removeEventListener(SLIDER_EVENT.UP, onMouseUp);
             }
-        }
-        return () => {
-            window.removeEventListener("resize", onResize);
         }
     }, [state.isDragging, onMouseMove]);
 
