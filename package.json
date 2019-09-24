@@ -1,7 +1,7 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "1.0.0",
-  "description": "A highly customizable circular slider with no dependencies. ",
+  "version": "1.0.1",
+  "description": "A customizable circular slider with many features to come.",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -20,13 +20,11 @@
   "homepage": "https://fseehawer.github.io/react-circular-slider/",
   "peerDependencies": {
     "react": "^16.6.1",
-    "react-dom": "^16.6.3"
+    "react-dom": "^16.6.3",
+    "aphrodite": "^2.4.0"
   },
   "dependencies": {
-    "aphrodite": "^2.4.0",
     "eslint-utils": "^1.4.1",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
   },
   "devDependencies": {
@@ -35,11 +33,12 @@
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "aphrodite": "^2.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && ./node_modules/.bin/babel src/CircularSlider --out-file index.js",
+    "build": "react-scripts build && ./node_modules/.bin/babel src --out-file index.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "gh-pages": "git subtree push --prefix build origin gh-pages && git push -u origin master"

@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.0.0-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.0.1-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. 
 
@@ -46,6 +46,7 @@ trackColor       | string | #DDDEFB
 progressSize     | number | 6
 trackSize        | number | 6
 onChange         | func   | value => {}
+
 
 ## license
 
