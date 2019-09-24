@@ -166,7 +166,7 @@ const CircularSlider = (props) => {
             zIndex: 2
         },
 
-        drag: {
+        dragging: {
             cursor: 'grabbing',
         },
 
@@ -247,7 +247,7 @@ const CircularSlider = (props) => {
             </svg>
             <div
                 style={{transform: `translate(${state.knob.x}px, ${state.knob.y}px)`}}
-                className={css(styles.knob, state.isDragging && styles.drag, state.isDragging && styles.pause)}
+                className={css(styles.knob, state.isDragging && styles.dragging, state.isDragging && styles.pause)}
                 onMouseDown={onMouseDown}
                 onTouchStart={onMouseDown}
             >
