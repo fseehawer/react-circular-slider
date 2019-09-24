@@ -46,7 +46,7 @@ const Knob = (props) => {
     return (
         <div
             style={{transform: `translate(${knobPosition.x}px, ${knobPosition.y}px)`}}
-            className={css(styles.knob, isDragging && styles.dragging, isDragging && styles.pause)}
+            className={css(styles.knob, isDragging && styles.dragging)}
             onMouseDown={onMouseDown}
             onTouchStart={onMouseDown}
         >
@@ -56,7 +56,7 @@ const Knob = (props) => {
                 viewBox={`0 0 ${knobSize} ${knobSize}`}
             >
                 <circle
-                    className={css(!isDragging && styles.animation)}
+                    className={css(styles.animation, isDragging && styles.pause)}
                     fill={knobColor}
                     fillOpacity="0.2"
                     stroke="none"
