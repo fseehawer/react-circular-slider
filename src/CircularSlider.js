@@ -115,14 +115,14 @@ const CircularSlider = (props) => {
             mounted: true,
             dashFullArray: pathLength,
             dashFullOffset: pathLength,
-            radius: sliderOffset.radius,
+            radius: state.radius,
             knob: {
                 radians: 0,
-                x: sliderOffset.radius,
+                x: state.radius,
                 y: 0,
             },
         }));
-    }, [offsetRelativeToDocument]);
+    }, [offsetRelativeToDocument, state.radius]);
 
     useEffect(() => {
         if (state.isDragging) {
