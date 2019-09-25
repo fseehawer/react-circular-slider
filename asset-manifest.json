@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/react-circular-slider/static/css/main.34de6062.chunk.css",
-    "main.js": "/react-circular-slider/static/js/main.d9dcdd22.chunk.js",
-    "main.js.map": "/react-circular-slider/static/js/main.d9dcdd22.chunk.js.map",
-    "runtime~main.js": "/react-circular-slider/static/js/runtime~main.d4b1d7d1.js",
-    "runtime~main.js.map": "/react-circular-slider/static/js/runtime~main.d4b1d7d1.js.map",
-    "static/js/2.2a2647d3.chunk.js": "/react-circular-slider/static/js/2.2a2647d3.chunk.js",
-    "static/js/2.2a2647d3.chunk.js.map": "/react-circular-slider/static/js/2.2a2647d3.chunk.js.map",
+    "main.js": "/react-circular-slider/static/js/main.768125a5.chunk.js",
+    "main.js.map": "/react-circular-slider/static/js/main.768125a5.chunk.js.map",
+    "runtime~main.js": "/react-circular-slider/static/js/runtime~main.e746ae86.js",
+    "runtime~main.js.map": "/react-circular-slider/static/js/runtime~main.e746ae86.js.map",
+    "static/js/2.b23f44af.chunk.js": "/react-circular-slider/static/js/2.b23f44af.chunk.js",
+    "static/js/2.b23f44af.chunk.js.map": "/react-circular-slider/static/js/2.b23f44af.chunk.js.map",
     "index.html": "/react-circular-slider/index.html",
-    "precache-manifest.ea2f94777d0bd3fbec93d0ca91e57d17.js": "/react-circular-slider/precache-manifest.ea2f94777d0bd3fbec93d0ca91e57d17.js",
+    "precache-manifest.ee39bcac34c0771a215a957a3ed80bf4.js": "/react-circular-slider/precache-manifest.ee39bcac34c0771a215a957a3ed80bf4.js",
     "service-worker.js": "/react-circular-slider/service-worker.js",
     "static/css/main.34de6062.chunk.css.map": "/react-circular-slider/static/css/main.34de6062.chunk.css.map"
   }
