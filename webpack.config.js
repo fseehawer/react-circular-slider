@@ -1,5 +1,6 @@
 var path = require('path');
 module.exports = {
+    mode: 'development',
     entry: './src/CircularSlider/index.js',
     output: {
         path: path.resolve(__dirname),
