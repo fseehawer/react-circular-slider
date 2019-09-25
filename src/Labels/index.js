@@ -30,7 +30,6 @@ const Labels = (props) => {
 
         description: {
             fontSize: '1rem',
-            textTransform: 'uppercase'
         }
     });
 

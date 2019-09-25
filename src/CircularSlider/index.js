@@ -14,7 +14,7 @@ const SLIDER_EVENT = {
 
 const CircularSlider = (props) => {
     const {
-        label = 'Degrees°',
+        label = 'DEGREES',
         width = 280,
         knobColor = '#4e63ea',
         labelColor = '#272b77',
@@ -124,13 +124,14 @@ const CircularSlider = (props) => {
             dashFullArray: pathLength,
             dashFullOffset: pathLength,
             radius: state.radius,
+            degrees: customData.length ? customData[0] : 0,
             knob: {
                 radians: 0,
                 x: state.radius,
                 y: 0,
             },
         }));
-    }, [offsetRelativeToDocument, state.radius]);
+    }, [offsetRelativeToDocument, state.radius, customData]);
 
     useEffect(() => {
         if (state.isDragging) {

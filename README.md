@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.0.7-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.0.8-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. 
 
@@ -45,7 +45,7 @@ The CircularSlider component with some custom props. See [example](https://fseeh
     progressSize={4}
     trackColor=#eeeeee"
     trackSize={12}
-    customData={"ABCDEFGHIJKLMNOPQRSTUVXWYZ".split("")}
+    customData={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
     onChange={onChange}
 />
 ```
@@ -56,7 +56,7 @@ prop             | type   | deafult
 -----------------|--------|--------
 width            | number | 280
 knobColor        | string | #4e63ea
-label            | string | Degrees°
+label            | string | DEGREES
 labelColor       | string | #272b77
 progressColorFrom| string | #80C3F3
 progressColorTo  | string | #4990E2
