@@ -4,9 +4,11 @@ import {StyleSheet, css} from 'aphrodite';
 const Svg = (props) => {
     const {
         width,
+        label,
         strokeDasharray,
         strokeDashoffset,
-        progressColors,
+        progressColorFrom,
+        progressColorTo,
         trackColor,
         progressSize,
         trackSize,
@@ -29,9 +31,9 @@ const Svg = (props) => {
             className={css(styles.svg)}
         >
             <defs>
-                <linearGradient id="gradient" x1="100%" x2="0%">
-                    <stop offset="0%" stopColor={progressColors.from}/>
-                    <stop offset="100%" stopColor={progressColors.to}/>
+                <linearGradient id={label} x1="100%" x2="0%">
+                    <stop offset="0%" stopColor={progressColorFrom}/>
+                    <stop offset="100%" stopColor={progressColorTo}/>
                 </linearGradient>
             </defs>
             <circle
@@ -49,7 +51,7 @@ const Svg = (props) => {
                 strokeWidth={progressSize}
                 strokeLinecap="round"
                 fill="none"
-                stroke="url(#gradient)"
+                stroke={`url(#${label})`}
                 d={`
                         M ${width / 2}, ${width / 2}
                         m 0, -${width / 2}

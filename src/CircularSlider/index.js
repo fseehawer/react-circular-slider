@@ -18,10 +18,12 @@ const CircularSlider = (props) => {
         width = 280,
         knobColor = '#4e63ea',
         labelColor = '#272b77',
-        progressColors = {from: '#80C3F3', to: '#4990E2'},
-        trackColor = '#DDDEFB',
+        progressColorFrom = '#80C3F3',
+        progressColorTo = '#4990E2',
         progressSize = 6,
+        trackColor = '#DDDEFB',
         trackSize = 6,
+        customData = [],
         onChange = value => {}
     } = props;
     const [state, setState] = useState({
@@ -57,21 +59,27 @@ const CircularSlider = (props) => {
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
 
         const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
+        let currentPoint = 0;
+
+        if(customData.length) {
+            const pointsInCircle = 360 / customData.length;
+            currentPoint = Math.floor(degrees / pointsInCircle)
+        }
 
         // props callback for parent
-        onChange(Math.round(degrees));
+        onChange(customData.length ? customData[currentPoint] : Math.round(degrees));
 
         setState(prevState => ({
             ...prevState,
             dashFullOffset: dashOffset,
-            degrees: Math.round(degrees),
+            degrees: customData.length ? customData[currentPoint] : Math.round(degrees),
             knob: {
                 radians: radians,
                 x: (radius * Math.cos(radians) + radius),
                 y: (radius * Math.sin(radians) + radius),
             }
         }));
-    }, [state.dashFullArray, state.radius, onChange]);
+    }, [state.dashFullArray, state.radius, customData, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -152,9 +160,11 @@ const CircularSlider = (props) => {
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
             <Svg
                 width={width}
+                label={label}
                 strokeDasharray={state.dashFullArray}
                 strokeDashoffset={state.dashFullOffset}
-                progressColors={progressColors}
+                progressColorFrom={progressColorFrom}
+                progressColorTo={progressColorTo}
                 trackColor={trackColor}
                 progressSize={progressSize}
                 trackSize={trackSize}
