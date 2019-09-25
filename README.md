@@ -46,7 +46,7 @@ The CircularSlider component with some custom props. See [example](https://fseeh
     trackColor=#eeeeee"
     trackSize={12}
     customData={["1€","2€",...]}
-    onChange={onChange}
+    onChange={onSliderChange}
 />
 ```
 

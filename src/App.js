@@ -48,7 +48,7 @@ const App = () => {
     progressSize={24}
     trackColor="#eeeeee"
     trackSize={24}
->`}
+/>`}
             </pre>
             <p>&nbsp;</p>
             <CircularSlider
@@ -75,7 +75,7 @@ const App = () => {
     progressSize={4}
     trackColor="#eeeeee"
     trackSize={12}
->`}
+/>`}
             </pre>
             <p>&nbsp;</p>
             <CircularSlider
