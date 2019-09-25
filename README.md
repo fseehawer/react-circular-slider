@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.0.9-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.1.0-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. 
 
@@ -37,7 +37,7 @@ The CircularSlider component with some custom props. See [example](https://fseeh
 
 ```
 <CircularSlider
-    label="Alphabet"
+    label="savings"
     labelColor="#212121"
     knobColor="#212121"
     progressColorFrom="#ff8500"
@@ -45,7 +45,7 @@ The CircularSlider component with some custom props. See [example](https://fseeh
     progressSize={4}
     trackColor=#eeeeee"
     trackSize={12}
-    customData={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
+    customData={["1€","2€",...]}
     onChange={onChange}
 />
 ```
