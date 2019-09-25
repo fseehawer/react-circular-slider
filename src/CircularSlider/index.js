@@ -66,13 +66,16 @@ const CircularSlider = (props) => {
             currentPoint = Math.floor(degrees / pointsInCircle)
         }
 
+        console.log(customData.length);
+
+        const labelValue = !!customData.length ? customData[currentPoint] : Math.round(degrees);
         // props callback for parent
-        onChange(customData.length ? customData[currentPoint] : Math.round(degrees));
+        onChange(labelValue);
 
         setState(prevState => ({
             ...prevState,
             dashFullOffset: dashOffset,
-            degrees: customData.length ? customData[currentPoint] : Math.round(degrees),
+            degrees: labelValue,
             knob: {
                 radians: radians,
                 x: (radius * Math.cos(radians) + radius),
@@ -131,7 +134,8 @@ const CircularSlider = (props) => {
                 y: 0,
             },
         }));
-    }, [offsetRelativeToDocument, state.radius, customData]);
+        // eslint-disable-next-line
+    }, [offsetRelativeToDocument, state.radius]);
 
     useEffect(() => {
         if (state.isDragging) {

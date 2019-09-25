@@ -18,7 +18,7 @@ const App = () => {
         }
     });
 
-    const onChange = (deg) => {
+    const onSliderChange = (deg) => {
         console.log(deg);
     };
 
@@ -27,11 +27,13 @@ const App = () => {
             <h2 className={css(styles.h2)}>react-circular-slider</h2>
             <h3 className={css(styles.h3)}>1. default:</h3>
             <pre>
-                {`<CircularSlider />`}
+                {`<CircularSlider
+    onChange={onSliderChange}
+/>`}
             </pre>
             <p>&nbsp;</p>
             <CircularSlider
-                onChange={onChange}
+                onChange={onSliderChange}
             />
             <p>&nbsp;</p>
             <h3 className={css(styles.h3)}>2. custom:</h3>
@@ -86,7 +88,6 @@ const App = () => {
                 trackColor={"#eeeeee"}
                 trackSize={24}
                 customData={["1€","2€","3€","4€","5€","6€","7€","8€","9€","10€","20€","30€","40€","50€","60€","70€","80€","90€","100€","200€","300€","400€","500€","600€","700€","800€","900€","1000€","2000€","3000€","4000€","5000€","6000€","7000€","8000€","9000€","10000€"]}
-                onChange={onChange}
             />
             <p>&nbsp;</p>
         </div>
