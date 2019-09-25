@@ -22,7 +22,7 @@ const CircularSlider = (props) => {
         trackColor = '#DDDEFB',
         progressSize = 6,
         trackSize = 6,
-        onChange
+        onChange = value => {}
     } = props;
     const [state, setState] = useState({
         mounted: false,
