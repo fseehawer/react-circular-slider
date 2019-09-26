@@ -23,7 +23,8 @@ const CircularSlider = (props) => {
         progressSize = 6,
         trackColor = '#DDDEFB',
         trackSize = 6,
-        customData = [],
+        data = [],
+        startIndex = 0,
         onChange = value => {}
     } = props;
     const [state, setState] = useState({
@@ -61,16 +62,12 @@ const CircularSlider = (props) => {
         const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
         let currentPoint = 0;
 
-        if(customData.length) {
-            const pointsInCircle = 360 / customData.length;
+        if(data.length) {
+            const pointsInCircle = 360 / data.length;
             currentPoint = Math.floor(degrees / pointsInCircle)
         }
 
-        console.log(customData.length);
-
-        const labelValue = !!customData.length ? customData[currentPoint] : Math.round(degrees);
-        // props callback for parent
-        onChange(labelValue);
+        const labelValue = !!data.length ? data[currentPoint] : Math.round(degrees);
 
         setState(prevState => ({
             ...prevState,
@@ -82,7 +79,10 @@ const CircularSlider = (props) => {
                 y: (radius * Math.sin(radians) + radius),
             }
         }));
-    }, [state.dashFullArray, state.radius, customData, onChange]);
+
+        // props callback for parent
+        onChange(labelValue);
+    }, [state.dashFullArray, state.radius, data, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -120,22 +120,41 @@ const CircularSlider = (props) => {
 
     useEffect(() => {
         const pathLength = svgFullPath.current.getTotalLength();
+        const pointsInCircle = 360 / data.length;
+        const degrees = startIndex * pointsInCircle;
+        const radians = (degrees * Math.PI / 180) - 1.5708; // offset by 90 degrees
+
+        let knob = {
+            radians: 0,
+            x: state.radius,
+            y: 0,
+        };
+
+        if(startIndex > 0) {
+            knob = {
+                radians: radians,
+                x: (state.radius * Math.cos(radians) + state.radius),
+                y: (state.radius * Math.sin(radians) + state.radius),
+            };
+        }
+
+        let dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
+
+        if(isNaN(dashOffset)) {
+            dashOffset = pathLength;
+        }
 
         setState(prevState => ({
             ...prevState,
             mounted: true,
             dashFullArray: pathLength,
-            dashFullOffset: pathLength,
+            dashFullOffset: dashOffset,
             radius: state.radius,
-            degrees: customData.length ? customData[0] : 0,
-            knob: {
-                radians: 0,
-                x: state.radius,
-                y: 0,
-            },
+            degrees: data.length ? data[startIndex] : 0,
+            knob,
         }));
         // eslint-disable-next-line
-    }, [offsetRelativeToDocument, state.radius]);
+    }, [offsetRelativeToDocument, state.radius, state.dashFullArray]);
 
     useEffect(() => {
         if (state.isDragging) {
