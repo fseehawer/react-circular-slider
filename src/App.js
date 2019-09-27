@@ -41,10 +41,10 @@ const App = () => {
                 {`<CircularSlider
     label="savings"
     data=["1€","2€",...]
-    startIndex={10}
+    placeKnobAtIndex={10}
     labelColor="#009c9a"
     knobColor="#009c9a"
-    progressColorFrom="#005a58"
+    progressColorFrom="#00bfbd"
     progressColorTo="#005a58"
     progressSize={24}
     trackColor="#eeeeee"
@@ -56,12 +56,12 @@ const App = () => {
                 label="savings"
                 labelColor={"#005a58"}
                 knobColor={"#005a58"}
-                progressColorFrom={"#009c9a"}
+                progressColorFrom={"#00bfbd"}
                 progressColorTo={"#009c9a"}
                 progressSize={24}
                 trackColor={"#eeeeee"}
                 trackSize={24}
-                startIndex={10}
+                placeKnobAtIndex={10}
                 data={["1€","2€","3€","4€","5€","6€","7€","8€","9€","10€","20€","30€","40€","50€","60€","70€","80€","90€","100€","200€","300€","400€","500€","600€","700€","800€","900€","1000€","2000€","3000€","4000€","5000€","6000€","7000€","8000€","9000€","10000€"]}
             />
             <p>&nbsp;</p>
@@ -74,9 +74,9 @@ const App = () => {
     knobColor="#212121"
     progressColorFrom="#ff8500"
     progressColorTo="#a15400"
-    progressSize={4}
+    progressSize={8}
     trackColor="#eeeeee"
-    trackSize={12}
+    trackSize={4}
 />`}
             </pre>
             <p>&nbsp;</p>
@@ -86,9 +86,9 @@ const App = () => {
                 knobColor={"#212121"}
                 progressColorFrom={"#ff8500"}
                 progressColorTo={"#a15400"}
-                progressSize={4}
+                progressSize={8}
                 trackColor={"#eeeeee"}
-                trackSize={12}
+                trackSize={4}
                 data={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
             />
             <p>&nbsp;</p>

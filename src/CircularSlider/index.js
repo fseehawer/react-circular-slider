@@ -24,7 +24,7 @@ const CircularSlider = (props) => {
         trackColor = '#DDDEFB',
         trackSize = 6,
         data = [],
-        startIndex = 0,
+        placeKnobAtIndex = 0,
         onChange = value => {}
     } = props;
     const [state, setState] = useState({
@@ -130,9 +130,9 @@ const CircularSlider = (props) => {
     }, []);
 
     useEffect(() => {
-        if(startIndex && !!data.length) {
+        if(placeKnobAtIndex && !!data.length) {
             const pointsInCircle = Math.ceil(360 / data.length);
-            const degrees = startIndex * pointsInCircle;
+            const degrees = placeKnobAtIndex * pointsInCircle;
             const radians = (degrees * Math.PI / 180) - radiansOffset;
 
             return knobPosition(radians);
@@ -140,7 +140,7 @@ const CircularSlider = (props) => {
 
         return knobPosition(-radiansOffset+0.005); // Add to offset to break boundary
         // eslint-disable-next-line
-    }, [state.dashFullArray, startIndex, data.length, radiansOffset]);
+    }, [state.dashFullArray, placeKnobAtIndex, data.length, radiansOffset]);
 
     useEffect(() => {
         if (state.isDragging) {

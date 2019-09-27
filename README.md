@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.1.3-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.1.4-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies.
 
@@ -18,14 +18,9 @@ npm install @fseehawer/react-circular-slider
 import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 const App = () => {
-    const onSliderChange = (value) => {
-        // use value
-        console.log(value);
-    };
-    
     return (
         <CircularSlider
-            onChange={onSliderChange}
+            onChange={ value => { console.log(value); } }
         />
     )
 };
@@ -46,27 +41,27 @@ The CircularSlider component with some custom props. See [example](https://fseeh
     trackColor=#eeeeee"
     trackSize={12}
     data={["1€","2€",...]}
-    startIndex={10}
+    placeKnobAtIndex={10}
     onChange={onSliderChange}
 />
 ```
 
 ## Props
 
-prop             | type   | deafult
------------------|--------|--------
-width            | number | 280
-knobColor        | string | #4e63ea
-label            | string | DEGREES
-labelColor       | string | #272b77
-progressColorFrom| string | #80C3F3
-progressColorTo  | string | #4990E2
-progressSize     | number | 6
-trackColor       | string | #DDDEFB
-trackSize        | number | 6
-data             | array  | []
-startIndex       | number | 0
-onChange         | func   | value => {}
+prop             | type   | default       | Affects
+-----------------|--------|---------------|--------
+width            | number | 280           | width of slider
+knobColor        | string | #4e63ea       | knob color
+label            | string | DEGREES       | label
+labelColor       | string | #272b77       | label color
+progressColorFrom| string | #80C3F3       | progress track gradient start color
+progressColorTo  | string | #4990E2       | progress track gradient end color
+progressSize     | number | 6             | progress track size
+trackColor       | string | #DDDEFB       | background track color
+trackSize        | number | 6             | background track size
+data             | array  | []            | array of data to be spread
+placeKnobAtIndex | int    | 0             | place knob at a certain array index
+onChange         | func   | value => {}   | returns label value
 
 
 ## license
