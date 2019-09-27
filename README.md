@@ -1,8 +1,10 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.1.8-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.1.9-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. You can check out some [examples](https://fseehawer.github.io/react-circular-slider/) here!
+
+<img src="public/slider.png" alt="CircularSlider example image" width="280" height="280" />
 
 ## install
 
@@ -53,8 +55,6 @@ const App = () => {
 
 export default App;
 ```
-
-<img src="public/slider.png" alt="CircularSlider example image" width="280" height="280" />
 
 ## Props
 
