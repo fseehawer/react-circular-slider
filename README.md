@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.1.7-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.1.8-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. You can check out some [examples](https://fseehawer.github.io/react-circular-slider/) here!
 
@@ -37,13 +37,13 @@ const App = () => {
     return (
         <CircularSlider
             label="savings"
-            labelColor="#212121"
-            knobColor="#212121"
-            progressColorFrom="#ff8500"
-            progressColorTo="#a15400"
-            progressSize={4}
+            labelColor="#005a58"
+            knobColor="#005a58"
+            progressColorFrom="#00bfbd"
+            progressColorTo="#009c9a"
+            progressSize={24}
             trackColor="#eeeeee"
-            trackSize={12}
+            trackSize={24}
             data={["1€","2€"]} //...
             placeKnobAtIndex={10}
             onChange={ value => { console.log(value); } }
@@ -54,7 +54,7 @@ const App = () => {
 export default App;
 ```
 
-<img src="public/slider.png" alt="Your image title" width="280" height="280" />
+<img src="public/slider.png" alt="CircularSlider example image" width="280" height="280" />
 
 ## Props
 

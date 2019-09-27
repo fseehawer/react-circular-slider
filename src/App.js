@@ -42,8 +42,8 @@ const App = () => {
     label="savings"
     data=["1€","2€",...]
     placeKnobAtIndex={10}
-    labelColor="#009c9a"
-    knobColor="#009c9a"
+    labelColor="#005a58"
+    knobColor="#005a58"
     progressColorFrom="#00bfbd"
     progressColorTo="#005a58"
     progressSize={24}
