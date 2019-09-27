@@ -32,9 +32,9 @@ const CircularSlider = (props) => {
         isDragging: false,
         width: width,
         radius: width / 2,
-        degrees: 0,
+        label: 0,
+        radians: 0,
         knob: {
-            radians: 0,
             x: 0,
             y: 0,
         },
@@ -42,6 +42,7 @@ const CircularSlider = (props) => {
         dashFullOffset: 0
     });
 
+    let radiansOffset = 1.571; // offset by 90 degrees
     let circularSlider = useRef(null);
     let svgFullPath = useRef(null);
 
@@ -54,7 +55,7 @@ const CircularSlider = (props) => {
 
     const knobPosition = useCallback((radians) => {
         const radius = state.radius;
-        const offsetRadians = radians + 1.5708; // offset by 90 degrees
+        const offsetRadians = radians + radiansOffset;
         const degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
@@ -62,9 +63,9 @@ const CircularSlider = (props) => {
         const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
         let currentPoint = 0;
 
-        if(data.length) {
-            const pointsInCircle = 360 / data.length;
-            currentPoint = Math.floor(degrees / pointsInCircle)
+        if(!!data.length) {
+            const pointsInCircle = Math.ceil(360 / data.length);
+            currentPoint = Math.floor(degrees / pointsInCircle);
         }
 
         const labelValue = !!data.length ? data[currentPoint] : Math.round(degrees);
@@ -72,9 +73,8 @@ const CircularSlider = (props) => {
         setState(prevState => ({
             ...prevState,
             dashFullOffset: dashOffset,
-            degrees: labelValue,
+            label: labelValue,
             knob: {
-                radians: radians,
                 x: (radius * Math.cos(radians) + radius),
                 y: (radius * Math.sin(radians) + radius),
             }
@@ -82,7 +82,7 @@ const CircularSlider = (props) => {
 
         // props callback for parent
         onChange(labelValue);
-    }, [state.dashFullArray, state.radius, data, onChange]);
+    }, [state.dashFullArray, state.radius, data, radiansOffset, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -118,43 +118,29 @@ const CircularSlider = (props) => {
         }));
     };
 
+    // Get svg path length on mount
     useEffect(() => {
         const pathLength = svgFullPath.current.getTotalLength();
-        const pointsInCircle = 360 / data.length;
-        const degrees = startIndex * pointsInCircle;
-        const radians = (degrees * Math.PI / 180) - 1.5708; // offset by 90 degrees
-
-        let knob = {
-            radians: 0,
-            x: state.radius,
-            y: 0,
-        };
-
-        if(startIndex > 0) {
-            knob = {
-                radians: radians,
-                x: (state.radius * Math.cos(radians) + state.radius),
-                y: (state.radius * Math.sin(radians) + state.radius),
-            };
-        }
-
-        let dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
-
-        if(isNaN(dashOffset)) {
-            dashOffset = pathLength;
-        }
 
         setState(prevState => ({
             ...prevState,
             mounted: true,
             dashFullArray: pathLength,
-            dashFullOffset: dashOffset,
-            radius: state.radius,
-            degrees: data.length ? data[startIndex] : 0,
-            knob,
         }));
+    }, []);
+
+    useEffect(() => {
+        if(startIndex && !!data.length) {
+            const pointsInCircle = Math.ceil(360 / data.length);
+            const degrees = startIndex * pointsInCircle;
+            const radians = (degrees * Math.PI / 180) - radiansOffset;
+
+            return knobPosition(radians);
+        }
+
+        return knobPosition(-radiansOffset+0.005); // Add to offset to break boundary
         // eslint-disable-next-line
-    }, [offsetRelativeToDocument, state.radius, state.dashFullArray]);
+    }, [state.dashFullArray, startIndex, data.length, radiansOffset]);
 
     useEffect(() => {
         if (state.isDragging) {
@@ -203,7 +189,7 @@ const CircularSlider = (props) => {
             <Labels
                 labelColor={labelColor}
                 label={label}
-                value={`${state.degrees}`}
+                value={`${state.label}`}
             />
         </div>
     );

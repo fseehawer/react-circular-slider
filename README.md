@@ -1,8 +1,8 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.1.2-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.1.3-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A highly customizable circular slider with no dependencies. 
+A highly customizable circular slider with no dependencies.
 
 You can see some [examples](https://fseehawer.github.io/react-circular-slider/) here!
 
