@@ -69,6 +69,7 @@ const App = () => {
             <pre>
                 {`<CircularSlider
     label="Alphabet"
+    width={200}
     data=["A","B","C",...]
     labelColor="#212121"
     knobColor="#212121"
@@ -82,6 +83,7 @@ const App = () => {
             <p>&nbsp;</p>
             <CircularSlider
                 label="Alphabet"
+                width={250}
                 labelColor={"#212121"}
                 knobColor={"#212121"}
                 progressColorFrom={"#ff8500"}
