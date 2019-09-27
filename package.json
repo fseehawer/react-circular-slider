@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A customizable circular slider with no dependencies.",
   "main": "index.js",
   "repository": {
@@ -45,7 +45,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "gh-pages": "git subtree push --prefix build origin gh-pages && git push -u origin master",
-    "build-npm": "webpack"
+    "build-npm": "webpack",
+    "build-commit-push": "func() { npm run build-npm && npm run build && git add --all && git commit -m \"$1\" && npm run gh-pages && npm publish --access public; }; func"
   },
   "eslintConfig": {
     "extends": "react-app"

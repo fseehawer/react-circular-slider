@@ -1,10 +1,8 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.1.4-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.1.5-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A highly customizable circular slider with no dependencies.
-
-You can see some [examples](https://fseehawer.github.io/react-circular-slider/) here!
+A highly customizable circular slider with no dependencies. You can check out some [examples](https://fseehawer.github.io/react-circular-slider/) here!
 
 ## install
 
@@ -17,6 +15,7 @@ npm install @fseehawer/react-circular-slider
 ```javascript
 import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
+
 const App = () => {
     return (
         <CircularSlider
@@ -28,22 +27,31 @@ const App = () => {
 export default App;
 ```
 
-The CircularSlider component with some custom props. See [example](https://fseehawer.github.io/react-circular-slider/) here!
+The CircularSlider component with some custom props. See the [examples](https://fseehawer.github.io/react-circular-slider/) here!
 
-```
-<CircularSlider
-    label="savings"
-    labelColor="#212121"
-    knobColor="#212121"
-    progressColorFrom="#ff8500"
-    progressColorTo="#a15400"
-    progressSize={4}
-    trackColor=#eeeeee"
-    trackSize={12}
-    data={["1€","2€",...]}
-    placeKnobAtIndex={10}
-    onChange={onSliderChange}
-/>
+```javascript
+import React from 'react';
+import CircularSlider from '@fseehawer/react-circular-slider';
+
+const App = () => {
+    return (
+        <CircularSlider
+            label="savings"
+            labelColor="#212121"
+            knobColor="#212121"
+            progressColorFrom="#ff8500"
+            progressColorTo="#a15400"
+            progressSize={4}
+            trackColor="#eeeeee"
+            trackSize={12}
+            data={["1€","2€"]} //...
+            placeKnobAtIndex={10}
+            onChange={ value => { console.log(value); } }
+        />
+    )
+};
+
+export default App;
 ```
 
 ## Props
