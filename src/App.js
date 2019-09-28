@@ -73,6 +73,7 @@ const App = () => {
     data=["A","B","C",...]
     labelColor="#212121"
     knobColor="#212121"
+    progressLineCap="flat"
     progressColorFrom="#ff8500"
     progressColorTo="#a15400"
     progressSize={8}
@@ -91,6 +92,7 @@ const App = () => {
                 progressSize={8}
                 trackColor={"#eeeeee"}
                 trackSize={4}
+                progressLineCap="flat"
                 data={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
             />
             <p>&nbsp;</p>

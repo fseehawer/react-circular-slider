@@ -25,6 +25,7 @@ const CircularSlider = (props) => {
         trackSize = 6,
         data = [],
         placeKnobAtIndex = 0,
+        progressLineCap = 'round',
         onChange = value => {}
     } = props;
     const [state, setState] = useState({
@@ -179,6 +180,7 @@ const CircularSlider = (props) => {
                 progressSize={progressSize}
                 trackSize={trackSize}
                 svgFullPath={svgFullPath}
+                progressLineCap={progressLineCap}
             />
             <Knob
                 isDragging={state.isDragging}

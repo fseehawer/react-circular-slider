@@ -13,6 +13,7 @@ const Svg = (props) => {
         progressSize,
         trackSize,
         svgFullPath,
+        progressLineCap,
     } = props;
 
     const styles = StyleSheet.create({
@@ -49,7 +50,7 @@ const Svg = (props) => {
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
                 strokeWidth={progressSize}
-                strokeLinecap="round"
+                strokeLinecap={progressLineCap !== 'round' ? 'butt' : 'round'}
                 fill="none"
                 stroke={`url(#${label})`}
                 d={`

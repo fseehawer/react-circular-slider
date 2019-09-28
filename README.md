@@ -1,8 +1,8 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.2.0-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.2.1-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A highly customizable circular slider with no dependencies. Check out some [live examples here!](https://fseehawer.github.io/react-circular-slider/)
+A highly customizable circular slider with no dependencies. Check out some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 <img src="public/slider.png" alt="CircularSlider example image" width="280" height="280" />
 
@@ -29,7 +29,7 @@ const App = () => {
 export default App;
 ```
 
-The CircularSlider component with some custom props. See the [examples](https://fseehawer.github.io/react-circular-slider/) here!
+The CircularSlider component with some custom props. See the [demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 ```javascript
 import React from 'react';
@@ -67,6 +67,7 @@ labelColor       | string | #272b77       | label color
 progressColorFrom| string | #80C3F3       | progress track gradient start color
 progressColorTo  | string | #4990E2       | progress track gradient end color
 progressSize     | number | 6             | progress track size
+progressLineCap  | string | round         | progress track cap to be round or flat
 trackColor       | string | #DDDEFB       | background track color
 trackSize        | number | 6             | background track size
 data             | array  | []            | array of data to be spread
