@@ -1,8 +1,8 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.2.3-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.2.4-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A highly customizable circular slider with no dependencies. Check out some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
+A highly customizable circular slider with no dependencies. See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 <img src="public/slider.png" alt="CircularSlider example image" width="280" height="280" />
 
@@ -29,7 +29,7 @@ const App = () => {
 export default App;
 ```
 
-The CircularSlider component with some custom props. See the [demos here!](https://fseehawer.github.io/react-circular-slider/)
+The CircularSlider component with some custom props. See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 ```javascript
 import React from 'react';
@@ -58,23 +58,24 @@ export default App;
 
 ## Props
 
-prop             | type   | default       | Affects
------------------|--------|---------------|--------
-width            | number | 280           | width of slider
-knobColor        | string | #4e63ea       | knob color
-label            | string | DEGREES       | label
-labelColor       | string | #272b77       | label color
-labelFontSize    | string | 1rem          | label font-size
-labelValueFontSize | string | 4rem        | label value font-size
-progressColorFrom| string | #80C3F3       | progress track gradient start color
-progressColorTo  | string | #4990E2       | progress track gradient end color
-progressSize     | number | 6             | progress track size
-progressLineCap  | string | round         | progress track cap to be round or flat
-trackColor       | string | #DDDEFB       | background track color
-trackSize        | number | 6             | background track size
-data             | array  | []            | array of data to be spread
-placeKnobAtIndex | int    | 0             | initially place knob at a certain value by array index
-onChange         | func   | value => {}   | returns label value
+prop               | type   | default       | Affects
+-------------------|--------|---------------|--------
+width              | number | 280           | width of slider
+knobColor          | string | #4e63ea       | knob color
+label              | string | DEGREES       | label
+labelColor         | string | #272b77       | label and value color
+labelFontSize      | string | 1rem          | label font-size
+labelValueFontSize | string | 4rem          | label value font-size
+labelVerticalOffset| string | 2rem          | vertical offset of the label and value
+progressColorFrom  | string | #80C3F3       | progress track gradient start color
+progressColorTo    | string | #4990E2       | progress track gradient end color
+progressSize       | number | 6             | progress track size
+progressLineCap    | string | round         | progress track cap to be round or flat
+trackColor         | string | #DDDEFB       | background track color
+trackSize          | number | 6             | background track size
+data               | array  | []            | array of data to be spread
+placeKnobAtIndex   | int    | 0             | initially place knob at a certain value by array index
+onChange           | func   | value => {}   | returns label value
 
 
 ## license

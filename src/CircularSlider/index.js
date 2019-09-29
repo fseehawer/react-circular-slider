@@ -20,6 +20,7 @@ const CircularSlider = (props) => {
         labelColor = '#272b77',
         labelFontSize = '1rem',
         labelValueFontSize = '4rem',
+        labelVerticalOffset = '2rem',
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
         progressSize = 6,
@@ -196,6 +197,7 @@ const CircularSlider = (props) => {
             <Labels
                 labelColor={labelColor}
                 labelFontSize={labelFontSize}
+                labelVerticalOffset={labelVerticalOffset}
                 labelValueFontSize={labelValueFontSize}
                 label={label}
                 value={`${state.label}`}

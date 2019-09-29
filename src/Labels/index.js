@@ -6,6 +6,7 @@ const Labels = (props) => {
         labelColor,
         labelFontSize,
         labelValueFontSize,
+        labelVerticalOffset,
         label,
         value
     } = props;
@@ -26,14 +27,15 @@ const Labels = (props) => {
         },
 
         value: {
-            marginBottom: '2rem'
+            fontSize: `${labelValueFontSize}`,
+            marginBottom: `calc(${labelVerticalOffset})`
         },
     });
 
     return (
         <div className={css(styles.labels)}>
             <div style={{fontSize: labelFontSize}}>{label}</div>
-            <div className={css(styles.value)} style={{fontSize: labelValueFontSize}}>
+            <div className={css(styles.value)}>
                 <code>{value}</code>
             </div>
         </div>
