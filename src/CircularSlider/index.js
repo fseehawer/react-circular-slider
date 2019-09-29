@@ -131,9 +131,12 @@ const CircularSlider = (props) => {
     }, []);
 
     useEffect(() => {
-        if(placeKnobAtIndex && !!data.length) {
-            const pointsInCircle = Math.ceil(360 / data.length);
-            const degrees = placeKnobAtIndex * pointsInCircle;
+        const dataArrayLength = data.length;
+        const knobPositionIndex = (placeKnobAtIndex > dataArrayLength - 1) ? dataArrayLength : placeKnobAtIndex;
+
+        if(knobPositionIndex && !!dataArrayLength) {
+            const pointsInCircle = Math.ceil(360 / dataArrayLength);
+            const degrees = knobPositionIndex * pointsInCircle;
             const radians = (degrees * Math.PI / 180) - radiansOffset;
 
             return knobPosition(radians);

@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.2.1-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.2.2-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. Check out some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -71,7 +71,7 @@ progressLineCap  | string | round         | progress track cap to be round or fl
 trackColor       | string | #DDDEFB       | background track color
 trackSize        | number | 6             | background track size
 data             | array  | []            | array of data to be spread
-placeKnobAtIndex | int    | 0             | place knob at a certain array index
+placeKnobAtIndex | int    | 0             | initially place knob at a certain value by array index
 onChange         | func   | value => {}   | returns label value
 
 
