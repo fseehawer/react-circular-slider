@@ -4,6 +4,8 @@ import {StyleSheet, css} from 'aphrodite';
 const Labels = (props) => {
     const {
         labelColor,
+        labelFontSize,
+        labelValueFontSize,
         label,
         value
     } = props;
@@ -24,19 +26,14 @@ const Labels = (props) => {
         },
 
         value: {
-            fontSize: '4rem',
             marginBottom: '2rem'
         },
-
-        description: {
-            fontSize: '1rem',
-        }
     });
 
     return (
         <div className={css(styles.labels)}>
-            <div className={css(styles.description)}>{label}</div>
-            <div className={css(styles.value)}>
+            <div style={{fontSize: labelFontSize}}>{label}</div>
+            <div className={css(styles.value)} style={{fontSize: labelValueFontSize}}>
                 <code>{value}</code>
             </div>
         </div>

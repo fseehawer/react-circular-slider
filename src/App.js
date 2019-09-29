@@ -72,6 +72,7 @@ const App = () => {
     width={200}
     data=["A","B","C",...]
     labelColor="#212121"
+    labelValueFontSize="6rem"
     knobColor="#212121"
     progressLineCap="flat"
     progressColorFrom="#ff8500"
@@ -86,6 +87,7 @@ const App = () => {
                 label="Alphabet"
                 width={250}
                 labelColor={"#212121"}
+                labelValueFontSize={"6rem"}
                 knobColor={"#212121"}
                 progressColorFrom={"#ff8500"}
                 progressColorTo={"#a15400"}
