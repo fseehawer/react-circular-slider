@@ -30,7 +30,7 @@ const CircularSlider = (props) => {
         trackColor = '#DDDEFB',
         trackSize = 6,
         data = [],
-        knobAtDataIndex = 0,
+        initialDataIndex = 0,
         progressLineCap = 'round',
         onChange = value => {}
     } = props;
@@ -153,7 +153,7 @@ const CircularSlider = (props) => {
 
     useEffect(() => {
         const dataArrayLength = data.length;
-        const knobPositionIndex = (knobAtDataIndex > dataArrayLength - 1) ? dataArrayLength : knobAtDataIndex;
+        const knobPositionIndex = (initialDataIndex > dataArrayLength - 1) ? dataArrayLength : initialDataIndex;
 
         setState(prevState => ({
             ...prevState,
@@ -170,7 +170,7 @@ const CircularSlider = (props) => {
 
         return knobPosition(-knobOffset[knobZeroPosition]+(offset*getSliderRotation(direction)));
         // eslint-disable-next-line
-    }, [state.dashFullArray, knobAtDataIndex, knobZeroPosition, offset, direction, data.length]);
+    }, [state.dashFullArray, initialDataIndex, knobZeroPosition, offset, direction, data.length]);
 
     useEffect(() => {
         if (state.isDragging) {
