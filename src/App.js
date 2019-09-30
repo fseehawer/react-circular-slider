@@ -25,13 +25,13 @@ const App = () => {
             <pre>
                 {`<CircularSlider
     direction={-1}
-    knobStartPosition="right"
+    knobZeroPosition="right"
 />`}
             </pre>
             <p>&nbsp;</p>
             <CircularSlider
                 direction={-1}
-                knobStartPosition="right"
+                knobZeroPosition="right"
             />
             <p>&nbsp;</p>
             <h3 className={css(styles.h3)}>Custom data array with an initial array index value shown:</h3>

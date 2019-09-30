@@ -18,7 +18,7 @@ const CircularSlider = (props) => {
         width = 280,
         direction = 1,
         knobColor = '#4e63ea',
-        knobStartPosition = 'top',
+        knobZeroPosition = 'top',
         labelColor = '#272b77',
         labelFontSize = '1rem',
         labelValueFontSize = '4rem',
@@ -74,7 +74,7 @@ const CircularSlider = (props) => {
 
     const knobPosition = useCallback((radians) => {
         const radius = state.radius;
-        const offsetRadians = radians + knobOffset[knobStartPosition];
+        const offsetRadians = radians + knobOffset[knobZeroPosition];
         let degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
@@ -104,7 +104,7 @@ const CircularSlider = (props) => {
 
         // props callback for parent
         onChange(labelValue);
-    }, [state.dashFullArray, state.radius, data, knobOffset, knobStartPosition, direction, onChange]);
+    }, [state.dashFullArray, state.radius, data, knobOffset, knobZeroPosition, direction, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -157,20 +157,20 @@ const CircularSlider = (props) => {
 
         setState(prevState => ({
             ...prevState,
-            radians: Math.PI / 2 - knobOffset[knobStartPosition],
+            radians: Math.PI / 2 - knobOffset[knobZeroPosition],
         }));
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
-            const radians = (degrees * Math.PI / 180) - knobOffset[knobStartPosition];
+            const radians = (degrees * Math.PI / 180) - knobOffset[knobZeroPosition];
 
             return knobPosition(radians+(offset*getSliderRotation(direction)));
         }
 
-        return knobPosition(-knobOffset[knobStartPosition]+(offset*getSliderRotation(direction)));
+        return knobPosition(-knobOffset[knobZeroPosition]+(offset*getSliderRotation(direction)));
         // eslint-disable-next-line
-    }, [state.dashFullArray, knobAtDataIndex, knobStartPosition, offset, direction, data.length]);
+    }, [state.dashFullArray, knobAtDataIndex, knobZeroPosition, offset, direction, data.length]);
 
     useEffect(() => {
         if (state.isDragging) {
