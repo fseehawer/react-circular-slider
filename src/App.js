@@ -18,6 +18,7 @@ const App = () => {
         },
 
         pre: {
+            fontSize: '0.9rem',
             borderRadius: '0.3rem',
             backgroundColor: '#eeeeee',
             padding: '0.5rem 1rem'
