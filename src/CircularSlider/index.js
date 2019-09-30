@@ -16,6 +16,7 @@ const CircularSlider = (props) => {
     const {
         label = 'DEGREES',
         width = 280,
+        direction = 1,
         knobColor = '#4e63ea',
         knobStartPosition = 'top',
         labelColor = '#272b77',
@@ -69,9 +70,12 @@ const CircularSlider = (props) => {
     const knobPosition = useCallback((radians) => {
         const radius = state.radius;
         const offsetRadians = radians + knobOffset[knobStartPosition];
-        const degrees = (offsetRadians > 0 ? offsetRadians
+        let degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
+
+        // change direction
+        degrees = (direction === -1 ? 360 - degrees : degrees);
 
         const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
         let currentPoint = 0;
@@ -85,7 +89,7 @@ const CircularSlider = (props) => {
 
         setState(prevState => ({
             ...prevState,
-            dashFullOffset: dashOffset,
+            dashFullOffset: direction * dashOffset,
             label: labelValue,
             knob: {
                 x: (radius * Math.cos(radians) + radius),
@@ -95,7 +99,7 @@ const CircularSlider = (props) => {
 
         // props callback for parent
         onChange(labelValue);
-    }, [state.dashFullArray, state.radius, data, knobOffset, knobStartPosition, onChange]);
+    }, [state.dashFullArray, state.radius, data, knobOffset, knobStartPosition, direction, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -153,13 +157,13 @@ const CircularSlider = (props) => {
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
-            const degrees = knobPositionIndex * pointsInCircle;
+            const degrees = direction * knobPositionIndex * pointsInCircle;
             const radians = (degrees * Math.PI / 180) - knobOffset[knobStartPosition];
 
-            return knobPosition(radians+offset);
+            return knobPosition(radians+(offset*direction));
         }
 
-        return knobPosition(-knobOffset[knobStartPosition]+offset);
+        return knobPosition(-knobOffset[knobStartPosition]+(offset*direction));
         // eslint-disable-next-line
     }, [state.dashFullArray, knobAtDataIndex, data.length]);
 
