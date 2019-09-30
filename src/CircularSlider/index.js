@@ -17,6 +17,8 @@ const CircularSlider = (props) => {
         label = 'DEGREES',
         width = 280,
         direction = 1,
+        min = 0,
+        max = 360,
         knobColor = '#4e63ea',
         knobZeroPosition = 'top',
         labelColor = '#272b77',
@@ -40,6 +42,7 @@ const CircularSlider = (props) => {
         width: width,
         radius: width / 2,
         label: 0,
+        data: [],
         radians: 0,
         knob: {
             x: 0,
@@ -65,6 +68,14 @@ const CircularSlider = (props) => {
         return Math.min(Math.max(number, -1), 1)
     };
 
+    const generateRange = (min, max) => {
+      let rangeOfNumbers = [];
+      for(let i = min; i <= max; i++) {
+          rangeOfNumbers.push(i);
+      }
+      return rangeOfNumbers;
+    };
+
     const offsetRelativeToDocument = useCallback(() => {
         const rect = circularSlider.current.getBoundingClientRect();
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
@@ -78,25 +89,17 @@ const CircularSlider = (props) => {
         let degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
-
-        let currentPoint = 0;
-
-        if(!!data.length) {
-            const pointsInCircle = Math.ceil(360 / data.length);
-            currentPoint = Math.floor(degrees / pointsInCircle);
-        }
-
-        const dashOffset = (degrees / 360) * state.dashFullArray;
-
         // change direction
+        const dashOffset = (degrees / 360) * state.dashFullArray;
         degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
 
-        const labelValue = !!data.length ? data[currentPoint] : Math.round(degrees);
+        const pointsInCircle = state.data.length / 360;
+        const currentPoint = Math.floor(degrees * pointsInCircle);
 
         setState(prevState => ({
             ...prevState,
             dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-            label: labelValue,
+            label: state.data[currentPoint],
             knob: {
                 x: (radius * Math.cos(radians) + radius),
                 y: (radius * Math.sin(radians) + radius),
@@ -104,8 +107,8 @@ const CircularSlider = (props) => {
         }));
 
         // props callback for parent
-        onChange(labelValue);
-    }, [state.dashFullArray, state.radius, data, knobOffset, knobZeroPosition, direction, onChange]);
+        onChange(state.data[currentPoint]);
+    }, [state.dashFullArray, state.radius, state.data, knobOffset, knobZeroPosition, direction, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -148,9 +151,11 @@ const CircularSlider = (props) => {
         setState(prevState => ({
             ...prevState,
             mounted: true,
+            data: data.length ? [...data] : [...generateRange(min, max)],
             dashFullArray: pathLength,
         }));
-    }, []);
+        // eslint-disable-next-line
+    }, [max, min]);
 
     useEffect(() => {
         const dataArrayLength = data.length;

@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.4.6-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.4.7-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -61,9 +61,11 @@ export default App;
 prop                 | type   | default       | Affects
 ---------------------|--------|---------------|--------
 width                | number | 280           | width of slider
-direction            | int    | 1             | direction of slider to be clockwise (**1**) or anticlockwise (**-1**)
-data                 | array  | []            | array of data to be spread
-initialDataIndex     | int    | 0             | initially place knob at a certain value in the array
+direction            | number | 1             | direction of slider to be clockwise (**1**) or anticlockwise (**-1**)
+min                  | number | 0             | smallest value
+max                  | number | 360           | largest value
+data                 | array  | []            | array of data to be spread in 360°
+initialDataIndex     | number | 0             | initially place knob at a certain value in the array
 knobColor            | string | #4e63ea       | knob color
 knobZeroPosition     | string | top           | knob's 0 position to be **top**, **right**, **bottom** or **left**
 label                | string | DEGREES       | label
