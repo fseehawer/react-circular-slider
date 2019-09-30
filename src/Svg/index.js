@@ -5,6 +5,7 @@ const Svg = (props) => {
     const {
         width,
         label,
+        direction,
         strokeDasharray,
         strokeDashoffset,
         progressColorFrom,
@@ -51,7 +52,7 @@ const Svg = (props) => {
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
                 strokeWidth={progressSize}
-                style={{transform: `rotate(${radiansOffset}rad)`, transformOrigin: 'center center'}}
+                style={{transform: `rotate(${radiansOffset}rad) ${direction === -1 && 'scale(-1, 1)'}`, transformOrigin: 'center center'}}
                 strokeLinecap={progressLineCap !== 'round' ? 'butt' : 'round'}
                 fill="none"
                 stroke={`url(#${label})`}

@@ -79,16 +79,17 @@ const CircularSlider = (props) => {
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
 
-        // change direction
-        degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
-
-        const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
         let currentPoint = 0;
 
         if(!!data.length) {
             const pointsInCircle = Math.ceil(360 / data.length);
             currentPoint = Math.floor(degrees / pointsInCircle);
         }
+
+        const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
+
+        // change direction
+        degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
 
         const labelValue = !!data.length ? data[currentPoint] : Math.round(degrees);
 
@@ -201,6 +202,7 @@ const CircularSlider = (props) => {
             <Svg
                 width={width}
                 label={label}
+                direction={direction}
                 strokeDasharray={state.dashFullArray}
                 strokeDashoffset={state.dashFullOffset}
                 progressColorFrom={progressColorFrom}
