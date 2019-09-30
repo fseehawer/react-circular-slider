@@ -24,6 +24,7 @@ const Labels = (props) => {
             justifyContent: 'center',
             alignItems: 'center',
             color: `${labelColor}`,
+            userSelect: 'none',
             zIndex: 1,
         },
 

@@ -86,7 +86,7 @@ const CircularSlider = (props) => {
             currentPoint = Math.floor(degrees / pointsInCircle);
         }
 
-        const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
+        const dashOffset = (degrees / 360) * state.dashFullArray;
 
         // change direction
         degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
@@ -95,7 +95,7 @@ const CircularSlider = (props) => {
 
         setState(prevState => ({
             ...prevState,
-            dashFullOffset: getSliderRotation(direction) * dashOffset,
+            dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
             label: labelValue,
             knob: {
                 x: (radius * Math.cos(radians) + radius),
