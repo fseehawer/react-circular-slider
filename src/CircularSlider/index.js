@@ -17,6 +17,7 @@ const CircularSlider = (props) => {
         label = 'DEGREES',
         width = 280,
         knobColor = '#4e63ea',
+        knobStartPosition = 'top',
         labelColor = '#272b77',
         labelFontSize = '1rem',
         labelValueFontSize = '4rem',
@@ -28,7 +29,7 @@ const CircularSlider = (props) => {
         trackColor = '#DDDEFB',
         trackSize = 6,
         data = [],
-        placeKnobAtIndex = 0,
+        knobAtDataIndex = 0,
         progressLineCap = 'round',
         onChange = value => {}
     } = props;
@@ -47,7 +48,14 @@ const CircularSlider = (props) => {
         dashFullOffset: 0
     });
 
-    let radiansOffset = 1.571; // offset by 90 degrees
+    let knobOffset = {
+        top: Math.PI / 2,
+        right: 0,
+        bottom: -Math.PI / 2,
+        left: -Math.PI
+    };
+
+    let offset = 0.005;
     let circularSlider = useRef(null);
     let svgFullPath = useRef(null);
 
@@ -60,7 +68,7 @@ const CircularSlider = (props) => {
 
     const knobPosition = useCallback((radians) => {
         const radius = state.radius;
-        const offsetRadians = radians + radiansOffset;
+        const offsetRadians = radians + knobOffset[knobStartPosition];
         const degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
@@ -87,7 +95,7 @@ const CircularSlider = (props) => {
 
         // props callback for parent
         onChange(labelValue);
-    }, [state.dashFullArray, state.radius, data, radiansOffset, onChange]);
+    }, [state.dashFullArray, state.radius, data, knobOffset, knobStartPosition, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -136,19 +144,24 @@ const CircularSlider = (props) => {
 
     useEffect(() => {
         const dataArrayLength = data.length;
-        const knobPositionIndex = (placeKnobAtIndex > dataArrayLength - 1) ? dataArrayLength : placeKnobAtIndex;
+        const knobPositionIndex = (knobAtDataIndex > dataArrayLength - 1) ? dataArrayLength : knobAtDataIndex;
+
+        setState(prevState => ({
+            ...prevState,
+            radians: Math.PI / 2 - knobOffset[knobStartPosition],
+        }));
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
             const degrees = knobPositionIndex * pointsInCircle;
-            const radians = (degrees * Math.PI / 180) - radiansOffset;
+            const radians = (degrees * Math.PI / 180) - knobOffset[knobStartPosition];
 
-            return knobPosition(radians);
+            return knobPosition(radians+offset);
         }
 
-        return knobPosition(-radiansOffset+0.005); // Add to offset to break boundary
+        return knobPosition(-knobOffset[knobStartPosition]+offset);
         // eslint-disable-next-line
-    }, [state.dashFullArray, placeKnobAtIndex, data.length, radiansOffset]);
+    }, [state.dashFullArray, knobAtDataIndex, data.length]);
 
     useEffect(() => {
         if (state.isDragging) {
@@ -187,6 +200,7 @@ const CircularSlider = (props) => {
                 progressSize={progressSize}
                 trackSize={trackSize}
                 svgFullPath={svgFullPath}
+                radiansOffset={state.radians}
                 progressLineCap={progressLineCap}
             />
             <Knob

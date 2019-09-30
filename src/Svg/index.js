@@ -13,6 +13,7 @@ const Svg = (props) => {
         progressSize,
         trackSize,
         svgFullPath,
+        radiansOffset,
         progressLineCap,
     } = props;
 
@@ -50,6 +51,7 @@ const Svg = (props) => {
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
                 strokeWidth={progressSize}
+                style={{transform: `rotate(${radiansOffset}rad)`, transformOrigin: 'center center'}}
                 strokeLinecap={progressLineCap !== 'round' ? 'butt' : 'round'}
                 fill="none"
                 stroke={`url(#${label})`}

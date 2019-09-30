@@ -19,7 +19,7 @@ const App = () => {
     });
 
     const onSliderChange = (deg) => {
-        console.log(deg);
+        //console.log(deg);
     };
 
     return (
@@ -41,7 +41,7 @@ const App = () => {
                 {`<CircularSlider
     label="savings"
     data=["1€","2€",...]
-    placeKnobAtIndex={10}
+    knobAtDataIndex={10}
     labelColor="#005a58"
     knobColor="#005a58"
     progressColorFrom="#00bfbd"
@@ -61,7 +61,7 @@ const App = () => {
                 progressSize={24}
                 trackColor={"#eeeeee"}
                 trackSize={24}
-                placeKnobAtIndex={10}
+                knobAtDataIndex={10}
                 data={["1€","2€","3€","4€","5€","6€","7€","8€","9€","10€","20€","30€","40€","50€","60€","70€","80€","90€","100€","200€","300€","400€","500€","600€","700€","800€","900€","1000€","2000€","3000€","4000€","5000€","6000€","7000€","8000€","9000€","10000€"]}
             />
             <p>&nbsp;</p>
