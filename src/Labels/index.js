@@ -7,6 +7,7 @@ const Labels = (props) => {
         labelFontSize,
         labelValueFontSize,
         labelVerticalOffset,
+        labelHide,
         label,
         value
     } = props;
@@ -30,10 +31,14 @@ const Labels = (props) => {
             fontSize: `${labelValueFontSize}`,
             marginBottom: `calc(${labelVerticalOffset})`
         },
+
+        hide: {
+            display: 'none'
+        }
     });
 
     return (
-        <div className={css(styles.labels)}>
+        <div className={css(styles.labels, labelHide && styles.hide)}>
             <div style={{fontSize: labelFontSize}}>{label}</div>
             <div className={css(styles.value)}>
                 <code>{value}</code>
