@@ -60,6 +60,11 @@ const CircularSlider = (props) => {
     let circularSlider = useRef(null);
     let svgFullPath = useRef(null);
 
+    const getSliderRotation = (number) => {
+        if(number === 0) return 1;
+        return Math.min(Math.max(number, -1), 1)
+    };
+
     const offsetRelativeToDocument = useCallback(() => {
         const rect = circularSlider.current.getBoundingClientRect();
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
@@ -75,7 +80,7 @@ const CircularSlider = (props) => {
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
 
         // change direction
-        degrees = (direction === -1 ? 360 - degrees : degrees);
+        degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
 
         const dashOffset = state.dashFullArray - ((degrees / 360) * state.dashFullArray);
         let currentPoint = 0;
@@ -89,7 +94,7 @@ const CircularSlider = (props) => {
 
         setState(prevState => ({
             ...prevState,
-            dashFullOffset: direction * dashOffset,
+            dashFullOffset: getSliderRotation(direction) * dashOffset,
             label: labelValue,
             knob: {
                 x: (radius * Math.cos(radians) + radius),
@@ -157,15 +162,15 @@ const CircularSlider = (props) => {
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
-            const degrees = direction * knobPositionIndex * pointsInCircle;
+            const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
             const radians = (degrees * Math.PI / 180) - knobOffset[knobStartPosition];
 
-            return knobPosition(radians+(offset*direction));
+            return knobPosition(radians+(offset*getSliderRotation(direction)));
         }
 
-        return knobPosition(-knobOffset[knobStartPosition]+(offset*direction));
+        return knobPosition(-knobOffset[knobStartPosition]+(offset*getSliderRotation(direction)));
         // eslint-disable-next-line
-    }, [state.dashFullArray, knobAtDataIndex, data.length]);
+    }, [state.dashFullArray, knobAtDataIndex, knobStartPosition, offset, direction, data.length]);
 
     useEffect(() => {
         if (state.isDragging) {
