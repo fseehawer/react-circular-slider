@@ -39,10 +39,12 @@ const App = () => {
     knobZeroPosition="right"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Custom data array with an initial array value:</h3>
+            <h3 className={css(styles.h3)}>Data array with an initial value:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
+                    data={["1€","2€","3€","4€","5€","6€","7€","8€","9€","10€","20€","30€","40€","50€","60€","70€","80€","90€","100€","200€","300€","400€","500€","600€","700€","800€","900€","1000€","2000€","3000€","4000€","5000€","6000€","7000€","8000€","9000€","10000€"]}
+                    initialDataIndex={10}
                     labelColor={"#005a58"}
                     knobColor={"#005a58"}
                     progressColorFrom={"#00bfbd"}
@@ -50,8 +52,6 @@ const App = () => {
                     progressSize={24}
                     trackColor={"#eeeeee"}
                     trackSize={24}
-                    initialDataIndex={10}
-                    data={["1€","2€","3€","4€","5€","6€","7€","8€","9€","10€","20€","30€","40€","50€","60€","70€","80€","90€","100€","200€","300€","400€","500€","600€","700€","800€","900€","1000€","2000€","3000€","4000€","5000€","6000€","7000€","8000€","9000€","10000€"]}
                 />
             </div>
             <pre className={css(styles.pre)}>
@@ -68,10 +68,11 @@ const App = () => {
     trackSize={24}
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Custom props with flat line cap:</h3>
+            <h3 className={css(styles.h3)}>Some props with flat line cap:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="Alphabet"
+                    progressLineCap="flat"
                     width={250}
                     labelColor={"#212121"}
                     labelValueFontSize={"6rem"}
@@ -81,19 +82,18 @@ const App = () => {
                     progressSize={8}
                     trackColor={"#eeeeee"}
                     trackSize={4}
-                    progressLineCap="flat"
                     data={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
                 />
             </div>
             <pre className={css(styles.pre)}>
                 {`<CircularSlider
-    label="Alphabet"
     width={200}
+    progressLineCap="flat"
+    label="Alphabet"
     data=["A","B","C",...]
     labelColor="#212121"
     labelValueFontSize="6rem"
     knobColor="#212121"
-    progressLineCap="flat"
     progressColorFrom="#ff8500"
     progressColorTo="#a15400"
     progressSize={8}
