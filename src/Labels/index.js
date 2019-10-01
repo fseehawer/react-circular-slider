@@ -6,6 +6,7 @@ const Labels = (props) => {
         labelColor,
         labelFontSize,
         labelValueFontSize,
+        labelValueAppend,
         labelVerticalOffset,
         labelHide,
         label,
@@ -30,7 +31,15 @@ const Labels = (props) => {
 
         value: {
             fontSize: `${labelValueFontSize}`,
-            marginBottom: `calc(${labelVerticalOffset})`
+            marginBottom: `calc(${labelVerticalOffset})`,
+            position: 'relative'
+        },
+
+        appended: {
+            position: 'absolute',
+            right: '0',
+            top: 0,
+            transform: 'translate(100%, 0)'
         },
 
         hide: {
@@ -42,7 +51,7 @@ const Labels = (props) => {
         <div className={css(styles.labels, labelHide && styles.hide)}>
             <div style={{fontSize: labelFontSize}}>{label}</div>
             <div className={css(styles.value)}>
-                <code>{value}</code>
+                <code>{value}<span className={css(styles.appended)}>{labelValueAppend}</span></code>
             </div>
         </div>
     );

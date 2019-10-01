@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-1.5.0-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-1.5.1-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -68,10 +68,11 @@ data                 | array  | []            | array of data to be spread in 36
 initialDataIndex     | number | 0             | initially place knob at a certain value in the array
 knobColor            | string | #4e63ea       | knob color
 knobZeroPosition     | string | top           | knob's 0 position to be **top**, **right**, **bottom** or **left**
-label                | string | DEGREES       | label
+label                | string | ANGLE         | label
 labelColor           | string | #272b77       | label and value color
 labelFontSize        | string | 1rem          | label font-size
 labelValueFontSize   | string | 4rem          | label value font-size
+labelValueAppend     | string | ''            | symbol or character to append to value
 labelVerticalOffset  | string | 2rem          | vertical offset of the label and value
 labelHide            | boolean| false         | hide label and value
 progressColorFrom    | string | #80C3F3       | progress track gradient start color

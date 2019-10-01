@@ -31,12 +31,14 @@ const App = () => {
                 <CircularSlider
                     direction={-1}
                     knobZeroPosition="right"
+                    labelValueAppend="°"
                 />
             </div>
             <pre className={css(styles.pre)}>
                 {`<CircularSlider
     direction={-1}
     knobZeroPosition="right"
+    labelValueAppend="°"
 />`}
             </pre>
             <h3 className={css(styles.h3)}>Data array with an initial value:</h3>
@@ -73,6 +75,7 @@ const App = () => {
                 <CircularSlider
                     label="Alphabet"
                     progressLineCap="flat"
+                    initialDataIndex={1}
                     width={250}
                     labelColor={"#212121"}
                     labelValueFontSize={"6rem"}
@@ -89,6 +92,7 @@ const App = () => {
                 {`<CircularSlider
     width={200}
     progressLineCap="flat"
+    initialDataIndex={1}
     label="Alphabet"
     data=["A","B","C",...]
     labelColor="#212121"

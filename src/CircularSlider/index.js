@@ -14,7 +14,7 @@ const SLIDER_EVENT = {
 
 const CircularSlider = (props) => {
     const {
-        label = 'DEGREES',
+        label = 'ANGLE',
         width = 280,
         direction = 1,
         min = 0,
@@ -24,6 +24,7 @@ const CircularSlider = (props) => {
         labelColor = '#272b77',
         labelFontSize = '1rem',
         labelValueFontSize = '4rem',
+        labelValueAppend = '',
         labelVerticalOffset = '2rem',
         labelHide = false,
         progressColorFrom = '#80C3F3',
@@ -230,6 +231,7 @@ const CircularSlider = (props) => {
                 labelFontSize={labelFontSize}
                 labelVerticalOffset={labelVerticalOffset}
                 labelValueFontSize={labelValueFontSize}
+                labelValueAppend={labelValueAppend}
                 labelHide={labelHide}
                 label={label}
                 value={`${state.label}`}
