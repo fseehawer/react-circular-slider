@@ -1,15 +1,14 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 
-const Knob = (props) => {
-    const {
-        isDragging,
-        knobPosition,
-        knobColor,
-        knobRadius = 12,
-        knobSize = 36,
-        onMouseDown,
-    } = props;
+const Knob = ({
+          isDragging,
+          knobPosition,
+          knobColor,
+          knobRadius = 12,
+          knobSize = 36,
+          onMouseDown,
+      }) => {
 
     const pulse_animation = {
         "0%": {transform: "scale(1)"},

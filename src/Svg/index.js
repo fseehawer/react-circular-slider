@@ -1,22 +1,21 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 
-const Svg = (props) => {
-    const {
-        width,
-        label,
-        direction,
-        strokeDasharray,
-        strokeDashoffset,
-        progressColorFrom,
-        progressColorTo,
-        trackColor,
-        progressSize,
-        trackSize,
-        svgFullPath,
-        radiansOffset,
-        progressLineCap,
-    } = props;
+const Svg = ({
+         width,
+         label,
+         direction,
+         strokeDasharray,
+         strokeDashoffset,
+         progressColorFrom,
+         progressColorTo,
+         trackColor,
+         progressSize,
+         trackSize,
+         svgFullPath,
+         radiansOffset,
+         progressLineCap,
+     }) => {
 
     const styles = StyleSheet.create({
         svg: {

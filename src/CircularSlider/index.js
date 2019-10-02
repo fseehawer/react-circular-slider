@@ -127,13 +127,19 @@ const CircularSlider = memo(({
         }));
     }, [state.dashFullArray, state.radius, state.data, state.label, knobZeroPosition, direction, onChange]);
 
-    const onMouseDown = useCallback((event) => {
+    const onMouseDown = (event) => {
         setState(prevState => ({
             ...prevState,
             isDragging: true
         }));
+    };
 
-    }, []);
+    const onMouseUp = (event) => {
+        setState(prevState => ({
+            ...prevState,
+            isDragging: false
+        }));
+    };
 
     const onMouseMove = useCallback((event) => {
         event.preventDefault();
@@ -153,13 +159,6 @@ const CircularSlider = memo(({
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
         knobPosition(radians);
     }, [state.isDragging, state.radius, knobPosition]);
-
-    const onMouseUp = (event) => {
-        setState(prevState => ({
-            ...prevState,
-            isDragging: false
-        }));
-    };
 
     // Get svg path length on mount
     useEffect(() => {

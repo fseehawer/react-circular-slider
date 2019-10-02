@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 
-const Labels = (props) => {
-    const {
+const Labels = ({
         labelColor,
         labelFontSize,
         labelValueFontSize,
@@ -11,8 +10,7 @@ const Labels = (props) => {
         labelHide,
         label,
         value
-    } = props;
-
+    }) => {
     const styles = StyleSheet.create({
         labels: {
             position: 'absolute',
