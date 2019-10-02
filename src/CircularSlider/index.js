@@ -111,6 +111,11 @@ const CircularSlider = memo(({
         const pointsInCircle = state.data.length / 361;
         const currentPoint = Math.floor(degrees * pointsInCircle);
 
+        if(state.data[currentPoint] !== state.label) {
+            // props callback for parent
+            onChange(state.data[currentPoint]);
+        }
+
         setState(prevState => ({
             ...prevState,
             dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
@@ -120,10 +125,7 @@ const CircularSlider = memo(({
                 y: (radius * Math.sin(radians) + radius),
             }
         }));
-
-        // props callback for parent
-        onChange(state.data[currentPoint]);
-    }, [state.dashFullArray, state.radius, state.data, knobZeroPosition, direction, onChange]);
+    }, [state.dashFullArray, state.radius, state.data, state.label, knobZeroPosition, direction, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -171,7 +173,7 @@ const CircularSlider = memo(({
 
     useEffect(() => {
         const dataArrayLength = data.length;
-        const knobPositionIndex = (initialDataIndex > dataArrayLength - 1) ? dataArrayLength : initialDataIndex;
+        const knobPositionIndex = (initialDataIndex > dataArrayLength - 1) ? dataArrayLength - 1 : initialDataIndex;
 
         setState(prevState => ({
             ...prevState,
