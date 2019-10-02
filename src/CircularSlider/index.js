@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, {useState, useEffect, useCallback, useRef, memo} from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import Knob from "../Knob";
 import Labels from "../Labels";
@@ -12,8 +12,42 @@ const SLIDER_EVENT = {
     MOVE: touchSupported ? 'touchmove' : 'mousemove',
 };
 
-const CircularSlider = (props) => {
-    const {
+const knobOffset = {
+    top: Math.PI / 2,
+    right: 0,
+    bottom: -Math.PI / 2,
+    left: -Math.PI
+};
+
+const offset = 0.005;
+
+const getSliderRotation = (number) => {
+    if(number === 0) return 1;
+    return Math.min(Math.max(number, -1), 1)
+};
+
+const generateRange = (min, max) => {
+    let rangeOfNumbers = [];
+    for(let i = min; i <= max; i++) {
+        rangeOfNumbers.push(i);
+    }
+    return rangeOfNumbers;
+};
+
+const styles = StyleSheet.create({
+    circularSlider: {
+        position: 'relative',
+        display: 'inline-block',
+        opacity: 0,
+        transition: 'opacity 1s ease-in'
+    },
+
+    mounted: {
+        opacity: 1
+    },
+});
+
+const CircularSlider = memo(({
         label = 'ANGLE',
         width = 280,
         direction = 1,
@@ -36,14 +70,15 @@ const CircularSlider = (props) => {
         initialDataIndex = 0,
         progressLineCap = 'round',
         onChange = value => {}
-    } = props;
+    }) => {
     const [state, setState] = useState({
         mounted: false,
         isDragging: false,
         width: width,
         radius: width / 2,
+        knobZeroPosition: knobZeroPosition,
         label: 0,
-        data: [],
+        data: data,
         radians: 0,
         knob: {
             x: 0,
@@ -53,29 +88,8 @@ const CircularSlider = (props) => {
         dashFullOffset: 0
     });
 
-    let knobOffset = {
-        top: Math.PI / 2,
-        right: 0,
-        bottom: -Math.PI / 2,
-        left: -Math.PI
-    };
-
-    let offset = 0.005;
-    let circularSlider = useRef(null);
-    let svgFullPath = useRef(null);
-
-    const getSliderRotation = (number) => {
-        if(number === 0) return 1;
-        return Math.min(Math.max(number, -1), 1)
-    };
-
-    const generateRange = (min, max) => {
-      let rangeOfNumbers = [];
-      for(let i = min; i <= max; i++) {
-          rangeOfNumbers.push(i);
-      }
-      return rangeOfNumbers;
-    };
+    const circularSlider = useRef(null);
+    const svgFullPath = useRef(null);
 
     const offsetRelativeToDocument = useCallback(() => {
         const rect = circularSlider.current.getBoundingClientRect();
@@ -109,7 +123,7 @@ const CircularSlider = (props) => {
 
         // props callback for parent
         onChange(state.data[currentPoint]);
-    }, [state.dashFullArray, state.radius, state.data, knobOffset, knobZeroPosition, direction, onChange]);
+    }, [state.dashFullArray, state.radius, state.data, knobZeroPosition, direction, onChange]);
 
     const onMouseDown = useCallback((event) => {
         setState(prevState => ({
@@ -147,16 +161,13 @@ const CircularSlider = (props) => {
 
     // Get svg path length on mount
     useEffect(() => {
-        const pathLength = svgFullPath.current.getTotalLength();
-
         setState(prevState => ({
             ...prevState,
             mounted: true,
-            data: data.length ? [...data] : [...generateRange(min, max)],
-            dashFullArray: pathLength,
+            data: prevState.data.length ? [...prevState.data] : [...generateRange(min, max)],
+            dashFullArray: svgFullPath.current.getTotalLength(),
         }));
-        // eslint-disable-next-line
-    }, [max, min]);
+    }, [state.date, max, min]);
 
     useEffect(() => {
         const dataArrayLength = data.length;
@@ -164,20 +175,20 @@ const CircularSlider = (props) => {
 
         setState(prevState => ({
             ...prevState,
-            radians: Math.PI / 2 - knobOffset[knobZeroPosition],
+            radians: Math.PI / 2 - knobOffset[state.knobZeroPosition],
         }));
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
-            const radians = (degrees * Math.PI / 180) - knobOffset[knobZeroPosition];
-
-            return knobPosition(radians+(offset*getSliderRotation(direction)));
+            const radians = (degrees * Math.PI / 180) - knobOffset[state.knobZeroPosition];
+            knobPosition(radians+(offset*getSliderRotation(direction)));
+            return;
         }
 
-        return knobPosition(-knobOffset[knobZeroPosition]+(offset*getSliderRotation(direction)));
+        knobPosition(-knobOffset[state.knobZeroPosition]+(offset*getSliderRotation(direction)));
         // eslint-disable-next-line
-    }, [state.dashFullArray, initialDataIndex, knobZeroPosition, offset, direction, data.length]);
+    }, [state.dashFullArray, state.knobZeroPosition, initialDataIndex, direction, data.length]);
 
     useEffect(() => {
         if (state.isDragging) {
@@ -189,19 +200,6 @@ const CircularSlider = (props) => {
             }
         }
     }, [state.isDragging, onMouseMove]);
-
-    const styles = StyleSheet.create({
-        circularSlider: {
-            position: 'relative',
-            display: 'inline-block',
-            opacity: 0,
-            transition: 'opacity 1s ease-in'
-        },
-
-        mounted: {
-            opacity: 1
-        },
-    });
 
     return (
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
@@ -238,6 +236,6 @@ const CircularSlider = (props) => {
             />
         </div>
     );
-};
+});
 
 export default CircularSlider;
