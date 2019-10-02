@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "985c8bb9ca985b720aa66b7030b81ef6",
+    "revision": "26e7f473d8ec1aa76b12650a03094ad2",
     "url": "/react-circular-slider/index.html"
   },
   {
-    "revision": "579b4a4ffd443f9ef25f",
+    "revision": "c31ca44dd516273f588f",
     "url": "/react-circular-slider/static/css/main.654bcc83.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-circular-slider/static/js/2.58e6d2f9.chunk.js"
   },
   {
-    "revision": "579b4a4ffd443f9ef25f",
-    "url": "/react-circular-slider/static/js/main.c50f9f52.chunk.js"
+    "revision": "c31ca44dd516273f588f",
+    "url": "/react-circular-slider/static/js/main.7eae9db0.chunk.js"
   },
   {
     "revision": "62e2d8b9e145ed5f1dfd",
