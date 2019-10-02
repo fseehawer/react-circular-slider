@@ -34,6 +34,13 @@ const generateRange = (min, max) => {
     return rangeOfNumbers;
 };
 
+const offsetRelativeToDocument = (ref) => {
+    const rect = ref.current.getBoundingClientRect();
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
+};
+
 const styles = StyleSheet.create({
     circularSlider: {
         position: 'relative',
@@ -91,13 +98,6 @@ const CircularSlider = memo(({
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
 
-    const offsetRelativeToDocument = useCallback(() => {
-        const rect = circularSlider.current.getBoundingClientRect();
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
-    }, []);
-
     const knobPosition = useCallback((radians) => {
         const radius = state.radius;
         const offsetRadians = radians + knobOffset[knobZeroPosition];
@@ -144,13 +144,13 @@ const CircularSlider = memo(({
         }
 
         const mouseXFromCenter = (event.type === 'touchmove' ? touch.pageX : event.pageX) -
-            (offsetRelativeToDocument().left + state.radius);
+            (offsetRelativeToDocument(circularSlider).left + state.radius);
         const mouseYFromCenter = (event.type === 'touchmove' ? touch.pageY : event.pageY) -
-            (offsetRelativeToDocument().top + state.radius);
+            (offsetRelativeToDocument(circularSlider).top + state.radius);
 
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
         knobPosition(radians);
-    }, [state.isDragging, state.radius, knobPosition, offsetRelativeToDocument]);
+    }, [state.isDragging, state.radius, knobPosition]);
 
     const onMouseUp = (event) => {
         setState(prevState => ({
@@ -182,8 +182,8 @@ const CircularSlider = memo(({
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
             const radians = (degrees * Math.PI / 180) - knobOffset[state.knobZeroPosition];
-            knobPosition(radians+(offset*getSliderRotation(direction)));
-            return;
+
+            return knobPosition(radians+(offset*getSliderRotation(direction)));
         }
 
         knobPosition(-knobOffset[state.knobZeroPosition]+(offset*getSliderRotation(direction)));
