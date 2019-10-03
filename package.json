@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "description": "A customizable circular slider with no dependencies.",
   "main": "index.js",
   "repository": {
@@ -8,11 +8,16 @@
     "url": "git+https://github.com/fseehawer/react-circular-slider.git"
   },
   "keywords": [
+    "react slider",
+    "round slider",
+    "circle slider",
+    "circular slider",
+    "radial slider",
     "react",
-    "hooks",
     "circular",
     "radial",
-    "slider"
+    "slider",
+    "react hooks"
   ],
   "author": "Fidel Seehawer",
   "license": "MIT",
@@ -32,6 +37,8 @@
     "aphrodite": "^2.4.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "eslint-utils": "^1.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",

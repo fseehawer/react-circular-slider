@@ -57,13 +57,13 @@ const Labels = ({
 };
 
 Labels.propTypes = {
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
     labelColor: PropTypes.string,
     labelFontSize: PropTypes.string,
     labelValueFontSize: PropTypes.string,
     labelValueAppend: PropTypes.string,
     labelVerticalOffset: PropTypes.string,
-    label: PropTypes.string,
-    value: PropTypes.string,
     labelHide: PropTypes.bool,
 };
 
