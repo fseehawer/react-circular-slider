@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "A customizable circular slider with no dependencies.",
   "main": "index.js",
   "repository": {
@@ -33,6 +33,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "eslint-utils": "^1.4.1",
+    "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",

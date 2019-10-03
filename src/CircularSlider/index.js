@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useCallback, useRef, memo} from 'react';
+import PropTypes from "prop-types";
 import {StyleSheet, css} from 'aphrodite';
 import Knob from "../Knob";
 import Labels from "../Labels";
@@ -238,5 +239,30 @@ const CircularSlider = memo(({
         </div>
     );
 });
+
+CircularSlider.propTypes = {
+    label: PropTypes.string,
+    width: PropTypes.number,
+    direction: PropTypes.number,
+    min: PropTypes.number,
+    max: PropTypes.number,
+    knobColor: PropTypes.string,
+    knobZeroPosition: PropTypes.string,
+    labelColor: PropTypes.string,
+    labelFontSize: PropTypes.string,
+    labelValueFontSize: PropTypes.string,
+    labelValueAppend: PropTypes.string,
+    labelVerticalOffset: PropTypes.string,
+    labelHide: PropTypes.bool,
+    progressColorFrom: PropTypes.string,
+    progressColorTo: PropTypes.string,
+    progressSize: PropTypes.number,
+    trackColor: PropTypes.string,
+    trackSize: PropTypes.number,
+    data: PropTypes.array,
+    initialDataIndex: PropTypes.number,
+    progressLineCap: PropTypes.string,
+    onChange: PropTypes.func
+};
 
 export default CircularSlider;

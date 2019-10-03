@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
+import PropTypes from "prop-types";
 
 const Svg = ({
          width,
@@ -68,6 +69,22 @@ const Svg = ({
                     `}/>
         </svg>
     );
+};
+
+Svg.propTypes = {
+    width: PropTypes.number,
+    label: PropTypes.string,
+    direction: PropTypes.number,
+    strokeDasharray: PropTypes.number,
+    strokeDashoffset: PropTypes.number,
+    progressColorFrom: PropTypes.string,
+    progressColorTo: PropTypes.string,
+    trackColor: PropTypes.string,
+    progressSize: PropTypes.number,
+    trackSize: PropTypes.number,
+    svgFullPath: PropTypes.object,
+    radiansOffset: PropTypes.number,
+    progressLineCap: PropTypes.string,
 };
 
 export default Svg;

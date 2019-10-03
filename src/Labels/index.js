@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
+import PropTypes from "prop-types";
 
 const Labels = ({
         labelColor,
@@ -53,6 +54,17 @@ const Labels = ({
             </div>
         </div>
     );
+};
+
+Labels.propTypes = {
+    labelColor: PropTypes.string,
+    labelFontSize: PropTypes.string,
+    labelValueFontSize: PropTypes.string,
+    labelValueAppend: PropTypes.string,
+    labelVerticalOffset: PropTypes.string,
+    label: PropTypes.string,
+    value: PropTypes.string,
+    labelHide: PropTypes.bool,
 };
 
 export default Labels;

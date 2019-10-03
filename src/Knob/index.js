@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
+import PropTypes from "prop-types";
 
 const Knob = ({
           isDragging,
@@ -76,6 +77,15 @@ const Knob = ({
             </svg>
         </div>
     );
+};
+
+Knob.propTypes = {
+    isDragging: PropTypes.bool,
+    knobPosition: PropTypes.object,
+    knobColor: PropTypes.string,
+    knobRadius: PropTypes.number,
+    knobSize: PropTypes.number,
+    onMouseDown: PropTypes.func,
 };
 
 export default Knob;
