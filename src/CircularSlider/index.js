@@ -6,21 +6,19 @@ import Labels from "../Labels";
 import Svg from "../Svg";
 
 const touchSupported = ('ontouchstart' in window);
-
 const SLIDER_EVENT = {
     DOWN: touchSupported ? 'touchstart' : 'mousedown',
     UP: touchSupported ? 'touchend' : 'mouseup',
     MOVE: touchSupported ? 'touchmove' : 'mousemove',
 };
 
+const offset = 0.005;
 const knobOffset = {
     top: Math.PI / 2,
     right: 0,
     bottom: -Math.PI / 2,
     left: -Math.PI
 };
-
-const offset = 0.005;
 
 const getSliderRotation = (number) => {
     if(number === 0) return 1;
@@ -62,20 +60,20 @@ const CircularSlider = memo(({
         min = 0,
         max = 360,
         knobColor = '#4e63ea',
-        knobZeroPosition = 'top',
+        knobPosition = 'top',
         labelColor = '#272b77',
         labelFontSize = '1rem',
-        labelValueFontSize = '4rem',
-        labelValueAppend = '',
-        labelVerticalOffset = '2rem',
-        labelHide = false,
+        valueFontSize = '4rem',
+        appendToValue = '',
+        verticalOffset = '2rem',
+        hideLabelValue = false,
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
         progressSize = 6,
         trackColor = '#DDDEFB',
         trackSize = 6,
         data = [],
-        initialDataIndex = 0,
+        dataIndex = 0,
         progressLineCap = 'round',
         onChange = value => {}
     }) => {
@@ -84,7 +82,7 @@ const CircularSlider = memo(({
         isDragging: false,
         width: width,
         radius: width / 2,
-        knobZeroPosition: knobZeroPosition,
+        knobPosition: knobPosition,
         label: 0,
         data: data,
         radians: 0,
@@ -99,9 +97,9 @@ const CircularSlider = memo(({
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
 
-    const knobPosition = useCallback((radians) => {
+    const setKnobPosition = useCallback((radians) => {
         const radius = state.radius;
-        const offsetRadians = radians + knobOffset[knobZeroPosition];
+        const offsetRadians = radians + knobOffset[knobPosition];
         let degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
@@ -126,7 +124,7 @@ const CircularSlider = memo(({
                 y: (radius * Math.sin(radians) + radius),
             }
         }));
-    }, [state.dashFullArray, state.radius, state.data, state.label, knobZeroPosition, direction, onChange]);
+    }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, direction, onChange]);
 
     const onMouseDown = (event) => {
         setState(prevState => ({
@@ -158,8 +156,8 @@ const CircularSlider = memo(({
             (offsetRelativeToDocument(circularSlider).top + state.radius);
 
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
-        knobPosition(radians);
-    }, [state.isDragging, state.radius, knobPosition]);
+        setKnobPosition(radians);
+    }, [state.isDragging, state.radius, setKnobPosition]);
 
     // Get svg path length on mount
     useEffect(() => {
@@ -173,24 +171,24 @@ const CircularSlider = memo(({
 
     useEffect(() => {
         const dataArrayLength = data.length;
-        const knobPositionIndex = (initialDataIndex > dataArrayLength - 1) ? dataArrayLength - 1 : initialDataIndex;
+        const knobPositionIndex = (dataIndex > dataArrayLength - 1) ? dataArrayLength - 1 : dataIndex;
 
         setState(prevState => ({
             ...prevState,
-            radians: Math.PI / 2 - knobOffset[state.knobZeroPosition],
+            radians: Math.PI / 2 - knobOffset[state.knobPosition],
         }));
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
-            const radians = (degrees * Math.PI / 180) - knobOffset[state.knobZeroPosition];
+            const radians = (degrees * Math.PI / 180) - knobOffset[state.knobPosition];
 
-            return knobPosition(radians+(offset*getSliderRotation(direction)));
+            return setKnobPosition(radians+(offset*getSliderRotation(direction)));
         }
 
-        knobPosition(-knobOffset[state.knobZeroPosition]+(offset*getSliderRotation(direction)));
+        setKnobPosition(-knobOffset[state.knobPosition]+(offset*getSliderRotation(direction)));
         // eslint-disable-next-line
-    }, [state.dashFullArray, state.knobZeroPosition, initialDataIndex, direction, data.length]);
+    }, [state.dashFullArray, state.knobPosition, dataIndex, direction, data.length]);
 
     useEffect(() => {
         if (state.isDragging) {
@@ -211,14 +209,14 @@ const CircularSlider = memo(({
                 direction={direction}
                 strokeDasharray={state.dashFullArray}
                 strokeDashoffset={state.dashFullOffset}
+                svgFullPath={svgFullPath}
+                progressSize={progressSize}
                 progressColorFrom={progressColorFrom}
                 progressColorTo={progressColorTo}
-                trackColor={trackColor}
-                progressSize={progressSize}
-                trackSize={trackSize}
-                svgFullPath={svgFullPath}
-                radiansOffset={state.radians}
                 progressLineCap={progressLineCap}
+                trackColor={trackColor}
+                trackSize={trackSize}
+                radiansOffset={state.radians}
             />
             <Knob
                 isDragging={state.isDragging}
@@ -227,13 +225,13 @@ const CircularSlider = memo(({
                 onMouseDown={onMouseDown}
             />
             <Labels
+                label={label}
                 labelColor={labelColor}
                 labelFontSize={labelFontSize}
-                labelVerticalOffset={labelVerticalOffset}
-                labelValueFontSize={labelValueFontSize}
-                labelValueAppend={labelValueAppend}
-                labelHide={labelHide}
-                label={label}
+                verticalOffset={verticalOffset}
+                valueFontSize={valueFontSize}
+                appendToValue={appendToValue}
+                hideLabelValue={hideLabelValue}
                 value={`${state.label}`}
             />
         </div>
@@ -247,21 +245,21 @@ CircularSlider.propTypes = {
     min: PropTypes.number,
     max: PropTypes.number,
     knobColor: PropTypes.string,
-    knobZeroPosition: PropTypes.string,
+    knobPosition: PropTypes.string,
     labelColor: PropTypes.string,
     labelFontSize: PropTypes.string,
-    labelValueFontSize: PropTypes.string,
-    labelValueAppend: PropTypes.string,
-    labelVerticalOffset: PropTypes.string,
-    labelHide: PropTypes.bool,
+    valueFontSize: PropTypes.string,
+    appendToValue: PropTypes.string,
+    verticalOffset: PropTypes.string,
+    hideLabelValue: PropTypes.bool,
+    progressLineCap: PropTypes.string,
     progressColorFrom: PropTypes.string,
     progressColorTo: PropTypes.string,
     progressSize: PropTypes.number,
     trackColor: PropTypes.string,
     trackSize: PropTypes.number,
     data: PropTypes.array,
-    initialDataIndex: PropTypes.number,
-    progressLineCap: PropTypes.string,
+    dataIndex: PropTypes.number,
     onChange: PropTypes.func
 };
 

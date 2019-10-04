@@ -75,16 +75,16 @@ Svg.propTypes = {
     width: PropTypes.number,
     label: PropTypes.string,
     direction: PropTypes.number,
+    svgFullPath: PropTypes.object,
     strokeDasharray: PropTypes.number,
     strokeDashoffset: PropTypes.number,
     progressColorFrom: PropTypes.string,
     progressColorTo: PropTypes.string,
-    trackColor: PropTypes.string,
-    progressSize: PropTypes.number,
-    trackSize: PropTypes.number,
-    svgFullPath: PropTypes.object,
-    radiansOffset: PropTypes.number,
     progressLineCap: PropTypes.string,
+    progressSize: PropTypes.number,
+    trackColor: PropTypes.string,
+    trackSize: PropTypes.number,
+    radiansOffset: PropTypes.number,
 };
 
 export default Svg;

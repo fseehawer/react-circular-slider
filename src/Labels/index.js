@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 const Labels = ({
         labelColor,
         labelFontSize,
-        labelValueFontSize,
-        labelValueAppend,
-        labelVerticalOffset,
+        valueFontSize,
+        appendToValue,
+        verticalOffset,
         labelHide,
         label,
         value
@@ -29,8 +29,8 @@ const Labels = ({
         },
 
         value: {
-            fontSize: `${labelValueFontSize}`,
-            marginBottom: `calc(${labelVerticalOffset})`,
+            fontSize: `${valueFontSize}`,
+            marginBottom: `calc(${verticalOffset})`,
             position: 'relative'
         },
 
@@ -50,7 +50,7 @@ const Labels = ({
         <div className={css(styles.labels, labelHide && styles.hide)}>
             <div style={{fontSize: labelFontSize}}>{label}</div>
             <div className={css(styles.value)}>
-                <code>{value}<span className={css(styles.appended)}>{labelValueAppend}</span></code>
+                <code>{value}<span className={css(styles.appended)}>{appendToValue}</span></code>
             </div>
         </div>
     );
@@ -61,10 +61,10 @@ Labels.propTypes = {
     value: PropTypes.string.isRequired,
     labelColor: PropTypes.string,
     labelFontSize: PropTypes.string,
-    labelValueFontSize: PropTypes.string,
-    labelValueAppend: PropTypes.string,
-    labelVerticalOffset: PropTypes.string,
-    labelHide: PropTypes.bool,
+    valueFontSize: PropTypes.string,
+    appendToValue: PropTypes.string,
+    verticalOffset: PropTypes.string,
+    hideLabelValue: PropTypes.bool,
 };
 
 export default Labels;
