@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.0.1-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.0.2-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -47,7 +47,7 @@ const App = () => {
             trackColor="#eeeeee"
             trackSize={24}
             data={["1€","2€"]} //...
-            initialDataIndex={10}
+            dataIndex={10}
             onChange={ value => { console.log(value); } }
         />
     )
