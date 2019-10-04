@@ -26,7 +26,7 @@ const App = () => {
 
     return (
         <div className={css(styles.wrapper)}>
-            <h3 className={css(styles.h3)}>Anticlockwise rotation with the knob positioned to the right and "°" appended to the value:</h3>
+            <h3 className={css(styles.h3)}>Anticlockwise rotation with the knob positioned to the right and a symbol "°" appended to the value:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     direction={-1}
@@ -43,7 +43,7 @@ const App = () => {
     appendToValue="°"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Data array with an initial value from the array at index 10:</h3>
+            <h3 className={css(styles.h3)}>Data array with an initial value at index 10:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
@@ -72,7 +72,7 @@ const App = () => {
     trackSize={24}
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>A flat line cap with the track size being smaller than the progress track size:</h3>
+            <h3 className={css(styles.h3)}>A flat line cap with the track size smaller than the progress track size:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="Alphabet"
