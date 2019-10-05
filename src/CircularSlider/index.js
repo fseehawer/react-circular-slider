@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback, useRef, memo} from 'react';
 import PropTypes from "prop-types";
 import {StyleSheet, css} from 'aphrodite';
+import useEventListener from "./useEventListener";
 import Knob from "../Knob";
 import Labels from "../Labels";
 import Svg from "../Svg";
@@ -190,16 +191,8 @@ const CircularSlider = memo(({
         // eslint-disable-next-line
     }, [state.dashFullArray, state.knobPosition, dataIndex, direction, data.length]);
 
-    useEffect(() => {
-        if (state.isDragging) {
-            window.addEventListener(SLIDER_EVENT.MOVE, onMouseMove, {passive: false});
-            window.addEventListener(SLIDER_EVENT.UP, onMouseUp, {passive: false});
-            return () => {
-                window.removeEventListener(SLIDER_EVENT.MOVE, onMouseMove);
-                window.removeEventListener(SLIDER_EVENT.UP, onMouseUp);
-            }
-        }
-    }, [state.isDragging, onMouseMove]);
+    useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
+    useEventListener(SLIDER_EVENT.UP, onMouseUp);
 
     return (
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
