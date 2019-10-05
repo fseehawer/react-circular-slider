@@ -14,7 +14,7 @@ const useEventListener = (eventName, handler, element = window) => {
             // Create event listener that calls handler function stored in ref
             const eventListener = event => savedHandler.current(event);
 
-            element.addEventListener(eventName, eventListener);
+            element.addEventListener(eventName, eventListener, {passive: false});
             return () => {
                 element.removeEventListener(eventName, eventListener);
             };
