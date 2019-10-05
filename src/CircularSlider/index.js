@@ -127,14 +127,14 @@ const CircularSlider = memo(({
         }));
     }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, direction, onChange]);
 
-    const onMouseDown = (event) => {
+    const onMouseDown = () => {
         setState(prevState => ({
             ...prevState,
             isDragging: true
         }));
     };
 
-    const onMouseUp = (event) => {
+    const onMouseUp = () => {
         setState(prevState => ({
             ...prevState,
             isDragging: false
@@ -142,9 +142,9 @@ const CircularSlider = memo(({
     };
 
     const onMouseMove = useCallback((event) => {
-        event.preventDefault();
-
         if (!state.isDragging) return;
+
+        event.preventDefault();
 
         let touch;
         if (event.type === 'touchmove') {
