@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/react-circular-slider/static/css/main.654bcc83.chunk.css",
-    "main.js": "/react-circular-slider/static/js/main.9821e6fb.chunk.js",
-    "main.js.map": "/react-circular-slider/static/js/main.9821e6fb.chunk.js.map",
+    "main.js": "/react-circular-slider/static/js/main.549e1fef.chunk.js",
+    "main.js.map": "/react-circular-slider/static/js/main.549e1fef.chunk.js.map",
     "runtime~main.js": "/react-circular-slider/static/js/runtime~main.e746ae86.js",
     "runtime~main.js.map": "/react-circular-slider/static/js/runtime~main.e746ae86.js.map",
     "static/js/2.58e6d2f9.chunk.js": "/react-circular-slider/static/js/2.58e6d2f9.chunk.js",
     "static/js/2.58e6d2f9.chunk.js.map": "/react-circular-slider/static/js/2.58e6d2f9.chunk.js.map",
     "index.html": "/react-circular-slider/index.html",
-    "precache-manifest.a91dee4c9fa6dbda069a943a2f0c8d69.js": "/react-circular-slider/precache-manifest.a91dee4c9fa6dbda069a943a2f0c8d69.js",
+    "precache-manifest.bf3e92d1566824c78441775e838b2ba5.js": "/react-circular-slider/precache-manifest.bf3e92d1566824c78441775e838b2ba5.js",
     "service-worker.js": "/react-circular-slider/service-worker.js",
     "static/css/main.654bcc83.chunk.css.map": "/react-circular-slider/static/css/main.654bcc83.chunk.css.map"
   }

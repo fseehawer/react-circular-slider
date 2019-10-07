@@ -43,7 +43,7 @@ const App = () => {
     appendToValue="°"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex and passing the index from the data array:</h3>
+            <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex by passing the index of the data array:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
