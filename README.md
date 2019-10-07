@@ -1,8 +1,8 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.0.6-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.0.7-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A highly customizable circular slider with no dependencies. See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
+A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 <img src="public/circular-slider.png" alt="CircularSlider example image" width="100%" />
 
@@ -29,7 +29,7 @@ const App = () => {
 export default App;
 ```
 
-Use min and max props to define the range of numbers. Use appendToValue if you want to append e.g. "°" to the value. Or use the data prop to pass any number or string sequence as an array to be spread in 360°.  See the [live demos here!](https://fseehawer.github.io/react-circular-slider/)
+Use min and max props to define the range of numbers. Use appendToValue if you want to append e.g. "°" or "€" to the value. Or use the data prop and pass any number or string sequence as an array to be spread in 360°. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 ```javascript
 import React from 'react';
