@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import PropTypes from "prop-types";
 
@@ -46,15 +46,16 @@ const Knob = ({
 
     const defaultKnobIcon = () => {
         return (
-            <>
+            <Fragment>
                 <rect fill="#FFFFFF" x="14" y="14" width="8" height="1"/>
                 <rect fill="#FFFFFF" x="14" y="17" width="8" height="1"/>
                 <rect fill="#FFFFFF" x="14" y="20" width="8" height="1"/>
-            </>
+            </Fragment>
         );
-    }
+    };
 
     const customKnobIcon = () => children;
+
     return (
         <div
             style={{transform: `translate(${knobPosition.x}px, ${knobPosition.y}px)`}}
@@ -95,6 +96,7 @@ Knob.propTypes = {
     knobColor: PropTypes.string,
     knobRadius: PropTypes.number,
     knobSize: PropTypes.number,
+    children: PropTypes.element,
     onMouseDown: PropTypes.func,
 };
 

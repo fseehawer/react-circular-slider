@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import CircularSlider from "./CircularSlider";
-import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 import { ReactComponent as PowerIcon } from './assets/power.svg';
+import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 
 const App = () => {
     const styles = StyleSheet.create({

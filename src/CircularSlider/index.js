@@ -22,8 +22,8 @@ const knobOffset = {
 };
 
 const getSliderRotation = (number) => {
-    if(number === 0) return 1;
-    return Math.min(Math.max(number, -1), 1)
+    if(number < 0) return -1;
+    return 1;
 };
 
 const generateRange = (min, max) => {
@@ -194,6 +194,7 @@ const CircularSlider = memo(({
 
     useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
+
     return (
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
             <Svg
