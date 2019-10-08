@@ -9,6 +9,7 @@ const Knob = ({
           knobRadius = 12,
           knobSize = 36,
           onMouseDown,
+          children
       }) => {
 
     const pulse_animation = {
@@ -43,6 +44,17 @@ const Knob = ({
         },
     });
 
+    const defaultKnobIcon = () => {
+        return (
+            <>
+                <rect fill="#FFFFFF" x="14" y="14" width="8" height="1"/>
+                <rect fill="#FFFFFF" x="14" y="17" width="8" height="1"/>
+                <rect fill="#FFFFFF" x="14" y="20" width="8" height="1"/>
+            </>
+        );
+    }
+
+    const customKnobIcon = () => children;
     return (
         <div
             style={{transform: `translate(${knobPosition.x}px, ${knobPosition.y}px)`}}
@@ -71,9 +83,7 @@ const Knob = ({
                     cy={knobSize / 2}
                     r={knobRadius}
                 />
-                <rect fill="#FFFFFF" x="14" y="14" width="8" height="1"/>
-                <rect fill="#FFFFFF" x="14" y="17" width="8" height="1"/>
-                <rect fill="#FFFFFF" x="14" y="20" width="8" height="1"/>
+                {children ? customKnobIcon() : defaultKnobIcon()}
             </svg>
         </div>
     );

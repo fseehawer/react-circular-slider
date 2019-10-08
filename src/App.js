@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import CircularSlider from "./CircularSlider";
+import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
+import { ReactComponent as PowerIcon } from './assets/power.svg';
 
 const App = () => {
     const styles = StyleSheet.create({
@@ -56,10 +58,16 @@ const App = () => {
                     progressSize={24}
                     trackColor={"#eeeeee"}
                     trackSize={24}
-                />
+                >
+                    <PowerIcon x="9" y="9" width="18px" height="18px" />
+                </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
-{`<CircularSlider
+{`import { ReactComponent as PowerIcon } from './assets/power.svg';
+.
+.
+.
+<CircularSlider
     label="savings"
     data=["1€","2€"]
     dataIndex={10}
@@ -70,7 +78,9 @@ const App = () => {
     progressSize={24}
     trackColor="#eeeeee"
     trackSize={24}
-/>`}
+>
+    <PowerIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}
             </pre>
             <h3 className={css(styles.h3)}>A flat line cap with the track size smaller than the progress track size:</h3>
             <div className={css(styles.slider)}>
@@ -89,10 +99,17 @@ const App = () => {
                     trackColor={"#eeeeee"}
                     trackSize={4}
                     data={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
-                />
+                >
+                    <EmojiIcon x="9" y="9" width="18px" height="18px" />
+                </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
-{`<CircularSlider
+{`
+import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
+.
+.
+.
+<CircularSlider
     width={200}
     progressLineCap="flat"
     dataIndex={1}
@@ -107,7 +124,9 @@ const App = () => {
     progressSize={8}
     trackColor="#eeeeee"
     trackSize={4}
-/>`}
+>
+    <EmojiIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}
             </pre>
         </div>
     );
