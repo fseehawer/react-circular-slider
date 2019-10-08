@@ -75,9 +75,6 @@ const CircularSlider = memo(({
         trackSize = 6,
         data = [],
         dataIndex = 0,
-        range,
-        rangeStartIndex = 0,
-        rangeEndIndex = 0,
         progressLineCap = 'round',
         children,
         onChange = value => {},
@@ -258,9 +255,6 @@ CircularSlider.propTypes = {
     trackSize: PropTypes.number,
     data: PropTypes.array,
     dataIndex: PropTypes.number,
-    range: PropTypes.boolean,
-    rangeStartIndex: PropTypes.number,
-    rangeEndIndex: PropTypes.number,
     onChange: PropTypes.func
 };
 
