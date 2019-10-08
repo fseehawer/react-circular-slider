@@ -76,7 +76,8 @@ const CircularSlider = memo(({
         data = [],
         dataIndex = 0,
         progressLineCap = 'round',
-        onChange = value => {}
+        children,
+        onChange = value => {},
     }) => {
     const [state, setState] = useState({
         mounted: false,
@@ -193,7 +194,6 @@ const CircularSlider = memo(({
 
     useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
-
     return (
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
             <Svg
@@ -216,7 +216,9 @@ const CircularSlider = memo(({
                 knobPosition={{ x: state.knob.x, y: state.knob.y }}
                 knobColor={knobColor}
                 onMouseDown={onMouseDown}
-            />
+            >
+                {children}
+            </Knob>
             <Labels
                 label={label}
                 labelColor={labelColor}

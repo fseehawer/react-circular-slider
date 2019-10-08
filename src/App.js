@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import CircularSlider from "./CircularSlider";
+import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
+import { ReactComponent as PowerIcon } from './assets/power.svg';
 
 const App = () => {
     const styles = StyleSheet.create({
@@ -32,7 +34,9 @@ const App = () => {
                     direction={-1}
                     knobPosition="right"
                     appendToValue="°"
-                />
+                >
+                    <EmojiIcon x="9" y="9" width="18px" height="18px" />
+                </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
 {`<CircularSlider
@@ -41,7 +45,9 @@ const App = () => {
     direction={-1}
     knobPosition="right"
     appendToValue="°"
-/>`}
+>
+    <EmojiIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}
             </pre>
             <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex by passing the index of the data array:</h3>
             <div className={css(styles.slider)}>
@@ -56,7 +62,9 @@ const App = () => {
                     progressSize={24}
                     trackColor={"#eeeeee"}
                     trackSize={24}
-                />
+                >
+                    <PowerIcon x="9" y="9" width="18px" height="18px" />
+                </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
 {`<CircularSlider
@@ -70,7 +78,9 @@ const App = () => {
     progressSize={24}
     trackColor="#eeeeee"
     trackSize={24}
-/>`}
+>
+    <PowerIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}
             </pre>
             <h3 className={css(styles.h3)}>A flat line cap with the track size smaller than the progress track size:</h3>
             <div className={css(styles.slider)}>
