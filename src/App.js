@@ -45,7 +45,7 @@ const App = () => {
     appendToValue="°"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex by passing the index of the data array:</h3>
+            <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex and a custom knob icon:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
@@ -59,7 +59,7 @@ const App = () => {
                     trackColor={"#eeeeee"}
                     trackSize={24}
                 >
-                    <PowerIcon x="9" y="9" width="18px" height="18px" />
+                    <PowerIcon x="9" y="8" width="18px" height="18px" />
                 </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
@@ -79,10 +79,10 @@ const App = () => {
     trackColor="#eeeeee"
     trackSize={24}
 >
-    <PowerIcon x="9" y="9" width="18px" height="18px" />
+    <PowerIcon x="9" y="8" width="18px" height="18px" />
 </CircularSlider>`}
             </pre>
-            <h3 className={css(styles.h3)}>A flat line cap with the track size smaller than the progress track size:</h3>
+            <h3 className={css(styles.h3)}>A flat line cap with the track size smaller than the progress track size and a smiley knob:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="Alphabet"
