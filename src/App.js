@@ -34,9 +34,7 @@ const App = () => {
                     direction={-1}
                     knobPosition="right"
                     appendToValue="°"
-                >
-                    <EmojiIcon x="9" y="9" width="18px" height="18px" />
-                </CircularSlider>
+                />
             </div>
             <pre className={css(styles.pre)}>
 {`<CircularSlider
@@ -45,9 +43,7 @@ const App = () => {
     direction={-1}
     knobPosition="right"
     appendToValue="°"
->
-    <EmojiIcon x="9" y="9" width="18px" height="18px" />
-</CircularSlider>`}
+/>`}
             </pre>
             <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex by passing the index of the data array:</h3>
             <div className={css(styles.slider)}>
@@ -67,7 +63,11 @@ const App = () => {
                 </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
-{`<CircularSlider
+{`import { ReactComponent as PowerIcon } from './assets/power.svg';
+.
+.
+.
+<CircularSlider
     label="savings"
     data=["1€","2€"]
     dataIndex={10}
@@ -99,10 +99,17 @@ const App = () => {
                     trackColor={"#eeeeee"}
                     trackSize={4}
                     data={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
-                />
+                >
+                    <EmojiIcon x="9" y="9" width="18px" height="18px" />
+                </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
-{`<CircularSlider
+{`
+import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
+.
+.
+.
+<CircularSlider
     width={200}
     progressLineCap="flat"
     dataIndex={1}
@@ -117,7 +124,9 @@ const App = () => {
     progressSize={8}
     trackColor="#eeeeee"
     trackSize={4}
-/>`}
+>
+    <EmojiIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}
             </pre>
         </div>
     );
