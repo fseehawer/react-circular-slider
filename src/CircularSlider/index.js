@@ -14,7 +14,7 @@ const SLIDER_EVENT = {
     MOVE: touchSupported ? 'touchmove' : 'mousemove',
 };
 
-const spreadDegrees = 355;
+const spreadDegrees = 360;
 const knobOffset = {
     top: Math.PI / 2,
     right: 0,
