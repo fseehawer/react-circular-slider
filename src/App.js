@@ -28,7 +28,7 @@ const App = () => {
 
     return (
         <div className={css(styles.wrapper)}>
-            <h3 className={css(styles.h3)}>Anticlockwise rotation with the knob positioned to the right and a symbol "°" appended to the value:</h3>
+            <h3 className={css(styles.h3)}>Anticlockwise rotation with the knob positioned to the right and "°" appended to the value:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     direction={-1}
@@ -45,18 +45,21 @@ const App = () => {
     appendToValue="°"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Data array with an initial value of 20€ shown using dataIndex and a custom knob icon:</h3>
+            <h3 className={css(styles.h3)}>Data array with an initial value of $20K, a custom knob icon, "$" prepended and "K" appended to the value:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
-                    data={["1€","2€","3€","4€","5€","6€","7€","8€","9€","10€","20€","30€","40€","50€","60€","70€","80€","90€","100€","200€","300€","400€","500€","600€","700€","800€","900€","1000€","2000€","3000€","4000€","5000€","6000€","7000€","8000€","9000€","10000€"]}
-                    dataIndex={10}
-                    labelColor={"#005a58"}
-                    knobColor={"#005a58"}
-                    progressColorFrom={"#00bfbd"}
-                    progressColorTo={"#009c9a"}
+                    min={0}
+                    max={100}
+                    dataIndex={20}
+                    prependToValue="$"
+                    appendToValue="K"
+                    labelColor="#005a58"
+                    knobColor="#005a58"
+                    progressColorFrom="#00bfbd"
+                    progressColorTo="#009c9a"
                     progressSize={24}
-                    trackColor={"#eeeeee"}
+                    trackColor="#eeeeee"
                     trackSize={24}
                 >
                     <PowerIcon x="9" y="8" width="18px" height="18px" />
@@ -69,8 +72,10 @@ const App = () => {
 .
 <CircularSlider
     label="savings"
-    data=["1€","2€"]
-    dataIndex={10}
+    min={0}
+    max={250}
+    dataIndex={20}
+    prependToValue="$"
     labelColor="#005a58"
     knobColor="#005a58"
     progressColorFrom="#00bfbd"
@@ -89,14 +94,14 @@ const App = () => {
                     progressLineCap="flat"
                     dataIndex={1}
                     width={250}
-                    labelColor={"#212121"}
-                    valueFontSize={"6rem"}
-                    verticalOffset={"1rem"}
-                    knobColor={"#212121"}
-                    progressColorFrom={"#ff8500"}
-                    progressColorTo={"#a15400"}
+                    labelColor="#212121"
+                    valueFontSize="6rem"
+                    verticalOffset="1rem"
+                    knobColor="#212121"
+                    progressColorFrom="#ff8500"
+                    progressColorTo="#a15400"
                     progressSize={8}
-                    trackColor={"#eeeeee"}
+                    trackColor="#eeeeee"
                     trackSize={4}
                     data={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
                 >
@@ -114,7 +119,7 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
     progressLineCap="flat"
     dataIndex={1}
     label="Alphabet"
-    data=["A","B","C"]
+    data=["A","B","C"]//...
     labelColor="#212121"
     valueFontSize="6rem"
     verticalOffset="1rem"

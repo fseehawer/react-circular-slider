@@ -14,7 +14,6 @@ const SLIDER_EVENT = {
     MOVE: touchSupported ? 'touchmove' : 'mousemove',
 };
 
-const offset = 0.005;
 const knobOffset = {
     top: Math.PI / 2,
     right: 0,
@@ -25,6 +24,10 @@ const knobOffset = {
 const getSliderRotation = (number) => {
     if(number < 0) return -1;
     return 1;
+};
+
+const getRadians = (degrees) => {
+    return degrees * Math.PI / 180;
 };
 
 const generateRange = (min, max) => {
@@ -170,7 +173,7 @@ const CircularSlider = memo(({
         setKnobPosition(radians);
     }, [state.isDragging, state.radius, setKnobPosition]);
 
-    // Get svg path length on mount
+    // Get svg path length onmount
     useEffect(() => {
         dispatch({
             type: 'init',
@@ -183,8 +186,9 @@ const CircularSlider = memo(({
         // eslint-disable-next-line
     }, [max, min]);
 
+    // Set knob position
     useEffect(() => {
-        const dataArrayLength = data.length;
+        const dataArrayLength = state.data.length;
         const knobPositionIndex = (dataIndex > dataArrayLength - 1) ? dataArrayLength - 1 : dataIndex;
 
         dispatch({
@@ -194,17 +198,20 @@ const CircularSlider = memo(({
             }
         });
 
+        let offset = 0.005;
+
         if(knobPositionIndex && !!dataArrayLength) {
-            const pointsInCircle = Math.ceil(360 / dataArrayLength);
+            const pointsInCircle = 360 / dataArrayLength;
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
-            const radians = (degrees * Math.PI / 180) - knobOffset[state.knobPosition];
+            const radians = getRadians(degrees) - knobOffset[state.knobPosition];
+            offset = getRadians(pointsInCircle) / 2;
 
             return setKnobPosition(radians+(offset*getSliderRotation(direction)));
         }
 
         setKnobPosition(-knobOffset[state.knobPosition]+(offset*getSliderRotation(direction)));
         // eslint-disable-next-line
-    }, [state.dashFullArray, state.knobPosition, dataIndex, direction, data.length]);
+    }, [state.dashFullArray, state.knobPosition, state.data.length, dataIndex, direction]);
 
     useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
