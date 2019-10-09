@@ -7,6 +7,7 @@ const Labels = ({
         labelFontSize,
         valueFontSize,
         appendToValue,
+        prependToValue,
         verticalOffset,
         labelHide,
         label,
@@ -41,6 +42,13 @@ const Labels = ({
             transform: 'translate(100%, 0)'
         },
 
+        prepended: {
+            position: 'absolute',
+            left: '0',
+            top: 0,
+            transform: 'translate(-100%, 0)'
+        },
+
         hide: {
             display: 'none'
         }
@@ -50,7 +58,11 @@ const Labels = ({
         <div className={css(styles.labels, labelHide && styles.hide)}>
             <div style={{fontSize: labelFontSize}}>{label}</div>
             <div className={css(styles.value)}>
-                <code>{value}<span className={css(styles.appended)}>{appendToValue}</span></code>
+                <code>
+                    <span className={css(styles.prepended)}>{prependToValue}</span>
+                    {value}
+                    <span className={css(styles.appended)}>{appendToValue}</span>
+                </code>
             </div>
         </div>
     );
@@ -63,6 +75,7 @@ Labels.propTypes = {
     labelFontSize: PropTypes.string,
     valueFontSize: PropTypes.string,
     appendToValue: PropTypes.string,
+    prependToValue: PropTypes.string,
     verticalOffset: PropTypes.string,
     hideLabelValue: PropTypes.bool,
 };

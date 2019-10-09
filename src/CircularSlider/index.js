@@ -67,6 +67,7 @@ const CircularSlider = memo(({
         labelFontSize = '1rem',
         valueFontSize = '4rem',
         appendToValue = '',
+        prependToValue = '',
         verticalOffset = '2rem',
         hideLabelValue = false,
         progressColorFrom = '#80C3F3',
@@ -240,6 +241,7 @@ const CircularSlider = memo(({
                 verticalOffset={verticalOffset}
                 valueFontSize={valueFontSize}
                 appendToValue={appendToValue}
+                prependToValue={prependToValue}
                 hideLabelValue={hideLabelValue}
                 value={`${state.label}`}
             />
@@ -259,6 +261,7 @@ CircularSlider.propTypes = {
     labelFontSize: PropTypes.string,
     valueFontSize: PropTypes.string,
     appendToValue: PropTypes.string,
+    prependToValue: PropTypes.string,
     verticalOffset: PropTypes.string,
     hideLabelValue: PropTypes.bool,
     progressLineCap: PropTypes.string,

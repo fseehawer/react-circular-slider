@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.1.3-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.1.4-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -29,7 +29,7 @@ const App = () => {
 export default App;
 ```
 
-Use min and max props to define the range of numbers. Use appendToValue if you want to append e.g. "°" or "€" to the value. Or use the data prop and pass any number or string sequence as an array to be spread in 360°. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
+Use min and max props to define the range of numbers. Use prependToValue/appendToValue if you want to prepend/append e.g. "$" or "°" to the value. Or simply use the data prop and pass any number or string sequence as an array to be spread in 360°. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
 ```javascript
 import React from 'react';
@@ -60,8 +60,8 @@ export default App;
 
 prop                 | type   | default       | Affects
 ---------------------|--------|---------------|--------
-width                | number | 280           | width of slider
-direction            | number | 1             | direction of slider to be clockwise (**1**) or anticlockwise (**-1**)
+width                | number | 280           | width of the slider
+direction            | number | 1             | clockwise (**1**) or anticlockwise (**-1**)
 min                  | number | 0             | smallest value
 max                  | number | 360           | largest value
 data                 | array  | []            | array of data to be spread in 360°
@@ -72,7 +72,8 @@ label                | string | ANGLE         | label
 labelColor           | string | #272b77       | label and value color
 labelFontSize        | string | 1rem          | label font-size
 valueFontSize        | string | 4rem          | label value font-size
-appendToValue        | string | ''            | symbol or character to append to value
+appendToValue        | string | ''            | append character to value
+prependToValue       | string | ''            | prepend character to value
 verticalOffset       | string | 2rem          | vertical offset of the label and value
 hideLabelValue       | boolean| false         | hide label and value
 progressColorFrom    | string | #80C3F3       | progress track gradient start color
