@@ -1,6 +1,7 @@
-import React, {useState, useEffect, useCallback, useRef, memo} from 'react';
+import React, {useEffect, useReducer, useCallback, useRef, memo} from 'react';
 import PropTypes from "prop-types";
 import {StyleSheet, css} from 'aphrodite';
+import reducer from "./reducer";
 import useEventListener from "./useEventListener";
 import Knob from "../Knob";
 import Labels from "../Labels";
@@ -79,7 +80,7 @@ const CircularSlider = memo(({
         children,
         onChange = value => {},
     }) => {
-    const [state, setState] = useState({
+    const initialState = {
         mounted: false,
         isDragging: false,
         width: width,
@@ -94,8 +95,9 @@ const CircularSlider = memo(({
         },
         dashFullArray: 0,
         dashFullOffset: 0
-    });
+    };
 
+    const [state, dispatch] = useReducer(reducer, initialState);
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
 
@@ -117,29 +119,35 @@ const CircularSlider = memo(({
             onChange(state.data[currentPoint]);
         }
 
-        setState(prevState => ({
-            ...prevState,
-            dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-            label: state.data[currentPoint],
-            knob: {
-                x: (radius * Math.cos(radians) + radius),
-                y: (radius * Math.sin(radians) + radius),
+        dispatch({
+            type: 'setKnobPosition',
+            payload: {
+                dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                label: state.data[currentPoint],
+                knob: {
+                    x: (radius * Math.cos(radians) + radius),
+                    y: (radius * Math.sin(radians) + radius),
+                }
             }
-        }));
+        });
     }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, direction, onChange]);
 
     const onMouseDown = () => {
-        setState(prevState => ({
-            ...prevState,
-            isDragging: true
-        }));
+        dispatch({
+            type: 'onMouseDown',
+            payload: {
+                isDragging: true
+            }
+        });
     };
 
     const onMouseUp = () => {
-        setState(prevState => ({
-            ...prevState,
-            isDragging: false
-        }));
+        dispatch({
+            type: 'onMouseUp',
+            payload: {
+                isDragging: false
+            }
+        });
     };
 
     const onMouseMove = useCallback((event) => {
@@ -163,22 +171,27 @@ const CircularSlider = memo(({
 
     // Get svg path length on mount
     useEffect(() => {
-        setState(prevState => ({
-            ...prevState,
-            mounted: true,
-            data: prevState.data.length ? [...prevState.data] : [...generateRange(min, max)],
-            dashFullArray: svgFullPath.current.getTotalLength(),
-        }));
+        dispatch({
+            type: 'init',
+            payload: {
+                mounted: true,
+                data: state.data.length ? [...state.data] : [...generateRange(min, max)],
+                dashFullArray: svgFullPath.current.getTotalLength(),
+            }
+        });
+        // eslint-disable-next-line
     }, [max, min]);
 
     useEffect(() => {
         const dataArrayLength = data.length;
         const knobPositionIndex = (dataIndex > dataArrayLength - 1) ? dataArrayLength - 1 : dataIndex;
 
-        setState(prevState => ({
-            ...prevState,
-            radians: Math.PI / 2 - knobOffset[state.knobPosition],
-        }));
+        dispatch({
+            type: 'setInitialKnobPosition',
+            payload: {
+                radians: Math.PI / 2 - knobOffset[state.knobPosition],
+            }
+        });
 
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = Math.ceil(360 / dataArrayLength);
