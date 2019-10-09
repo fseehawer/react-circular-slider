@@ -14,6 +14,7 @@ const SLIDER_EVENT = {
     MOVE: touchSupported ? 'touchmove' : 'mousemove',
 };
 
+const spreadDegrees = 355;
 const knobOffset = {
     top: Math.PI / 2,
     right: 0,
@@ -115,7 +116,7 @@ const CircularSlider = memo(({
         const dashOffset = (degrees / 360) * state.dashFullArray;
         degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
 
-        const pointsInCircle = state.data.length / 361;
+        const pointsInCircle = (state.data.length - 1) / spreadDegrees;
         const currentPoint = Math.floor(degrees * pointsInCircle);
 
         if(state.data[currentPoint] !== state.label) {
@@ -201,7 +202,7 @@ const CircularSlider = memo(({
         let offset = 0.005;
 
         if(knobPositionIndex && !!dataArrayLength) {
-            const pointsInCircle = 360 / dataArrayLength;
+            const pointsInCircle = spreadDegrees / dataArrayLength;
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
             const radians = getRadians(degrees) - knobOffset[state.knobPosition];
             offset = getRadians(pointsInCircle) / 2;

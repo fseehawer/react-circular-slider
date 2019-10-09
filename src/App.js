@@ -73,9 +73,10 @@ const App = () => {
 <CircularSlider
     label="savings"
     min={0}
-    max={250}
+    max={100}
     dataIndex={20}
     prependToValue="$"
+    appendToValue="K"
     labelColor="#005a58"
     knobColor="#005a58"
     progressColorFrom="#00bfbd"
