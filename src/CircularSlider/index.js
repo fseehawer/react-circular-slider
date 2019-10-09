@@ -176,7 +176,7 @@ const CircularSlider = memo(({
             payload: {
                 mounted: true,
                 data: state.data.length ? [...state.data] : [...generateRange(min, max)],
-                dashFullArray: svgFullPath.current.getTotalLength(),
+                dashFullArray: svgFullPath.current.getTotalLength ? svgFullPath.current.getTotalLength() : 0,
             }
         });
         // eslint-disable-next-line
