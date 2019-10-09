@@ -169,7 +169,7 @@ const CircularSlider = memo(({
             data: prevState.data.length ? [...prevState.data] : [...generateRange(min, max)],
             dashFullArray: svgFullPath.current.getTotalLength(),
         }));
-    }, [state.date, max, min]);
+    }, [max, min]);
 
     useEffect(() => {
         const dataArrayLength = data.length;
