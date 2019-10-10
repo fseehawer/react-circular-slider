@@ -111,10 +111,10 @@ const CircularSlider = memo(({
         const offsetRadians = radians + knobOffset[knobPosition];
         let degrees = (offsetRadians > 0 ? offsetRadians
             :
-            ((2 * Math.PI) + offsetRadians)) * (360 / (2 * Math.PI));
+            ((2 * Math.PI) + offsetRadians)) * (spreadDegrees / (2 * Math.PI));
         // change direction
-        const dashOffset = (degrees / 360) * state.dashFullArray;
-        degrees = (getSliderRotation(direction) === -1 ? 360 - degrees : degrees);
+        const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
+        degrees = (getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees);
 
         const pointsInCircle = (state.data.length - 1) / spreadDegrees;
         const currentPoint = Math.floor(degrees * pointsInCircle);
