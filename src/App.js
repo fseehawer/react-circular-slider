@@ -45,7 +45,7 @@ const App = () => {
     appendToValue="°"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>Data array with an initial value of $20K, a custom knob icon, "$" prepended and "K" appended to the value:</h3>
+            <h3 className={css(styles.h3)}>An initial value of 20, "$" prepended and "K" appended to the value with a custom knob icon:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
