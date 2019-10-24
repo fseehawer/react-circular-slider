@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useCallback, useRef, memo} from 'react';
 import PropTypes from "prop-types";
 import {StyleSheet, css} from 'aphrodite';
-import reducer from "./reducer";
+import reducer from "../redux/reducer";
 import useEventListener from "./useEventListener";
 import Knob from "../Knob";
 import Labels from "../Labels";
@@ -117,7 +117,7 @@ const CircularSlider = memo(({
         degrees = (getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees);
 
         const pointsInCircle = (state.data.length - 1) / spreadDegrees;
-        const currentPoint = Math.floor(degrees * pointsInCircle);
+        const currentPoint = Math.round(degrees * pointsInCircle);
 
         if(state.data[currentPoint] !== state.label) {
             // props callback for parent
