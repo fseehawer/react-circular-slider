@@ -32,8 +32,11 @@ const Labels = ({
 
         value: {
             fontSize: `${valueFontSize}`,
-            marginBottom: `calc(${verticalOffset})`,
             position: 'relative'
+        },
+
+        bottomMargin: {
+            marginBottom: `calc(${verticalOffset})`,
         },
 
         appended: {
@@ -58,7 +61,7 @@ const Labels = ({
     return (
         <div className={css(styles.labels, labelHide && styles.hide)}>
             { labelBottom || <div style={{fontSize: labelFontSize}}>{label}</div> }
-            <div className={css(styles.value)}>
+            <div className={css(styles.value, !labelBottom && styles.bottomMargin)}>
                 <code>
                     <span className={css(styles.prepended)}>{prependToValue}</span>
                     {value}
