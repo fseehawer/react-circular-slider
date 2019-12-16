@@ -63,7 +63,7 @@ const App = () => {
                     trackColor="#eeeeee"
                     trackSize={24}
                 >
-                    <PowerIcon x="9" y="8" width="18px" height="18px" />
+                    <PowerIcon x="9" y="9" width="18px" height="18px" />
                 </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>

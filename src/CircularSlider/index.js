@@ -200,16 +200,19 @@ const CircularSlider = memo(({
             }
         });
 
-        if(knobPositionIndex && !!dataArrayLength) {
+        if(!!dataArrayLength) {
             const pointsInCircle = spreadDegrees / dataArrayLength;
-            const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
-            const radians = getRadians(degrees) - knobOffset[state.knobPosition];
-            let offset = getRadians(pointsInCircle) / 2;
+            const offset = getRadians(pointsInCircle) / 2;
 
-            return setKnobPosition(radians+(offset*getSliderRotation(direction)));
+            if(knobPositionIndex) {
+                const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
+                const radians = getRadians(degrees) - knobOffset[state.knobPosition];
+
+                return setKnobPosition(radians+(offset*getSliderRotation(direction)));
+            }
+            setKnobPosition(-(knobOffset[state.knobPosition]*getSliderRotation(direction))+(offset*getSliderRotation(direction)));
         }
 
-        setKnobPosition(-knobOffset[state.knobPosition]*getSliderRotation(direction));
         // eslint-disable-next-line
     }, [state.dashFullArray, state.knobPosition, state.data.length, dataIndex, direction]);
 

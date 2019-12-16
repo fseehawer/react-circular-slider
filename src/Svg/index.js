@@ -25,7 +25,7 @@ const Svg = ({
         },
 
         path: {
-            transform: `rotate(${radiansOffset}rad) ${direction === -1 && 'scale(-1, 1)'}`,
+            transform: `rotate(${radiansOffset}rad) ${direction === -1 ? 'scale(-1, 1)' : 'scale(1, 1)'}`,
             transformOrigin: 'center center'
         }
     });
