@@ -1,6 +1,12 @@
 import {useEffect, useRef} from 'react';
 
-const useEventListener = (eventName, handler, element = window) => {
+let winObj = null;
+
+if (typeof window !== 'undefined') {
+    winObj = window;
+}
+
+const useEventListener = (eventName, handler, element= winObj) => {
     const savedHandler = useRef(null);
 
     useEffect(() => {
@@ -8,6 +14,7 @@ const useEventListener = (eventName, handler, element = window) => {
     }, [handler]);
 
     useEffect(() => {
+            if(winObj === null) return;
             const isSupported = element && element.addEventListener;
             if (!isSupported) return;
 
