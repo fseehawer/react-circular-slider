@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.1.14-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.1.15-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -70,6 +70,7 @@ knobColor            | string | #4e63ea       | knob color
 knobPosition         | string | top           | knob's 0 position to be **top**, **right**, **bottom** or **left**
 label                | string | ANGLE         | label
 labelColor           | string | #272b77       | label and value color
+labelBottom          | boolean| false         | label position at bottom
 labelFontSize        | string | 1rem          | label font-size
 valueFontSize        | string | 4rem          | label value font-size
 appendToValue        | string | ''            | append character to value

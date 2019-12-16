@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const Labels = ({
         labelColor,
+        labelBottom,
         labelFontSize,
         valueFontSize,
         appendToValue,
@@ -38,14 +39,14 @@ const Labels = ({
         appended: {
             position: 'absolute',
             right: '0',
-            top: 0,
+            top: '0',
             transform: 'translate(100%, 0)'
         },
 
         prepended: {
             position: 'absolute',
             left: '0',
-            top: 0,
+            top: '0',
             transform: 'translate(-100%, 0)'
         },
 
@@ -56,7 +57,7 @@ const Labels = ({
 
     return (
         <div className={css(styles.labels, labelHide && styles.hide)}>
-            <div style={{fontSize: labelFontSize}}>{label}</div>
+            { labelBottom || <div style={{fontSize: labelFontSize}}>{label}</div> }
             <div className={css(styles.value)}>
                 <code>
                     <span className={css(styles.prepended)}>{prependToValue}</span>
@@ -64,6 +65,7 @@ const Labels = ({
                     <span className={css(styles.appended)}>{appendToValue}</span>
                 </code>
             </div>
+            { labelBottom && <div style={{fontSize: labelFontSize}}>{label}</div> }
         </div>
     );
 };
@@ -72,6 +74,7 @@ Labels.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     labelColor: PropTypes.string,
+    labelBottom: PropTypes.bool,
     labelFontSize: PropTypes.string,
     valueFontSize: PropTypes.string,
     appendToValue: PropTypes.string,

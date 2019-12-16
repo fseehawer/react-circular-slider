@@ -45,7 +45,7 @@ const App = () => {
     appendToValue="°"
 />`}
             </pre>
-            <h3 className={css(styles.h3)}>An initial value of 20, "$" prepended and "K" appended to the value with a custom knob icon:</h3>
+            <h3 className={css(styles.h3)}>An initial value of 20, "$" prepended and "K" appended to the value with a custom knob icon and the label on the bottom:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
                     label="savings"
@@ -55,6 +55,7 @@ const App = () => {
                     prependToValue="$"
                     appendToValue="K"
                     labelColor="#005a58"
+                    labelBottom={true}
                     knobColor="#005a58"
                     progressColorFrom="#00bfbd"
                     progressColorTo="#009c9a"
@@ -78,6 +79,7 @@ const App = () => {
     prependToValue="$"
     appendToValue="K"
     labelColor="#005a58"
+    labelBottom={true}
     knobColor="#005a58"
     progressColorFrom="#00bfbd"
     progressColorTo="#005a58"

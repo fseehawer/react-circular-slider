@@ -68,6 +68,7 @@ const CircularSlider = memo(({
         knobColor = '#4e63ea',
         knobPosition = 'top',
         labelColor = '#272b77',
+        labelBottom = false,
         labelFontSize = '1rem',
         valueFontSize = '4rem',
         appendToValue = '',
@@ -243,6 +244,7 @@ const CircularSlider = memo(({
             <Labels
                 label={label}
                 labelColor={labelColor}
+                labelBottom={labelBottom}
                 labelFontSize={labelFontSize}
                 verticalOffset={verticalOffset}
                 valueFontSize={valueFontSize}
@@ -264,6 +266,7 @@ CircularSlider.propTypes = {
     knobColor: PropTypes.string,
     knobPosition: PropTypes.string,
     labelColor: PropTypes.string,
+    labelBottom: PropTypes.bool,
     labelFontSize: PropTypes.string,
     valueFontSize: PropTypes.string,
     appendToValue: PropTypes.string,
