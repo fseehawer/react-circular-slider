@@ -199,18 +199,16 @@ const CircularSlider = memo(({
             }
         });
 
-        let offset = 0.005;
-
         if(knobPositionIndex && !!dataArrayLength) {
             const pointsInCircle = spreadDegrees / dataArrayLength;
             const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
             const radians = getRadians(degrees) - knobOffset[state.knobPosition];
-            offset = getRadians(pointsInCircle) / 2;
+            let offset = getRadians(pointsInCircle) / 2;
 
             return setKnobPosition(radians+(offset*getSliderRotation(direction)));
         }
 
-        setKnobPosition(-knobOffset[state.knobPosition]+(offset*getSliderRotation(direction)));
+        setKnobPosition(-knobOffset[state.knobPosition]*getSliderRotation(direction));
         // eslint-disable-next-line
     }, [state.dashFullArray, state.knobPosition, state.data.length, dataIndex, direction]);
 

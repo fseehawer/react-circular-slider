@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.1.11",
+  "version": "2.1.13",
   "description": "A customizable circular slider with no dependencies.",
   "main": "index.js",
   "repository": {
@@ -26,8 +26,8 @@
   },
   "homepage": "https://fseehawer.github.io/react-circular-slider/",
   "peerDependencies": {
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
