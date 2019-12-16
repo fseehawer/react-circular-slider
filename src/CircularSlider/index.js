@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useCallback, useRef, memo} from 'react';
+import React, {useEffect, useReducer, useCallback, useRef} from 'react';
 import PropTypes from "prop-types";
 import {StyleSheet, css} from 'aphrodite';
 import reducer from "../redux/reducer";
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const CircularSlider = memo(({
+const CircularSlider = ({
         label = 'ANGLE',
         width = 280,
         direction = 1,
@@ -276,7 +276,7 @@ const CircularSlider = memo(({
             />
         </div>
     );
-});
+};
 
 CircularSlider.propTypes = {
     label: PropTypes.string,
