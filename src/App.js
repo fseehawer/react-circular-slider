@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import CircularSlider from "./CircularSlider";
-import { ReactComponent as PowerIcon } from './assets/power.svg';
+import { ReactComponent as DragIcon } from './assets/drag.svg';
 import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 
 const App = () => {
@@ -63,7 +63,7 @@ const App = () => {
                     trackColor="#eeeeee"
                     trackSize={24}
                 >
-                    <PowerIcon x="9" y="9" width="18px" height="18px" />
+                    <DragIcon x="9" y="9" width="18px" height="18px" />
                 </CircularSlider>
             </div>
             <pre className={css(styles.pre)}>
@@ -87,7 +87,7 @@ const App = () => {
     trackColor="#eeeeee"
     trackSize={24}
 >
-    <PowerIcon x="9" y="8" width="18px" height="18px" />
+    <DragIcon x="9" y="8" width="18px" height="18px" />
 </CircularSlider>`}
             </pre>
             <h3 className={css(styles.h3)}>A flat line cap with the track size smaller than the progress track size and a smiley knob:</h3>
