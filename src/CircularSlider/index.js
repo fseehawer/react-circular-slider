@@ -113,6 +113,7 @@ const CircularSlider = ({
         label: 0,
         data: data,
         radians: 0,
+        offset: 0,
         knob: {
             x: 0,
             y: 0,
@@ -211,16 +212,17 @@ const CircularSlider = ({
         const dataArrayLength = state.data.length;
         const knobPositionIndex = (dataIndex > dataArrayLength - 1) ? dataArrayLength - 1 : dataIndex;
 
-        dispatch({
-            type: 'setInitialKnobPosition',
-            payload: {
-                radians: Math.PI / 2 - knobOffset[state.knobPosition],
-            }
-        });
-
         if(!!dataArrayLength) {
             const pointsInCircle = spreadDegrees / dataArrayLength;
             const offset = getRadians(pointsInCircle) / 2;
+
+            dispatch({
+                type: 'setInitialKnobPosition',
+                payload: {
+                    radians: Math.PI / 2 - knobOffset[state.knobPosition],
+                    offset
+                }
+            });
 
             if(knobPositionIndex) {
                 const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
