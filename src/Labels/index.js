@@ -10,7 +10,7 @@ const Labels = ({
         appendToValue,
         prependToValue,
         verticalOffset,
-        labelHide,
+        hideLabelValue,
         label,
         value
     }) => {
@@ -59,7 +59,7 @@ const Labels = ({
     });
 
     return (
-        <div className={css(styles.labels, labelHide && styles.hide)}>
+        <div className={css(styles.labels, hideLabelValue && styles.hide)}>
             { labelBottom || <div style={{fontSize: labelFontSize}}>{label}</div> }
             <div className={css(styles.value, !labelBottom && styles.bottomMargin)}>
                 <code>
