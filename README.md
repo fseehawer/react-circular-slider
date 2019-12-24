@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.1.22-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.1.23-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -79,10 +79,10 @@ verticalOffset       | string | 2rem          | vertical offset of the label and
 hideLabelValue       | boolean| false         | hide label and value
 progressColorFrom    | string | #80C3F3       | progress track gradient start color
 progressColorTo      | string | #4990E2       | progress track gradient end color
-progressSize         | number | 6             | progress track size
+progressSize         | number | 8             | progress track size
 progressLineCap      | string | round         | progress track cap to be **round** or **flat**
 trackColor           | string | #DDDEFB       | background track color
-trackSize            | number | 6             | background track size
+trackSize            | number | 8             | background track size
 onChange             | func   | value => {}   | returns label value
 
 
