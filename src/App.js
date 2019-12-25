@@ -34,6 +34,7 @@ const App = () => {
                     direction={-1}
                     knobPosition="right"
                     appendToValue="°"
+                    valueFontSize="4rem"
                 />
             </div>
             <pre className={css(styles.pre)}>
@@ -43,6 +44,7 @@ const App = () => {
     direction={-1}
     knobPosition="right"
     appendToValue="°"
+    valueFontSize="4rem"
 />`}
             </pre>
             <h3 className={css(styles.h3)}>An initial value of 20, "$" prepended and "K" appended to the value with a custom knob icon and the label on the bottom:</h3>

@@ -30,6 +30,9 @@ const Svg = ({
         }
     });
 
+    const halfTrack = trackSize / 2;
+    const radius = width / 2 - halfTrack;
+
     return (
         <svg
             width={`${width}px`}
@@ -50,7 +53,7 @@ const Svg = ({
                 stroke={trackColor}
                 cx={width / 2}
                 cy={width / 2}
-                r={width / 2}
+                r={radius}
             />
             <path
                 className={css(styles.path)}
@@ -63,9 +66,9 @@ const Svg = ({
                 stroke={`url(#${label})`}
                 d={`
                         M ${width / 2}, ${width / 2}
-                        m 0, -${width / 2}
-                        a ${width / 2},${width / 2} 0 0,1 0,${width}
-                        a -${width / 2},-${width / 2} 0 0,1 0,-${width}
+                        m 0, -${width / 2 - halfTrack}
+                        a ${width / 2 - halfTrack},${width / 2 - halfTrack} 0 0,1 0,${width - halfTrack*2}
+                        a -${width / 2 - halfTrack},-${width / 2 - halfTrack} 0 0,1 0,-${width - halfTrack*2}
                     `}/>
         </svg>
     );

@@ -88,10 +88,10 @@ const CircularSlider = ({
         labelColor = '#272b77',
         labelBottom = false,
         labelFontSize = '1rem',
-        valueFontSize = '4rem',
+        valueFontSize = '3rem',
         appendToValue = '',
         prependToValue = '',
-        verticalOffset = '2rem',
+        verticalOffset = '1.5rem',
         hideLabelValue = false,
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
@@ -127,7 +127,7 @@ const CircularSlider = ({
     const svgFullPath = useRef(null);
 
     const setKnobPosition = useCallback((radians) => {
-        const radius = state.radius;
+        const radius = state.radius - trackSize / 2;
         const offsetRadians = radians + knobOffset[knobPosition];
         let degrees = (offsetRadians > 0 ? offsetRadians
             :
@@ -260,6 +260,7 @@ const CircularSlider = ({
                 isDragging={state.isDragging}
                 knobPosition={{ x: state.knob.x, y: state.knob.y }}
                 knobColor={knobColor}
+                trackSize={trackSize}
                 onMouseDown={onMouseDown}
             >
                 {children}

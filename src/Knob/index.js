@@ -9,6 +9,7 @@ const Knob = ({
           knobRadius = 12,
           knobSize = 36,
           onMouseDown,
+          trackSize,
           children
       }) => {
 
@@ -21,8 +22,8 @@ const Knob = ({
     const styles = StyleSheet.create({
         knob: {
             position: 'absolute',
-            left: `-${knobSize/2}px`,
-            top: `-${knobSize/2}px`,
+            left: `-${knobSize/2 - trackSize / 2}px`,
+            top: `-${knobSize/2 - trackSize / 2}px`,
             cursor: 'grab',
             zIndex: 3
         },
@@ -96,6 +97,7 @@ Knob.propTypes = {
     knobColor: PropTypes.string,
     knobRadius: PropTypes.number,
     knobSize: PropTypes.number,
+    trackSize: PropTypes.number,
     children: PropTypes.element,
     onMouseDown: PropTypes.func,
 };
