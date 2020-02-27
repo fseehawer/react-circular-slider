@@ -50,7 +50,7 @@ const App = () => {
             <h3 className={css(styles.h3)}>An initial value of 20, "$" prepended and "K" appended to the value with a custom knob icon and the label on the bottom:</h3>
             <div className={css(styles.slider)}>
                 <CircularSlider
-                    label="savings"
+                    label="savings account"
                     min={0}
                     max={100}
                     dataIndex={20}

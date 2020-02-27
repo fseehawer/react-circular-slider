@@ -243,7 +243,7 @@ const CircularSlider = ({
         <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
             <Svg
                 width={width}
-                label={label}
+                label={label.split(" ").join("")}
                 direction={direction}
                 strokeDasharray={state.dashFullArray}
                 strokeDashoffset={state.dashFullOffset}
