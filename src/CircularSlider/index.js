@@ -1,6 +1,5 @@
 import React, {useEffect, useReducer, useCallback, useRef} from 'react';
 import PropTypes from "prop-types";
-import {StyleSheet, css} from 'aphrodite';
 import reducer from "../redux/reducer";
 import useEventListener from "./useEventListener";
 import Knob from "../Knob";
@@ -64,7 +63,7 @@ const offsetRelativeToDocument = (ref) => {
     return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
 };
 
-const styles = StyleSheet.create({
+const styles = ({
     circularSlider: {
         position: 'relative',
         display: 'inline-block',
@@ -240,7 +239,7 @@ const CircularSlider = ({
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
 
     return (
-        <div className={css(styles.circularSlider, state.mounted && styles.mounted)} ref={circularSlider}>
+        <div style={{...styles.circularSlider, ...(state.mounted && styles.mounted)}} ref={circularSlider}>
             <Svg
                 width={width}
                 label={label.split(" ").join("")}

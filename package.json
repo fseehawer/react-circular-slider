@@ -34,7 +34,6 @@
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
-    "aphrodite": "^2.4.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "enzyme": "^3.10.0",

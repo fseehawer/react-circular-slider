@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet, css} from 'aphrodite';
 import PropTypes from "prop-types";
 
 const Svg = ({
@@ -18,7 +17,7 @@ const Svg = ({
          progressLineCap,
      }) => {
 
-    const styles = StyleSheet.create({
+    const styles = ({
         svg: {
             position: 'relative',
             zIndex: 2
@@ -39,7 +38,7 @@ const Svg = ({
             height={`${width}px`}
             viewBox={`0 0 ${width} ${width}`}
             overflow="visible"
-            className={css(styles.svg)}
+            style={styles.svg}
         >
             <defs>
                 <linearGradient id={label} x1="100%" x2="0%">
@@ -56,7 +55,7 @@ const Svg = ({
                 r={radius}
             />
             <path
-                className={css(styles.path)}
+                style={styles.path}
                 ref={svgFullPath}
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
