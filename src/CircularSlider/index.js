@@ -102,6 +102,7 @@ const CircularSlider = ({
         data = [],
         dataIndex = 0,
         progressLineCap = 'round',
+        renderLabelValue = null,
         children,
         onChange = value => {},
     }) => {
@@ -269,18 +270,20 @@ const CircularSlider = ({
                     {children}
                 </Knob>
             )}
-            <Labels
-                label={label}
-                labelColor={labelColor}
-                labelBottom={labelBottom}
-                labelFontSize={labelFontSize}
-                verticalOffset={verticalOffset}
-                valueFontSize={valueFontSize}
-                appendToValue={appendToValue}
-                prependToValue={prependToValue}
-                hideLabelValue={hideLabelValue}
-                value={`${state.label}`}
-            />
+            {renderLabelValue || (
+                <Labels
+                    label={label}
+                    labelColor={labelColor}
+                    labelBottom={labelBottom}
+                    labelFontSize={labelFontSize}
+                    verticalOffset={verticalOffset}
+                    valueFontSize={valueFontSize}
+                    appendToValue={appendToValue}
+                    prependToValue={prependToValue}
+                    hideLabelValue={hideLabelValue}
+                    value={`${state.label}`}
+                />
+            )}
         </div>
     );
 };
@@ -300,6 +303,7 @@ CircularSlider.propTypes = {
     labelFontSize: PropTypes.string,
     valueFontSize: PropTypes.string,
     appendToValue: PropTypes.string,
+    renderLabelValue: PropTypes.element,
     prependToValue: PropTypes.string,
     verticalOffset: PropTypes.string,
     hideLabelValue: PropTypes.bool,

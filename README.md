@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.2.3-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.2.4-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -77,6 +77,7 @@ labelFontSize        | string | 1rem          | label font-size
 valueFontSize        | string | 4rem          | label value font-size
 appendToValue        | string | ''            | append character to value
 prependToValue       | string | ''            | prepend character to value
+renderLabelValue     | jsx    | null          | add custom jsx code for the labels and styles
 verticalOffset       | string | 2rem          | vertical offset of the label and value
 hideLabelValue       | boolean| false         | hide label and value
 progressColorFrom    | string | #80C3F3       | progress track gradient start color
