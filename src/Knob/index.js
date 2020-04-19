@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React  from 'react';
 import PropTypes from 'prop-types';
 import './index.css'
 
@@ -8,6 +8,7 @@ const Knob = ({
 	knobColor,
 	knobRadius = 12,
 	knobSize = 36,
+	hideKnob,
 	onMouseDown,
 	trackSize,
 	children,
@@ -34,15 +35,19 @@ const Knob = ({
 			animationTimingFunction: 'ease-out',
 			animation: 'pulse 1500ms infinite',
 		},
+
+		hide: {
+			opacity: 0
+		}
 	};
 
 	const defaultKnobIcon = () => {
 		return (
-			<Fragment>
+			<>
 				<rect fill='#FFFFFF' x='14' y='14' width='8' height='1' />
 				<rect fill='#FFFFFF' x='14' y='17' width='8' height='1' />
 				<rect fill='#FFFFFF' x='14' y='20' width='8' height='1' />
-			</Fragment>
+			</>
 		);
 	};
 
@@ -54,6 +59,7 @@ const Knob = ({
 				transform: `translate(${knobPosition.x}px, ${knobPosition.y}px)`,
 				...styles.knob,
 				...(isDragging && styles.dragging),
+				...(hideKnob && styles.hide),
 			}}
 			onMouseDown={onMouseDown}
 			onTouchStart={onMouseDown}>

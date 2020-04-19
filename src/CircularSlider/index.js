@@ -92,6 +92,8 @@ const CircularSlider = ({
         prependToValue = '',
         verticalOffset = '1.5rem',
         hideLabelValue = false,
+        hideKnob = false,
+        knobDraggable = true,
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
         progressSize = 8,
@@ -154,7 +156,7 @@ const CircularSlider = ({
                 }
             }
         });
-    }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, direction, onChange]);
+    }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, trackSize, direction, onChange]);
 
     const onMouseDown = () => {
         dispatch({
@@ -255,15 +257,18 @@ const CircularSlider = ({
                 trackSize={trackSize}
                 radiansOffset={state.radians}
             />
-            <Knob
-                isDragging={state.isDragging}
-                knobPosition={{ x: state.knob.x, y: state.knob.y }}
-                knobColor={knobColor}
-                trackSize={trackSize}
-                onMouseDown={onMouseDown}
-            >
-                {children}
-            </Knob>
+            {knobDraggable && (
+                <Knob
+                    isDragging={state.isDragging}
+                    knobPosition={{ x: state.knob.x, y: state.knob.y }}
+                    knobColor={knobColor}
+                    trackSize={trackSize}
+                    hideKnob={hideKnob}
+                    onMouseDown={onMouseDown}
+                >
+                    {children}
+                </Knob>
+            )}
             <Labels
                 label={label}
                 labelColor={labelColor}
@@ -288,6 +293,8 @@ CircularSlider.propTypes = {
     max: PropTypes.number,
     knobColor: PropTypes.string,
     knobPosition: PropTypes.string,
+    hideKnob: PropTypes.bool,
+    knobDraggable: PropTypes.bool,
     labelColor: PropTypes.string,
     labelBottom: PropTypes.bool,
     labelFontSize: PropTypes.string,

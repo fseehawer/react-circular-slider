@@ -1,6 +1,6 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.2.0-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+![](https://img.shields.io/badge/version-2.2.3-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
 
@@ -67,6 +67,8 @@ max                  | number | 360           | largest value
 data                 | array  | []            | array of data to be spread in 360°
 dataIndex            | number | 0             | initially place knob at a certain value in the array
 knobColor            | string | #4e63ea       | knob color
+hideKnob             | boolean| false         | hide knob
+knobDraggable        | boolean| true          | knob not draggable
 knobPosition         | string | top           | knob's 0 position to be **top**, **right**, **bottom** or **left**
 label                | string | ANGLE         | label
 labelColor           | string | #272b77       | label and value color
