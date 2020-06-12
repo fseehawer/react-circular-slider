@@ -6,26 +6,8 @@ import Knob from "../Knob";
 import Labels from "../Labels";
 import Svg from "../Svg";
 
-// mock window object for SSR
-let winObj = {
-    pageXOffset: 0,
-    pageYOffset: 0
-};
-
-let docObj = {
-    documentElement: {
-        scrollLeft: 0,
-        scrollTop: 0
-    }
-};
-
-let touchSupported = false;
-
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-    touchSupported = ('ontouchstart' in window);
-    winObj = window;
-    docObj = document;
-}
+const isWindowContext = typeof window !== "undefined";
+const touchSupported = isWindowContext && ('ontouchstart' in window);
 
 const SLIDER_EVENT = {
     DOWN: touchSupported ? 'touchstart' : 'mousedown',
@@ -60,8 +42,8 @@ const generateRange = (min, max) => {
 
 const offsetRelativeToDocument = (ref) => {
     const rect = ref.current.getBoundingClientRect();
-    const scrollLeft = winObj.pageXOffset || docObj.documentElement.scrollLeft;
-    const scrollTop = winObj.pageYOffset || docObj.documentElement.scrollTop;
+    const scrollLeft = isWindowContext && (window.pageXOffset || document.documentElement.scrollLeft);
+    const scrollTop = isWindowContext && (window.pageYOffset || document.documentElement.scrollTop);
     return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
 };
 
