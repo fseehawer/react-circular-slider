@@ -1,4 +1,5 @@
 import React, {useEffect, useReducer, useCallback, useRef} from 'react';
+import window from 'global';
 import PropTypes from "prop-types";
 import reducer from "../redux/reducer";
 import useEventListener from "../hooks/useEventListener";
