@@ -97,7 +97,7 @@ const CircularSlider = ({
     const [state, dispatch] = useReducer(reducer, initialState);
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
-    const touchSupported = !isServer && (window?.ontouchstart ?? false);
+    const touchSupported = !isServer && ('ontouchstart' in window);
     const SLIDER_EVENT = {
         DOWN: touchSupported ? 'touchstart' : 'mousedown',
         UP: touchSupported ? 'touchend' : 'mouseup',
