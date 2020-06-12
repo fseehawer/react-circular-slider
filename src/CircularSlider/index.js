@@ -7,7 +7,7 @@ import Labels from "../Labels";
 import Svg from "../Svg";
 
 const isWindowContext = typeof window !== "undefined";
-const touchSupported = isWindowContext && ('ontouchstart' in window);
+const touchSupported = isWindowContext && (window?.ontouchstart ?? false);
 
 const SLIDER_EVENT = {
     DOWN: touchSupported ? 'touchstart' : 'mousedown',
@@ -42,8 +42,8 @@ const generateRange = (min, max) => {
 
 const offsetRelativeToDocument = (ref) => {
     const rect = ref.current.getBoundingClientRect();
-    const scrollLeft = isWindowContext && (window.pageXOffset || document.documentElement.scrollLeft);
-    const scrollTop = isWindowContext && (window.pageYOffset || document.documentElement.scrollTop);
+    const scrollLeft = isWindowContext && ((window?.pageXOffset ?? 0) || (document?.documentElement?.scrollLeft ?? 0));
+    const scrollTop = isWindowContext && ((window?.pageYOffset ?? 0) || (document?.documentElement?.scrollTop ?? 0));
     return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
 };
 
