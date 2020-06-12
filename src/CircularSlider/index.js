@@ -19,12 +19,14 @@ let docObj = {
     }
 };
 
-if (typeof window !== 'undefined') {
+let touchSupported = false;
+
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    touchSupported = ('ontouchstart' in window);
     winObj = window;
     docObj = document;
 }
 
-const touchSupported = ('ontouchstart' in winObj);
 const SLIDER_EVENT = {
     DOWN: touchSupported ? 'touchstart' : 'mousedown',
     UP: touchSupported ? 'touchend' : 'mouseup',
