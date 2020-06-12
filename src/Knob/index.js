@@ -27,7 +27,7 @@ const Knob = ({
 		},
 
 		pause: {
-			animationPlayState: 'paused',
+			animation: 'pulse 1500ms paused',
 		},
 
 		animation: {

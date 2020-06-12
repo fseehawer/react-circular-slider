@@ -1,19 +1,11 @@
 import React, {useEffect, useReducer, useCallback, useRef} from 'react';
 import PropTypes from "prop-types";
 import reducer from "../redux/reducer";
-import useEventListener from "./useEventListener";
+import useEventListener from "../hooks/useEventListener";
+import useIsServer from "../hooks/useIsServer";
 import Knob from "../Knob";
 import Labels from "../Labels";
 import Svg from "../Svg";
-
-const isWindowContext = typeof window !== "undefined";
-const touchSupported = isWindowContext && (window?.ontouchstart ?? false);
-
-const SLIDER_EVENT = {
-    DOWN: touchSupported ? 'touchstart' : 'mousedown',
-    UP: touchSupported ? 'touchend' : 'mouseup',
-    MOVE: touchSupported ? 'touchmove' : 'mousemove',
-};
 
 const spreadDegrees = 360;
 const knobOffset = {
@@ -38,13 +30,6 @@ const generateRange = (min, max) => {
         rangeOfNumbers.push(i);
     }
     return rangeOfNumbers;
-};
-
-const offsetRelativeToDocument = (ref) => {
-    const rect = ref.current.getBoundingClientRect();
-    const scrollLeft = isWindowContext && ((window?.pageXOffset ?? 0) || (document?.documentElement?.scrollLeft ?? 0));
-    const scrollTop = isWindowContext && ((window?.pageYOffset ?? 0) || (document?.documentElement?.scrollTop ?? 0));
-    return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
 };
 
 const styles = ({
@@ -107,10 +92,16 @@ const CircularSlider = ({
         dashFullArray: 0,
         dashFullOffset: 0
     };
-
+    const isServer = useIsServer();
     const [state, dispatch] = useReducer(reducer, initialState);
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
+    const touchSupported = !isServer && (window?.ontouchstart ?? false);
+    const SLIDER_EVENT = {
+        DOWN: touchSupported ? 'touchstart' : 'mousedown',
+        UP: touchSupported ? 'touchend' : 'mouseup',
+        MOVE: touchSupported ? 'touchmove' : 'mousemove',
+    };
 
     const setKnobPosition = useCallback((radians) => {
         const radius = state.radius - trackSize / 2;
@@ -171,6 +162,13 @@ const CircularSlider = ({
             touch = event.changedTouches[0];
         }
 
+        const offsetRelativeToDocument = (ref) => {
+            const rect = ref.current.getBoundingClientRect();
+            const scrollLeft = !isServer && ((window?.pageXOffset ?? 0) || (document?.documentElement?.scrollLeft ?? 0));
+            const scrollTop = !isServer && ((window?.pageYOffset ?? 0) || (document?.documentElement?.scrollTop ?? 0));
+            return {top: rect.top + scrollTop, left: rect.left + scrollLeft};
+        };
+
         const mouseXFromCenter = (event.type === 'touchmove' ? touch.pageX : event.pageX) -
             (offsetRelativeToDocument(circularSlider).left + state.radius);
         const mouseYFromCenter = (event.type === 'touchmove' ? touch.pageY : event.pageY) -
@@ -178,7 +176,7 @@ const CircularSlider = ({
 
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
         setKnobPosition(radians);
-    }, [state.isDragging, state.radius, setKnobPosition]);
+    }, [state.isDragging, state.radius, setKnobPosition, isServer]);
 
     // Get svg path length onmount
     useEffect(() => {
