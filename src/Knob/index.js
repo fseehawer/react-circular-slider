@@ -27,13 +27,15 @@ const Knob = ({
 		},
 
 		pause: {
-			animation: 'pulse 1500ms paused',
+			animationPlayState: 'paused'
 		},
 
 		animation: {
 			transformOrigin: '50% 50%',
 			animationTimingFunction: 'ease-out',
-			animation: 'pulse 1500ms infinite',
+			animationDuration: '1500ms',
+			animationIterationCount: 'infinite',
+			animationName: 'pulse',
 		},
 
 		hide: {
