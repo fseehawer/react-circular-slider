@@ -53,6 +53,7 @@ const CircularSlider = ({
         min = 0,
         max = 360,
         knobColor = '#4e63ea',
+        knobSize = 36,
         knobPosition = 'top',
         labelColor = '#272b77',
         labelBottom = false,
@@ -245,6 +246,7 @@ const CircularSlider = ({
                 <Knob
                     isDragging={state.isDragging}
                     knobPosition={{ x: state.knob.x, y: state.knob.y }}
+                    knobSize={knobSize}
                     knobColor={knobColor}
                     trackSize={trackSize}
                     hideKnob={hideKnob}
