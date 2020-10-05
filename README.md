@@ -67,6 +67,7 @@ max                  | number | 360           | largest value
 data                 | array  | []            | array of data to be spread in 360°
 dataIndex            | number | 0             | initially place knob at a certain value in the array
 knobColor            | string | #4e63ea       | knob color
+knobSize             | number | 32            | knob size
 hideKnob             | boolean| false         | hide knob
 knobDraggable        | boolean| true          | knob not draggable
 knobPosition         | string | top           | knob's 0 position to be **top**, **right**, **bottom** or **left**

@@ -64,12 +64,13 @@ const App = () => {
 					labelColor='#005a58'
 					labelBottom={true}
 					knobColor='#005a58'
+					knobSize={72}
 					progressColorFrom='#00bfbd'
 					progressColorTo='#009c9a'
 					progressSize={24}
 					trackColor='#eeeeee'
 					trackSize={24}>
-					<DragIcon x='9' y='9' width='18px' height='18px' />
+					<DragIcon x='22' y='22' width='28px' height='28px' />
 				</CircularSlider>
 			</div>
 			<pre className={styles.pre}>
@@ -87,13 +88,14 @@ const App = () => {
     labelColor="#005a58"
     labelBottom={true}
     knobColor="#005a58"
+    knobSize={72}
     progressColorFrom="#00bfbd"
     progressColorTo="#005a58"
     progressSize={24}
     trackColor="#eeeeee"
     trackSize={24}
 >
-    <DragIcon x="9" y="8" width="18px" height="18px" />
+    <DragIcon x='22' y='22' width='28px' height='28px' />
 </CircularSlider>`}
 			</pre>
 			<h3 className={styles.h3}>
