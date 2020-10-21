@@ -225,11 +225,13 @@ const CircularSlider = ({
     useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
 
+    const sanitizedLabel = label.replace(/[^A-Za-z0-9]+/g, " ").split(" ").join("");
+
     return (
         <div style={{...styles.circularSlider, ...(state.mounted && styles.mounted)}} ref={circularSlider}>
             <Svg
                 width={width}
-                label={label.split(" ").join("")}
+                label={sanitizedLabel}
                 direction={direction}
                 strokeDasharray={state.dashFullArray}
                 strokeDashoffset={state.dashFullOffset}
