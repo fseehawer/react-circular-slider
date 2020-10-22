@@ -225,7 +225,7 @@ const CircularSlider = ({
     useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
 
-    const sanitizedLabel = label.replace(/[^A-Za-z0-9]+/g, " ").split(" ").join("");
+    const sanitizedLabel = label.replace(/[\W_]/g, "_");
 
     return (
         <div style={{...styles.circularSlider, ...(state.mounted && styles.mounted)}} ref={circularSlider}>
