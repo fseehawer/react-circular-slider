@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/react-circular-slider/static/css/main.01192246.chunk.css",
-    "main.js": "/react-circular-slider/static/js/main.60dd25df.chunk.js",
-    "main.js.map": "/react-circular-slider/static/js/main.60dd25df.chunk.js.map",
+    "main.js": "/react-circular-slider/static/js/main.c6a4e817.chunk.js",
+    "main.js.map": "/react-circular-slider/static/js/main.c6a4e817.chunk.js.map",
     "runtime-main.js": "/react-circular-slider/static/js/runtime-main.44242f48.js",
     "runtime-main.js.map": "/react-circular-slider/static/js/runtime-main.44242f48.js.map",
     "static/js/2.0a6a4744.chunk.js": "/react-circular-slider/static/js/2.0a6a4744.chunk.js",
     "static/js/2.0a6a4744.chunk.js.map": "/react-circular-slider/static/js/2.0a6a4744.chunk.js.map",
     "index.html": "/react-circular-slider/index.html",
-    "precache-manifest.99d7c8631eb0b765353a5eefe2534d27.js": "/react-circular-slider/precache-manifest.99d7c8631eb0b765353a5eefe2534d27.js",
+    "precache-manifest.98ef5c07bd49d0ffd7255f26695f33ec.js": "/react-circular-slider/precache-manifest.98ef5c07bd49d0ffd7255f26695f33ec.js",
     "service-worker.js": "/react-circular-slider/service-worker.js",
     "static/css/main.01192246.chunk.css.map": "/react-circular-slider/static/css/main.01192246.chunk.css.map",
     "static/js/2.0a6a4744.chunk.js.LICENSE.txt": "/react-circular-slider/static/js/2.0a6a4744.chunk.js.LICENSE.txt",
@@ -19,6 +19,6 @@
     "static/js/runtime-main.44242f48.js",
     "static/js/2.0a6a4744.chunk.js",
     "static/css/main.01192246.chunk.css",
-    "static/js/main.60dd25df.chunk.js"
+    "static/js/main.c6a4e817.chunk.js"
   ]
 }
