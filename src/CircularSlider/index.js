@@ -251,6 +251,7 @@ const CircularSlider = ({
                 knobColor={knobColor}
                 trackSize={trackSize}
                 hideKnob={hideKnob}
+                knobDraggable={knobDraggable}
                 onMouseDown={onMouseDown}
             >
                 {children}

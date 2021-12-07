@@ -8,6 +8,7 @@ const Knob = ({
 	knobColor,
 	knobSize,
 	hideKnob,
+	knobDraggable,
 	onMouseDown,
 	trackSize,
 	children,
@@ -39,6 +40,10 @@ const Knob = ({
 
 		hide: {
 			opacity: 0
+		},
+
+		normalCursor: {
+			cursor: "auto"
 		}
 	};
 
@@ -64,6 +69,7 @@ const Knob = ({
 				...styles.knob,
 				...(isDragging && styles.dragging),
 				...(hideKnob && styles.hide),
+				...(!knobDraggable && styles.normalCursor),
 			}}
 			onMouseDown={onMouseDown}
 			onTouchStart={onMouseDown}>
@@ -99,6 +105,8 @@ Knob.propTypes = {
 	knobColor: PropTypes.string,
 	knobRadius: PropTypes.number,
 	knobSize: PropTypes.number,
+	hideKnob: PropTypes.bool,
+	knobDraggable: PropTypes.bool,
 	trackSize: PropTypes.number,
 	children: PropTypes.element,
 	onMouseDown: PropTypes.func,
