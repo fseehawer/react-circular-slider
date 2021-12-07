@@ -106,10 +106,6 @@ const CircularSlider = ({
     };
 
     const setKnobPosition = useCallback((radians) => {
-        if (!knobDraggable) {
-            return;
-        }
-
         const radius = state.radius - trackSize / 2;
         const offsetRadians = radians + knobOffset[knobPosition];
         let degrees = (offsetRadians > 0 ? offsetRadians
@@ -159,7 +155,7 @@ const CircularSlider = ({
     };
 
     const onMouseMove = useCallback((event) => {
-        if (!state.isDragging) return;
+        if (!state.isDragging || !knobDraggable) return;
 
         event.preventDefault();
 
