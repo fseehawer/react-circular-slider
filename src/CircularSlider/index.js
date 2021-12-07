@@ -106,6 +106,10 @@ const CircularSlider = ({
     };
 
     const setKnobPosition = useCallback((radians) => {
+        if (!knobDraggable) {
+            return;
+        }
+
         const radius = state.radius - trackSize / 2;
         const offsetRadians = radians + knobOffset[knobPosition];
         let degrees = (offsetRadians > 0 ? offsetRadians
@@ -244,19 +248,17 @@ const CircularSlider = ({
                 trackSize={trackSize}
                 radiansOffset={state.radians}
             />
-            {knobDraggable && (
-                <Knob
-                    isDragging={state.isDragging}
-                    knobPosition={{ x: state.knob.x, y: state.knob.y }}
-                    knobSize={knobSize}
-                    knobColor={knobColor}
-                    trackSize={trackSize}
-                    hideKnob={hideKnob}
-                    onMouseDown={onMouseDown}
-                >
-                    {children}
-                </Knob>
-            )}
+            <Knob
+                isDragging={state.isDragging}
+                knobPosition={{ x: state.knob.x, y: state.knob.y }}
+                knobSize={knobSize}
+                knobColor={knobColor}
+                trackSize={trackSize}
+                hideKnob={hideKnob}
+                onMouseDown={onMouseDown}
+            >
+                {children}
+            </Knob>
             {renderLabelValue || (
                 <Labels
                     label={label}

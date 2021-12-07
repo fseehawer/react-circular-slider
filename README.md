@@ -69,7 +69,7 @@ dataIndex            | number | 0             | initially place knob at a certai
 knobColor            | string | #4e63ea       | knob color
 knobSize             | number | 32            | knob size
 hideKnob             | boolean| false         | hide knob
-knobDraggable        | boolean| true          | knob not draggable
+knobDraggable        | boolean| true          | knob draggable
 knobPosition         | string | top           | knob's 0 position to be **top**, **right**, **bottom** or **left**
 label                | string | ANGLE         | label
 labelColor           | string | #272b77       | label and value color
