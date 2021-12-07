@@ -47,21 +47,6 @@ const Knob = ({
 		}
 	};
 
-	const defaultKnobIcon = () => {
-		return (
-			<svg
-				width={`${knobSize}px`}
-				height={`${knobSize}px`}
-				viewBox={`0 0 36 36`}>
-				<rect fill='#FFFFFF' x='14' y='14' width='8' height='1' />
-				<rect fill='#FFFFFF' x='14' y='17' width='8' height='1' />
-				<rect fill='#FFFFFF' x='14' y='20' width='8' height='1' />
-			</svg>
-		);
-	};
-
-	const customKnobIcon = () => children;
-
 	return (
 		<div
 			style={{
@@ -93,7 +78,16 @@ const Knob = ({
 					cy={knobSize / 2}
 					r={(knobSize * 2 / 3) / 2}
 				/>
-				{children ? customKnobIcon() : defaultKnobIcon()}
+				{children ?? (
+					<svg
+						width={`${knobSize}px`}
+						height={`${knobSize}px`}
+						viewBox={`0 0 36 36`}>
+						<rect fill='#FFFFFF' x='14' y='14' width='8' height='1' />
+						<rect fill='#FFFFFF' x='14' y='17' width='8' height='1' />
+						<rect fill='#FFFFFF' x='14' y='20' width='8' height='1' />
+					</svg>
+				)}
 			</svg>
 		</div>
 	);

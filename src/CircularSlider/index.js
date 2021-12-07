@@ -178,7 +178,7 @@ const CircularSlider = ({
 
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
         setKnobPosition(radians);
-    }, [state.isDragging, state.radius, setKnobPosition, isServer]);
+    }, [state.isDragging, state.radius, setKnobPosition, knobDraggable, isServer]);
 
     // Get svg path length onmount
     useEffect(() => {
