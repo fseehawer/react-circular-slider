@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "A customizable circular slider with no dependencies.",
   "main": "index.js",
   "repository": {
@@ -27,8 +27,8 @@
   "homepage": "https://fseehawer.github.io/react-circular-slider/",
   "peerDependencies": {
     "global": "^4.4.0",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react": "^16.0.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -42,9 +42,9 @@
     "eslint-utils": "^1.4.1",
     "global": "^4.4.0",
     "prop-types": "^15.7.2",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-scripts": "^3.4.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^5.0.0",
     "serialize-javascript": "^3.1.0",
     "webpack-cli": "^3.3.11"
   },
