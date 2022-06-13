@@ -146,6 +146,17 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
     <EmojiIcon x="9" y="9" width="18px" height="18px" />
 </CircularSlider>`}
 			</pre>
+			<br />
+			<hr />
+			<br />
+			<h3 className={styles.h3}>
+				Please consider a small donation. Even one dollar will help to maintain and develop new features. Thanks!
+			</h3>
+			<form action="https://www.paypal.com/donate" method="post" target="_top">
+				<input type="hidden" name="hosted_button_id" value="GGLRKKGFPTXJW" />
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+				<img alt="" border="0" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1" />
+			</form>
 		</div>
 	);
 };
