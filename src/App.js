@@ -4,6 +4,7 @@ import { ReactComponent as DragIcon } from './assets/drag.svg';
 import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 
 const App = () => {
+	const [isDragging, setIsDragging] = React.useState(false);
 	const styles = {
 		wrapper: {
 			margin: '2rem',
@@ -37,8 +38,17 @@ const App = () => {
 					knobPosition='right'
 					appendToValue='°'
 					valueFontSize='4rem'
+					trackColor="#eeeeee"
+					progressColorFrom={isDragging ? "#F0A367" : "#00bfbd"}
+          progressColorTo={isDragging ? "#F65749" : "#009c9a"}
+					labelColor={isDragging ? "#F0A367" : "#00bfbd"}
+					knobColor={isDragging ? "#F0A367" : "#00bfbd"}
+          isDragging={(value) => setIsDragging(value)}
 				/>
 			</div>
+			<div style={{ marginTop: "20px" }}>
+          isDragging: {isDragging ? "yes 🥵" : "no 😑"}
+      </div>
 			<pre className={styles.pre}>
 				{`<CircularSlider
     min={0}
@@ -47,6 +57,12 @@ const App = () => {
     knobPosition="right"
     appendToValue="°"
     valueFontSize="4rem"
+    trackColor="#eeeeee"
+    progressColorFrom={isDragging ? "#F0A367" : "#00bfbd"}
+    progressColorTo={isDragging ? "#F65749" : "#009c9a"}
+    labelColor={isDragging ? "#F0A367" : "#00bfbd"}
+    knobColor={isDragging ? "#F0A367" : "#00bfbd"}
+    isDragging={(value) => setIsDragging(value)}
 />`}
 			</pre>
 			<h3 className={styles.h3}>
