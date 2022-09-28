@@ -32,6 +32,7 @@ declare module '@augustolopez/react-circular-slider' {
     dataIndex?: number;
     onChange?: Function;
     children?: React.ReactNode;
+    isDragging?: Function;
   }
 
   const CircularSlider: React.FC<CircularSliderProps>;

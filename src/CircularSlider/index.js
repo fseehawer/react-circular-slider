@@ -76,6 +76,7 @@ const CircularSlider = ({
         renderLabelValue = null,
         children,
         onChange = value => {},
+        isDragging = value => {},
     }) => {
     const initialState = {
         mounted: false,
@@ -137,6 +138,7 @@ const CircularSlider = ({
     }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, trackSize, direction, onChange]);
 
     const onMouseDown = () => {
+        isDragging(true);
         dispatch({
             type: 'onMouseDown',
             payload: {
@@ -146,6 +148,7 @@ const CircularSlider = ({
     };
 
     const onMouseUp = () => {
+        state.isDragging && isDragging(false);
         dispatch({
             type: 'onMouseUp',
             payload: {
@@ -301,7 +304,8 @@ CircularSlider.propTypes = {
     trackSize: PropTypes.number,
     data: PropTypes.array,
     dataIndex: PropTypes.number,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    isDragging: PropTypes.func
 };
 
 export default CircularSlider;

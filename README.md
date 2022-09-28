@@ -88,6 +88,7 @@ progressLineCap      | string | round         | progress track cap to be **round
 trackColor           | string | #DDDEFB       | background track color
 trackSize            | number | 8             | background track size
 onChange             | func   | value => {}   | returns label value
+isDragging           | func   | value => {}   | returns isDragging value
 
 ## 
 
