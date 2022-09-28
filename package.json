@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.5.12",
+  "version": "2.5.13",
   "description": "A customizable circular slider with no dependencies.",
   "main": "index.js",
   "repository": {
