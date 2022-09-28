@@ -1,6 +1,6 @@
 // Definitions by: Augusto Lopez <https://github.com/augustolopez>
 import React from 'react';
-declare module '@augustolopez/react-circular-slider' {
+declare module '@fseehawer/react-circular-slider' {
 
   export interface CircularSliderProps {
     label?: string;
