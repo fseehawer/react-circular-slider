@@ -40,15 +40,15 @@ const App = () => {
 					valueFontSize='4rem'
 					trackColor="#eeeeee"
 					progressColorFrom={isDragging ? "#F0A367" : "#00bfbd"}
-          progressColorTo={isDragging ? "#F65749" : "#009c9a"}
+          			progressColorTo={isDragging ? "#F65749" : "#009c9a"}
 					labelColor={isDragging ? "#F0A367" : "#00bfbd"}
 					knobColor={isDragging ? "#F0A367" : "#00bfbd"}
-          isDragging={(value) => setIsDragging(value)}
+          			isDragging={(value) => setIsDragging(value)}
 				/>
 			</div>
 			<div style={{ marginTop: "20px" }}>
-          isDragging: {isDragging ? "yes 🥵" : "no 😑"}
-      </div>
+			  isDragging: {isDragging ? "yes 🥵" : "no 😑"}
+			</div>
 			<pre className={styles.pre}>
 				{`<CircularSlider
     min={0}
@@ -148,7 +148,7 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
     progressLineCap="flat"
     dataIndex={1}
     label="Alphabet"
-    data=["A","B","C"]//...
+    data=["A","B","C","D","E","etc..."]
     labelColor="#212121"
     valueFontSize="6rem"
     verticalOffset="1rem"
