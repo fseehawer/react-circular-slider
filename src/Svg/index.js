@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from "prop-types";
 
 const Svg = ({
@@ -17,7 +17,7 @@ const Svg = ({
          progressLineCap,
          onMouseDown
      }) => {
-
+    const circleRef = useRef(null)
     const styles = ({
         svg: {
             position: 'relative',
@@ -33,6 +33,32 @@ const Svg = ({
     const halfTrack = trackSize / 2;
     const radius = width / 2 - halfTrack;
 
+    /**
+     * Check that there is a click handler and that the click happened on the
+     * circumference of the circle (e.g. that the user is dragging the track to
+     * change the value) and then call the handler
+     * @param {SyntheticBaseEvent} event 
+     */
+    const handleClick = (event) => {
+        if(!onMouseDown) return
+
+        const circleBounds = circleRef.current.getBoundingClientRect();
+
+        const mouseX = event?.clientX || event?.touches[0]?.clientX;
+        const mouseY = event.clientY || event?.touches[0]?.clientY;
+        const circleCenterX = circleBounds.left + circleBounds.width / 2;
+        const circleCenterY = circleBounds.top + circleBounds.height / 2;
+        const distance = Math.sqrt(
+          Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2)
+        );
+
+        if (distance < (circleBounds.width / 2) - trackSize) {
+            return
+        }
+        
+        onMouseDown()
+    }
+    
     return (
         <svg
             width={`${width}px`}
@@ -40,8 +66,8 @@ const Svg = ({
             viewBox={`0 0 ${width} ${width}`}
             overflow="visible"
             style={styles.svg}
-            onMouseDown={onMouseDown}
-            onTouchStart={onMouseDown}
+            onMouseDown={handleClick}
+            onTouchStart={handleClick}
         >
             <defs>
                 <linearGradient id={label} x1="100%" x2="0%">
@@ -50,6 +76,7 @@ const Svg = ({
                 </linearGradient>
             </defs>
             <circle
+                ref={circleRef}
                 strokeWidth={trackSize}
                 fill="none"
                 stroke={trackColor}
