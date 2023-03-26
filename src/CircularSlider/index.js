@@ -70,6 +70,7 @@ const CircularSlider = ({
         progressSize = 8,
         trackColor = '#DDDEFB',
         trackSize = 8,
+        trackDraggable = false,
         data = [],
         dataIndex = 0,
         progressLineCap = 'round',
@@ -158,7 +159,7 @@ const CircularSlider = ({
     };
 
     const onMouseMove = useCallback((event) => {
-        if (!state.isDragging || !knobDraggable) return;
+        if (!state.isDragging || (!knobDraggable && !trackDraggable)) return;
 
         event.preventDefault();
 
@@ -181,7 +182,7 @@ const CircularSlider = ({
 
         const radians = Math.atan2(mouseYFromCenter, mouseXFromCenter);
         setKnobPosition(radians);
-    }, [state.isDragging, state.radius, setKnobPosition, knobDraggable, isServer]);
+    }, [state.isDragging, state.radius, setKnobPosition, knobDraggable, trackDraggable, isServer]);
 
     // Get svg path length onmount
     useEffect(() => {
@@ -246,6 +247,7 @@ const CircularSlider = ({
                 trackColor={trackColor}
                 trackSize={trackSize}
                 radiansOffset={state.radians}
+                onMouseDown={trackDraggable ? onMouseDown : null}
             />
             <Knob
                 isDragging={state.isDragging}
@@ -300,6 +302,7 @@ CircularSlider.propTypes = {
     progressColorFrom: PropTypes.string,
     progressColorTo: PropTypes.string,
     progressSize: PropTypes.number,
+    trackDraggable: PropTypes.bool,
     trackColor: PropTypes.string,
     trackSize: PropTypes.number,
     data: PropTypes.array,

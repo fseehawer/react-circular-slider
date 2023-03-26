@@ -28,6 +28,7 @@ declare module '@fseehawer/react-circular-slider' {
     progressSize?: number;
     trackColor?: string;
     trackSize?: number;
+    trackDraggable?: boolean;
     data?: any[];
     dataIndex?: number;
     onChange?: Function;
