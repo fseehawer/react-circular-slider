@@ -15,6 +15,7 @@ const Svg = ({
          svgFullPath,
          radiansOffset,
          progressLineCap,
+         onMouseDown
      }) => {
 
     const styles = ({
@@ -39,6 +40,8 @@ const Svg = ({
             viewBox={`0 0 ${width} ${width}`}
             overflow="visible"
             style={styles.svg}
+            onMouseDown={onMouseDown}
+            onTouchStart={onMouseDown}
         >
             <defs>
                 <linearGradient id={label} x1="100%" x2="0%">
