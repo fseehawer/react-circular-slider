@@ -15,7 +15,8 @@ const Svg = ({
          svgFullPath,
          radiansOffset,
          progressLineCap,
-         onMouseDown
+         onMouseDown,
+         isDragging
      }) => {
     const circleRef = useRef(null)
     const styles = ({
@@ -52,7 +53,8 @@ const Svg = ({
           Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2)
         );
 
-        if (distance < (circleBounds.width / 2) - trackSize) {
+        const threshold = (circleBounds.width / isDragging ? 4 : 2) - trackSize
+        if (distance < threshold) {
             return
         }
         

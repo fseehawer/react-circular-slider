@@ -52,6 +52,7 @@ const CircularSlider = ({
         direction = 1,
         min = 0,
         max = 360,
+        initialValue = 0,
         knobColor = '#4e63ea',
         knobSize = 36,
         knobPosition = 'top',
@@ -78,15 +79,26 @@ const CircularSlider = ({
         children,
         onChange = value => {},
         isDragging = value => {},
+        // When continuous is enabled the wheel will go round infinitely up to
+        // the max and down to the min values
+        continuous = {
+            enabled: false,
+            clicks: 120,
+            interval: 1,
+        }
     }) => {
+    // This is used to keep track of the previous index when continuous mode is enabled
+    const continuousPreviousIndex = useRef(-1);
+    const clicksPerLoop = continuous.clicks || Math.floor((max - min) / 3);
+
     const initialState = {
         mounted: false,
         isDragging: false,
         width: width,
         radius: width / 2,
         knobPosition: knobPosition,
-        label: 0,
-        data: data,
+        label: initialValue || 0,
+        data: continuous.enabled ? Array.from(Array(clicksPerLoop).keys()) : data,
         radians: 0,
         offset: 0,
         knob: {
@@ -96,6 +108,7 @@ const CircularSlider = ({
         dashFullArray: 0,
         dashFullOffset: 0
     };
+
     const isServer = useIsServer();
     const [state, dispatch] = useReducer(reducer, initialState);
     const circularSlider = useRef(null);
@@ -120,23 +133,93 @@ const CircularSlider = ({
         const pointsInCircle = (state.data.length - 1) / spreadDegrees;
         const currentPoint = Math.round(degrees * pointsInCircle);
 
-        if(state.data[currentPoint] !== state.label) {
-            // props callback for parent
-            onChange(state.data[currentPoint]);
-        }
-
-        dispatch({
-            type: 'setKnobPosition',
-            payload: {
-                dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-                label: state.data[currentPoint],
-                knob: {
-                    x: (radius * Math.cos(radians) + radius),
-                    y: (radius * Math.sin(radians) + radius),
-                }
+        if(continuous?.enabled ?? false) {
+            if(continuousPreviousIndex.current === -1) {
+                // Calibrate the loop point of the continuous dial
+                continuousPreviousIndex.current = currentPoint
+                return
             }
-        });
-    }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, trackSize, direction, onChange]);
+
+
+            if(continuousPreviousIndex.current === currentPoint) {
+                // If the index has not changed then we are not moving, just
+                // update the position of the knob
+                dispatch({
+                    type: 'setKnobPosition',
+                    payload: {
+                        dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                        label: Number(state.label),
+                        knob: {
+                            x: (radius * Math.cos(radians) + radius),
+                            y: (radius * Math.sin(radians) + radius),
+                        }
+                    }
+                });
+                continuousPreviousIndex.current = currentPoint
+                return
+            }
+
+            // Determine the direction of the dial
+            const positiveDistance = (currentPoint - continuousPreviousIndex.current + clicksPerLoop) % clicksPerLoop;
+            const negativeDistance = (continuousPreviousIndex.current - currentPoint + clicksPerLoop) % clicksPerLoop;
+            const positive = positiveDistance <= Math.max(1, clicksPerLoop * 0.02)
+            const negative = negativeDistance <= Math.max(1, clicksPerLoop * 0.02)
+
+            if(!positive && !negative) {
+                // Protect against the dial being moved too far in one direction
+                dispatch({
+                    type: 'setKnobPosition',
+                    payload: {
+                        dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                        label: Number(state.label),
+                        knob: {
+                            x: (radius * Math.cos(radians) + radius),
+                            y: (radius * Math.sin(radians) + radius),
+                        }
+                    }
+                });
+                continuousPreviousIndex.current = currentPoint
+                return
+            }
+
+            // Increment or decrement by the interval
+            const interval = continuous?.interval ?? 1
+            const increment = positive ? interval * positiveDistance : -interval * negativeDistance
+            
+            continuousPreviousIndex.current = currentPoint
+            const newValue = Math.min(max, Math.max(min, Number(state.label) + increment))
+            onChange(newValue)
+            dispatch({
+                      type: 'setKnobPosition',
+                      payload: {
+                          dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                          label: newValue,
+                          knob: {
+                              x: (radius * Math.cos(radians) + radius),
+                              y: (radius * Math.sin(radians) + radius),
+                          }
+                      }
+                  });
+            return
+        } else {
+            if(state.data[currentPoint] !== state.label) {
+                // props callback for parent
+                onChange(state.data[currentPoint]);
+            }
+
+            dispatch({
+                type: 'setKnobPosition',
+                payload: {
+                    dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                    label: state.data[currentPoint],
+                    knob: {
+                        x: (radius * Math.cos(radians) + radius),
+                        y: (radius * Math.sin(radians) + radius),
+                    }
+                }
+            });
+        }
+    }, [state.dashFullArray, state.radius, state.data, state.label, knobPosition, trackSize, direction, onChange, continuous.enabled]);
 
     const onMouseDown = () => {
         isDragging(true);
@@ -149,6 +232,11 @@ const CircularSlider = ({
     };
 
     const onMouseUp = () => {
+        if(continuous?.enabled ?? false) {
+            // Reset the continuous index, so we can recalibrate on the next interaction
+            continuousPreviousIndex.current = -1
+        }
+        
         state.isDragging && isDragging(false);
         dispatch({
             type: 'onMouseUp',
@@ -248,6 +336,7 @@ const CircularSlider = ({
                 trackSize={trackSize}
                 radiansOffset={state.radians}
                 onMouseDown={trackDraggable ? onMouseDown : null}
+                isDragging={state.isDragging}
             />
             <Knob
                 isDragging={state.isDragging}

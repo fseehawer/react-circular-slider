@@ -2,12 +2,19 @@
 import React from 'react';
 declare module '@fseehawer/react-circular-slider' {
 
+  interface Continuous {
+    enabled: boolean;
+    clicks: number;
+    interval: number;
+  }
+
   export interface CircularSliderProps {
     label?: string;
     width?: number;
     direction?: number;
     min?: number;
     max?: number;
+    initialValue?: number;
     knobColor?: string;
     knobPosition?: string;
     knobSize?: number;
@@ -34,6 +41,7 @@ declare module '@fseehawer/react-circular-slider' {
     onChange?: Function;
     children?: React.ReactNode;
     isDragging?: Function;
+    continuous?: Continuous;
   }
 
   const CircularSlider: React.FC<CircularSliderProps>;
