@@ -220,7 +220,7 @@ const CircularSlider = ({
 
                 return setKnobPosition(radians+(offset*getSliderRotation(direction)));
             }
-            setKnobPosition(-(knobOffset[state.knobPosition]*getSliderRotation(direction))+(offset*getSliderRotation(direction)));
+            setKnobPosition(-(knobOffset[state.knobPosition])+(offset*getSliderRotation(direction)));
         }
 
         // eslint-disable-next-line
