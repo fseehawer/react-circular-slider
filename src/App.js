@@ -162,6 +162,43 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
     <EmojiIcon x="9" y="9" width="18px" height="18px" />
 </CircularSlider>`}
 			</pre>
+			<h3 style={styles.h3}>
+				Here continuous mode is enabled, making the dial behave like an iPod click wheel.
+				You can click anywhere on the wheel to start the interaction and move 
+				the dial round infinitely, up and down to the max/min values.
+			</h3>
+			<div style={styles.slider}>
+				<CircularSlider
+				    min={0}
+					max={360}
+					knobPosition='right'
+					appendToValue='°'
+					valueFontSize='4rem'
+					trackColor="#eeeeee"
+					trackDraggable={true}
+					continuous={{
+						enabled: true,
+						clicks: 100,
+						increment: 1,
+					}}
+				/>
+			</div>
+			<pre className={styles.pre}>
+				{`<CircularSlider
+    min={0}
+    max={360}
+    knobPosition="right"
+    appendToValue="°"
+    valueFontSize="4rem"
+    trackColor="#eeeeee"
+	trackDraggable={true}
+	continuous={{
+		enabled: true,
+		clicks: 100
+		increment: 1,
+	}}
+/>`}
+			</pre>
 			<br />
 			<hr />
 			<br />

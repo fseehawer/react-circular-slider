@@ -64,6 +64,7 @@ width                | number | 280           | width of the slider
 direction            | number | 1             | clockwise (**1**) or anticlockwise (**-1**)
 min                  | number | 0             | smallest value
 max                  | number | 360           | largest value
+initialValue         | number | 0             | set an initial value for the label
 data                 | array  | []            | array of data to be spread in 360°
 dataIndex            | number | 0             | initially place knob at a certain value in the array
 knobColor            | string | #4e63ea       | knob color
@@ -90,6 +91,10 @@ trackSize            | number | 8             | background track size
 trackDraggable       | boolean| false         | make the track draggable
 onChange             | func   | value => {}   | returns label value
 isDragging           | func   | value => {}   | returns isDragging value
+continuous           | object | ...           | apply settings to enable continuous mode
+continuous.enabled   | boolean| false         | whether continuous mode is enabled
+continuous.clicks    | number | 120           | the amount of clicks per loop cycle
+continuous.interval  | number | 1             | the amount to increment/decrement with each click
 
 ## 
 
