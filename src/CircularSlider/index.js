@@ -9,7 +9,7 @@ import Labels from "../Labels";
 import Svg from "../Svg";
 
 const spreadDegrees = 360;
-const knobOffset = {
+const knobOffsetConsts = {
     top: Math.PI / 2,
     right: 0,
     bottom: -Math.PI / 2,
@@ -31,6 +31,11 @@ const generateRange = (min, max) => {
         rangeOfNumbers.push(i);
     }
     return rangeOfNumbers;
+};
+
+const getKnobOffsetAmount = (knobPosition) => {
+    if (knobPosition in knobOffsetConsts) return knobOffsetConsts[knobPosition];
+    return getRadians(knobPosition);
 };
 
 const styles = ({
@@ -96,7 +101,7 @@ const CircularSlider = ({
         isDragging: false,
         width: width,
         radius: width / 2,
-        knobPosition: knobPosition,
+        knobOffset: getKnobOffsetAmount(knobPosition),
         label: initialValue || 0,
         data: continuous.enabled ? Array.from(Array(clicksPerLoop).keys()) : data,
         radians: 0,
@@ -122,7 +127,7 @@ const CircularSlider = ({
 
     const setKnobPosition = useCallback((radians) => {
         const radius = state.radius - trackSize / 2;
-        const offsetRadians = radians + knobOffset[knobPosition];
+        const offsetRadians = radians + getKnobOffsetAmount(knobPosition);
         let degrees = (offsetRadians > 0 ? offsetRadians
             :
             ((2 * Math.PI) + offsetRadians)) * (spreadDegrees / (2 * Math.PI));
@@ -297,22 +302,22 @@ const CircularSlider = ({
             dispatch({
                 type: 'setInitialKnobPosition',
                 payload: {
-                    radians: Math.PI / 2 - knobOffset[state.knobPosition],
+                    radians: Math.PI / 2 - state.knobOffset,
                     offset
                 }
             });
 
             if(knobPositionIndex) {
                 const degrees = getSliderRotation(direction) * knobPositionIndex * pointsInCircle;
-                const radians = getRadians(degrees) - knobOffset[state.knobPosition];
+                const radians = getRadians(degrees) - state.knobOffset;
 
                 return setKnobPosition(radians+(offset*getSliderRotation(direction)));
             }
-            setKnobPosition(-(knobOffset[state.knobPosition])+(offset*getSliderRotation(direction)));
+            setKnobPosition(-(state.knobOffset)+(offset*getSliderRotation(direction)));
         }
 
         // eslint-disable-next-line
-    }, [state.dashFullArray, state.knobPosition, state.data.length, dataIndex, direction]);
+    }, [state.dashFullArray, state.knobOffset, state.data.length, dataIndex, direction]);
 
     useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
     useEventListener(SLIDER_EVENT.UP, onMouseUp);
@@ -375,7 +380,10 @@ CircularSlider.propTypes = {
     min: PropTypes.number,
     max: PropTypes.number,
     knobColor: PropTypes.string,
-    knobPosition: PropTypes.string,
+    knobPosition: PropTypes.oneOfType([
+        PropTypes.oneOf(Object.keys(knobOffsetConsts)),
+        PropTypes.number,
+    ]),
     hideKnob: PropTypes.bool,
     knobDraggable: PropTypes.bool,
     labelColor: PropTypes.string,
