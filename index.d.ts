@@ -8,6 +8,8 @@ declare module '@fseehawer/react-circular-slider' {
     interval: number;
   }
 
+  type KnobPosition = 'top' | 'right' | 'bottom' | 'left';
+
   export interface CircularSliderProps {
     label?: string;
     width?: number;
@@ -16,7 +18,7 @@ declare module '@fseehawer/react-circular-slider' {
     max?: number;
     initialValue?: number;
     knobColor?: string;
-    knobPosition?: string;
+    knobPosition?: KnobPosition | number;
     knobSize?: number;
     hideKnob?: boolean;
     knobDraggable?: boolean;
