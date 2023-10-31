@@ -118,12 +118,6 @@ const CircularSlider = ({
     const [state, dispatch] = useReducer(reducer, initialState);
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
-    const touchSupported = !isServer && ('ontouchstart' in window);
-    const SLIDER_EVENT = {
-        DOWN: touchSupported ? 'touchstart' : 'mousedown',
-        UP: touchSupported ? 'touchend' : 'mouseup',
-        MOVE: touchSupported ? 'touchmove' : 'mousemove',
-    };
 
     const setKnobPosition = useCallback((radians) => {
         const radius = state.radius - trackSize / 2;
@@ -319,8 +313,10 @@ const CircularSlider = ({
         // eslint-disable-next-line
     }, [state.dashFullArray, state.knobOffset, state.data.length, dataIndex, direction]);
 
-    useEventListener(SLIDER_EVENT.MOVE, onMouseMove);
-    useEventListener(SLIDER_EVENT.UP, onMouseUp);
+    useEventListener("mousemove", onMouseMove);
+    useEventListener("touchmove", onMouseMove);
+    useEventListener("mouseup", onMouseUp);
+    useEventListener("touchend", onMouseUp);
 
     const sanitizedLabel = label.replace(/[\W_]/g, "_");
 
