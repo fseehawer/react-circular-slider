@@ -73,6 +73,7 @@ const CircularSlider = ({
         knobDraggable = true,
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
+        useMouseAdditionalToTouch = false,
         progressSize = 8,
         trackColor = '#DDDEFB',
         trackSize = 8,
@@ -118,6 +119,8 @@ const CircularSlider = ({
     const [state, dispatch] = useReducer(reducer, initialState);
     const circularSlider = useRef(null);
     const svgFullPath = useRef(null);
+    const touchSupported = !isServer && ('ontouchstart' in window);
+    const useMouse = !touchSupported || (touchSupported && useMouseAdditionalToTouch);
 
     const setKnobPosition = useCallback((radians) => {
         const radius = state.radius - trackSize / 2;
@@ -246,7 +249,7 @@ const CircularSlider = ({
     };
 
     const onMouseMove = useCallback((event) => {
-        if (!state.isDragging || (!knobDraggable && !trackDraggable)) return;
+        if (!state.isDragging || (!knobDraggable && !trackDraggable) || ((event.type === 'mousemove') && !useMouse)) return;
 
         event.preventDefault();
 
@@ -313,10 +316,10 @@ const CircularSlider = ({
         // eslint-disable-next-line
     }, [state.dashFullArray, state.knobOffset, state.data.length, dataIndex, direction]);
 
-    useEventListener("mousemove", onMouseMove);
-    useEventListener("touchmove", onMouseMove);
-    useEventListener("mouseup", onMouseUp);
-    useEventListener("touchend", onMouseUp);
+    useEventListener('touchend', onMouseUp);
+    useEventListener('mouseup', onMouseUp);
+    useEventListener('touchmove', onMouseMove);
+    useEventListener('mousemove', onMouseMove);
 
     const sanitizedLabel = label.replace(/[\W_]/g, "_");
 
@@ -394,6 +397,7 @@ CircularSlider.propTypes = {
     progressLineCap: PropTypes.string,
     progressColorFrom: PropTypes.string,
     progressColorTo: PropTypes.string,
+    useMouseAdditionalToTouch: PropTypes.bool,
     progressSize: PropTypes.number,
     trackDraggable: PropTypes.bool,
     trackColor: PropTypes.string,
