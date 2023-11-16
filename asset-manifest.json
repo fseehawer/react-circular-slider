@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/react-circular-slider/static/css/main.c5642d7e.css",
-    "main.js": "/react-circular-slider/static/js/main.a052b78d.js",
+    "main.js": "/react-circular-slider/static/js/main.030e7694.js",
     "static/media/drag.svg": "/react-circular-slider/static/media/drag.eb30d0a770139a33298cfd390df5a3ba.svg",
     "static/media/emoji.svg": "/react-circular-slider/static/media/emoji.eb4874606fc31f03261796c0f6e5d71c.svg",
     "index.html": "/react-circular-slider/index.html",
     "main.c5642d7e.css.map": "/react-circular-slider/static/css/main.c5642d7e.css.map",
-    "main.a052b78d.js.map": "/react-circular-slider/static/js/main.a052b78d.js.map"
+    "main.030e7694.js.map": "/react-circular-slider/static/js/main.030e7694.js.map"
   },
   "entrypoints": [
     "static/css/main.c5642d7e.css",
-    "static/js/main.a052b78d.js"
+    "static/js/main.030e7694.js"
   ]
 }
