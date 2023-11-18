@@ -46,7 +46,7 @@
     "react-dom": "^18.0.0",
     "react-scripts": "^5.0.0",
     "serialize-javascript": "^3.1.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   },
   "scripts": {
     "start": "react-scripts start",
