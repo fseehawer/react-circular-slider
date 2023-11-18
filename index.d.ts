@@ -34,6 +34,7 @@ declare module '@fseehawer/react-circular-slider' {
     progressLineCap?: string;
     progressColorFrom?: string;
     progressColorTo?: string;
+    useMouseAdditionalToTouch?: boolean;
     progressSize?: number;
     trackColor?: string;
     trackSize?: number;
