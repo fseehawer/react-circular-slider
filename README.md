@@ -70,6 +70,7 @@ dataIndex                  | number          | 0             | initially place k
 knobColor                  | string          | #4e63ea       | knob color
 knobSize                   | number          | 32            | knob size
 hideKnob                   | boolean         | false         | hide knob
+hideKnobRing               | boolean         | false         | hide the slightly transparent ring around knob
 knobDraggable              | boolean         | true          | knob draggable
 knobPosition               | string or number| top           | knob's 0 position as an angle or **top**, **right**, **bottom**, **left**
 label                      | string          | ANGLE         | label

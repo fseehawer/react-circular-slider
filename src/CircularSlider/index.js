@@ -70,6 +70,7 @@ const CircularSlider = ({
         verticalOffset = '1.5rem',
         hideLabelValue = false,
         hideKnob = false,
+        hideKnobRing = false,
         knobDraggable = true,
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
@@ -349,6 +350,7 @@ const CircularSlider = ({
                 knobColor={knobColor}
                 trackSize={trackSize}
                 hideKnob={hideKnob}
+                hideKnobRing={hideKnobRing}
                 knobDraggable={knobDraggable}
                 onMouseDown={onMouseDown}
             >
