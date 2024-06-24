@@ -8,6 +8,7 @@ const Knob = ({
 	knobColor,
 	knobSize,
 	hideKnob,
+	hideKnobRing,
 	knobDraggable,
 	onMouseDown,
 	trackSize,
@@ -62,15 +63,17 @@ const Knob = ({
 				width={`${knobSize}px`}
 				height={`${knobSize}px`}
 				viewBox={`0 0 ${knobSize} ${knobSize}`}>
-				<circle
-					style={{ ...styles.animation, ...(isDragging && styles.pause) }}
-					fill={knobColor}
-					fillOpacity='0.2'
-					stroke='none'
-					cx={knobSize / 2}
-					cy={knobSize / 2}
-					r={knobSize / 2}
-				/>
+				{!hideKnobRing && (
+					<circle
+						style={{ ...styles.animation, ...(isDragging && styles.pause) }}
+						fill={knobColor}
+						fillOpacity='0.2'
+						stroke='none'
+						cx={knobSize / 2}
+						cy={knobSize / 2}
+						r={knobSize / 2}
+					/>
+				)}
 				<circle
 					fill={knobColor}
 					stroke='none'
