@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useCallback, useRef} from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import window from 'global';
 import PropTypes from "prop-types";
 import reducer from "../redux/reducer";
@@ -58,6 +58,7 @@ const CircularSlider = ({
         min = 0,
         max = 360,
         initialValue = 0,
+        value = null,
         knobColor = '#4e63ea',
         knobSize = 36,
         knobPosition = 'top',
@@ -121,6 +122,7 @@ const CircularSlider = ({
     const svgFullPath = useRef(null);
     const touchSupported = !isServer && ('ontouchstart' in window);
     const useMouse = !touchSupported || (touchSupported && useMouseAdditionalToTouch);
+    const [valueFromParent, setValueFromParent] = useState();
 
     const setKnobPosition = useCallback((radians) => {
         const radius = state.radius - trackSize / 2;
@@ -316,6 +318,19 @@ const CircularSlider = ({
         // eslint-disable-next-line
     }, [state.dashFullArray, state.knobOffset, state.data.length, dataIndex, direction]);
 
+    // update state on parent value change 
+    useEffect(() => { 
+        setValueFromParent(value);
+        // calculate radians of value/max
+        const radians = getRadians(value);
+        // adjust to account for starting position
+        const offsetRadians = -(state.knobOffset)+(radians*getSliderRotation(direction));
+
+        // update knob position
+        setKnobPosition(offsetRadians)     
+        // eslint-disable-next-line
+    }, [direction, state.knobOffset, value]);
+
     useEventListener('touchend', onMouseUp);
     useEventListener('mouseup', onMouseUp);
     useEventListener('touchmove', onMouseMove);
@@ -365,7 +380,7 @@ const CircularSlider = ({
                     appendToValue={appendToValue}
                     prependToValue={prependToValue}
                     hideLabelValue={hideLabelValue}
-                    value={`${state.label}`}
+                    value={`${valueFromParent ?? state.label}`}
                 />
             )}
         </div>
@@ -378,6 +393,7 @@ CircularSlider.propTypes = {
     direction: PropTypes.number,
     min: PropTypes.number,
     max: PropTypes.number,
+    value: PropTypes.number,
     knobColor: PropTypes.string,
     knobPosition: PropTypes.oneOfType([
         PropTypes.oneOf(Object.keys(knobOffsetConsts)),
