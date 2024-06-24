@@ -174,12 +174,12 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 </CircularSlider>`}
 			</pre>
 			<h3 style={styles.h3}>
-				Slider with value controlled by external state:
+				Slider with value bound to external state:
 			</h3>
 			<div style={styles.slider}>
 				<CircularSlider	
-				knobDraggable={false}
 				value={sliderValue}
+				onChange={(value)=>setSliderValue(value)}
 				/>
 			</div>
 			<div style={{ marginTop: "20px" }}>
@@ -191,9 +191,11 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 				<button style={styles.button} onClick={()=>setSliderValue(sliderValue + 45)}>+45</button>
 			</div>
 			<pre className={styles.pre}>
-				{`<CircularSlider
-	knobDraggable={false}
+				{`const [sliderValue, setSliderValue] = React.useState(0);
+[...]
+<CircularSlider
 	value={sliderValue}
+	onChange={(value)=>setSliderValue(value)}
 />`}
 			</pre>
 			<h3 style={styles.h3}>
