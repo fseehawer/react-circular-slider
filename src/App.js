@@ -5,6 +5,8 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 
 const App = () => {
 	const [isDragging, setIsDragging] = React.useState(false);
+	const [sliderValue, setSliderValue] = React.useState(0);
+
 	const styles = {
 		wrapper: {
 			margin: '2rem',
@@ -24,6 +26,15 @@ const App = () => {
 		slider: {
 			padding: '0 0 0.5rem 0',
 		},
+
+		button: {
+			padding: '0.5rem',
+			fontSize: '1rem',
+			backgroundColor: '#80C3F3',
+			borderRadius: '0.5rem',
+			borderColor: '#4990E2',
+			margin: '5px',
+		}
 	};
 
 	return (
@@ -161,6 +172,31 @@ import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
 >
     <EmojiIcon x="9" y="9" width="18px" height="18px" />
 </CircularSlider>`}
+			</pre>
+			<h3 style={styles.h3}>
+				Slider with value bound to external state:
+			</h3>
+			<div style={styles.slider}>
+				<CircularSlider	
+				value={sliderValue}
+				onChange={(value)=>setSliderValue(value)}
+				/>
+			</div>
+			<div style={{ marginTop: "20px" }}>
+				<h3>sliderValue: {sliderValue}</h3>
+				<button style={styles.button} onClick={()=>setSliderValue(sliderValue - 45)}>-45</button>
+				<button style={styles.button} onClick={()=>setSliderValue(sliderValue - 1)}>-1</button>
+				<button style={styles.button} onClick={()=>setSliderValue(0)}>Reset</button>
+				<button style={styles.button} onClick={()=>setSliderValue(sliderValue + 1)}>+1</button>
+				<button style={styles.button} onClick={()=>setSliderValue(sliderValue + 45)}>+45</button>
+			</div>
+			<pre className={styles.pre}>
+				{`const [sliderValue, setSliderValue] = React.useState(0);
+[...]
+<CircularSlider
+	value={sliderValue}
+	onChange={(value)=>setSliderValue(value)}
+/>`}
 			</pre>
 			<h3 style={styles.h3}>
 				Here continuous mode is enabled, making the dial behave like an iPod click wheel.
