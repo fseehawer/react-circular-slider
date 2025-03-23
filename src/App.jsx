@@ -24,7 +24,6 @@ const App = () => {
 		},
 		h1: {
 			fontSize: '2rem',
-			fontWeight: 600,
 			color: '#333',
 		},
 		intro: {
@@ -41,8 +40,8 @@ const App = () => {
 		},
 		pre: {
 			fontSize: '0.85rem',
-			background: '#1e1e1e',
-			color: '#dcdcdc',
+			background: '#ececec',
+			color: '#1e1e1e',
 			borderRadius: '8px',
 			padding: '1rem',
 			overflowX: 'auto',
@@ -54,7 +53,8 @@ const App = () => {
 			justifyContent: 'center',
 			alignItems: 'center',
 			flexWrap: 'wrap',
-			marginBottom: '1rem',
+			marginBottom: '2rem',
+			marginTop: '1rem',
 		},
 		button: {
 			padding: '0.5rem 1rem',
@@ -98,7 +98,19 @@ const App = () => {
 					/>
 				</div>
 				<div>isDragging: {isDragging ? "yes 🥵" : "no 😑"}</div>
-				<pre style={styles.pre}>{`<CircularSlider ... />`}</pre>
+				<pre style={styles.pre}>{`<CircularSlider
+  label="Temperature"
+  direction={-1}
+  knobPosition="right"
+  appendToValue="°"
+  valueFontSize="4rem"
+  trackColor="#eeeeee"
+  progressColorFrom={isDragging ? "#F0A367" : "#00bfbd"}
+  progressColorTo={isDragging ? "#F65749" : "#009c9a"}
+  labelColor={isDragging ? "#F0A367" : "#00bfbd"}
+  knobColor={isDragging ? "#F0A367" : "#00bfbd"}
+  isDragging={(value) => setIsDragging(value)}
+/>`}</pre>
 
 				<hr style={styles.divider} />
 
@@ -123,7 +135,25 @@ const App = () => {
 						<DragIcon x='22' y='22' width='28px' height='28px' />
 					</CircularSlider>
 				</div>
-				<pre style={styles.pre}>{`<CircularSlider ... > <DragIcon /> </CircularSlider>`}</pre>
+				<pre style={styles.pre}>{`<CircularSlider
+  label="savings"
+  min={0}
+  max={100}
+  dataIndex={20}
+  prependToValue="$"
+  appendToValue="K"
+  labelColor="#005a58"
+  labelBottom={true}
+  knobColor="#005a58"
+  knobSize={72}
+  progressColorFrom="#00bfbd"
+  progressColorTo="#009c9a"
+  progressSize={24}
+  trackColor="#eeeeee"
+  trackSize={24}
+>
+  <DragIcon x="22" y="22" width="28px" height="28px" />
+</CircularSlider>`}</pre>
 
 				<hr style={styles.divider} />
 
@@ -147,7 +177,24 @@ const App = () => {
 						<EmojiIcon x='9' y='9' width='18px' height='18px' />
 					</CircularSlider>
 				</div>
-				<pre style={styles.pre}>{`<CircularSlider data={['A', 'B', ...]} ... />`}</pre>
+				<pre style={styles.pre}>{`<CircularSlider
+  label="Alphabet"
+  progressLineCap="flat"
+  dataIndex={1}
+  width={250}
+  labelColor="#212121"
+  valueFontSize="6rem"
+  verticalOffset="1rem"
+  knobColor="#212121"
+  progressColorFrom="#ff8500"
+  progressColorTo="#a15400"
+  progressSize={8}
+  trackColor="#eeeeee"
+  trackSize={4}
+  data={["A", "B", "C", "D", "E", ...]}
+>
+  <EmojiIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}</pre>
 
 				<hr style={styles.divider} />
 
@@ -168,7 +215,10 @@ const App = () => {
 						>{val > 0 ? `+${val}` : val}</button>
 					))}
 				</div>
-				<pre style={styles.pre}>{`<CircularSlider value={sliderValue} onChange={...} />`}</pre>
+				<pre style={styles.pre}>{`<CircularSlider
+  value={sliderValue}
+  onChange={(value) => setSliderValue(value)}
+/>`}</pre>
 
 				<hr style={styles.divider} />
 
@@ -189,7 +239,20 @@ const App = () => {
 						}}
 					/>
 				</div>
-				<pre style={styles.pre}>{`<CircularSlider continuous={{ enabled: true, clicks: 100, increment: 1 }} />`}</pre>
+				<pre style={styles.pre}>{`<CircularSlider
+  min={0}
+  max={360}
+  knobPosition="right"
+  appendToValue="°"
+  valueFontSize="4rem"
+  trackColor="#eeeeee"
+  trackDraggable={true}
+  continuous={{
+    enabled: true,
+    clicks: 100,
+    increment: 1,
+  }}
+/>`}</pre>
 
 				<hr style={styles.divider} />
 
