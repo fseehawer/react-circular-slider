@@ -45,6 +45,7 @@ const App = () => {
 			</h3>
 			<div style={styles.slider}>
 				<CircularSlider
+					label='Temperature'
 					direction={-1}
 					knobPosition='right'
 					appendToValue='°'
@@ -82,7 +83,7 @@ const App = () => {
 			</h3>
 			<div className={styles.slider}>
 				<CircularSlider
-					label='savings account'
+					label='savings'
 					min={0}
 					max={100}
 					dataIndex={20}
