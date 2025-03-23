@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "description": "A customizable circular slider with no dependencies.",
   "main": "dist/react-circular-slider.umd.js",
   "module": "dist/react-circular-slider.es.js",
@@ -60,8 +60,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "gh-pages": "git subtree push --prefix build origin gh-pages && git push -u origin master",
-    "build-publish": "npm run build && npm run gh-pages && npm publish --access public"
+    "build-demo": "vite build --config vite.demo.config.js",
+    "gh-pages": "git subtree push --prefix build origin gh-pages",
+    "build-publish": "npm run build && npm run build-demo && npm run gh-pages && npm publish --access public"
   },
   "eslintConfig": {
     "extends": "react-app"
