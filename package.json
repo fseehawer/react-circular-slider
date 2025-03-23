@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "A customizable circular slider with no dependencies.",
   "main": "dist/react-circular-slider.umd.js",
   "module": "dist/react-circular-slider.es.js",
@@ -20,6 +20,7 @@
     "circle slider",
     "circular slider",
     "radial slider",
+    "vite",
     "react",
     "circular",
     "radial",
