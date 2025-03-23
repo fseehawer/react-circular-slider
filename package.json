@@ -1,8 +1,15 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "A customizable circular slider with no dependencies.",
-  "main": "index.js",
+  "main": "dist/react-circular-slider.umd.js",
+  "module": "dist/react-circular-slider.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react-circular-slider.es.js",
+      "require": "./dist/react-circular-slider.umd.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fseehawer/react-circular-slider.git"
@@ -27,35 +34,33 @@
   "homepage": "https://fseehawer.github.io/react-circular-slider/",
   "peerDependencies": {
     "global": "^4.4.0",
-    "react": "^16.0.0 || ^17.0.0 || ^18.0.0",
-    "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
+    "@vitejs/plugin-react": "^4.3.4",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.1",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.2",
     "eslint-utils": "^1.4.1",
     "global": "^4.4.0",
     "prop-types": "^15.7.2",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-scripts": "^5.0.0",
     "serialize-javascript": "^3.1.0",
+    "vite": "^6.2.2",
     "webpack-cli": "^3.3.12"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-npm": "webpack",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "gh-pages": "git subtree push --prefix build origin gh-pages && git push -u origin master",
-    "build-commit-push": "func() { npm run build-npm && npm run build && git add --all && git commit -m \"$1\" && npm run gh-pages && npm publish --access public; }; func"
+    "build-publish": "npm run build && npm run gh-pages && npm publish --access public"
   },
   "eslintConfig": {
     "extends": "react-app"
