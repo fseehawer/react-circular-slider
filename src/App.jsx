@@ -1,7 +1,7 @@
 import React from 'react';
 import CircularSlider from './CircularSlider';
-import { ReactComponent as DragIcon } from './assets/drag.svg';
-import { ReactComponent as EmojiIcon } from './assets/emoji.svg';
+import DragIcon from './assets/drag.svg?react';
+import EmojiIcon from './assets/emoji.svg?react';
 
 const App = () => {
 	const [isDragging, setIsDragging] = React.useState(false);

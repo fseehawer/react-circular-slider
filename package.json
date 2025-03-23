@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.9.3",
+  "version": "2.9.4",
   "description": "A customizable circular slider with no dependencies.",
   "main": "dist/react-circular-slider.umd.js",
   "module": "dist/react-circular-slider.es.js",
@@ -45,16 +45,17 @@
     "@babel/preset-react": "^7.9.4",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-loader": "^8.1.0",
-    "css-loader": "^3.5.1",
+    "css-loader": "^7.1.2",
     "eslint-utils": "^1.4.1",
     "global": "^4.4.0",
     "prop-types": "^15.7.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-scripts": "^5.0.0",
+    "react-scripts": "^3.0.1",
     "serialize-javascript": "^3.1.0",
     "vite": "^6.2.2",
-    "webpack-cli": "^3.3.12"
+    "vite-plugin-svgr": "^4.3.0",
+    "webpack-cli": "^6.0.1"
   },
   "scripts": {
     "dev": "vite",

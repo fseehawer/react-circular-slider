@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-    plugins: [react()],
-    base: '/react-circular-slider/', // this is important for GitHub Pages!
+    root: 'demo',
+    plugins: [react(), svgr()],
+    base: '/react-circular-slider/',
     build: {
-        outDir: 'build',
+        outDir: '../build',
+        emptyOutDir: true,
     },
 });
