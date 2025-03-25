@@ -1,11 +1,11 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.0.0-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.0.1-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
 
-![Circular Slider Preview](public/circular-slider.png)
+<img src="public/circular-slider.png" alt="An image showing the CircularSlider settings" width="100%" />
 
 ## TypeScript Support
 
@@ -92,7 +92,6 @@ The table below lists all available props along with their TypeScript types, def
 | `hideLabelValue`          | `boolean`                                               | `false`                                   | If `true`, both the label and value are hidden.                                                          |
 | `progressColorFrom`       | `string`                                                | `"#80C3F3"`                               | Start color for the progress gradient.                                                                   |
 | `progressColorTo`         | `string`                                                | `"#4990E2"`                               | End color for the progress gradient.                                                                     |
-| `useMouseAdditionalToTouch` | `boolean`                                            | `false`                                   | Enables mouse events alongside touch events if `true`.                                                 |
 | `progressSize`            | `number`                                                | `8`                                       | Thickness of the progress track.                                                                         |
 | `progressLineCap`         | `"round" \| "butt"`                                     | `"round"`                                 | Cap style for the progress track.                                                                        |
 | `trackColor`              | `string`                                                | `"#DDDEFB"`                               | Color of the background track.                                                                           |
@@ -104,7 +103,7 @@ The table below lists all available props along with their TypeScript types, def
 
 ## Donation
 
-## PIf you find this component useful, please consider a small donation. Even one dollar helps maintain and develop new features!
+## If you find this component useful, please consider a small donation. Even one dollar helps maintain and develop new features!
 
 [You can find the donate button on the bottom of the example page](https://fseehawer.github.io/react-circular-slider/)
 
