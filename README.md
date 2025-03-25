@@ -1,14 +1,20 @@
 # react-circular-slider
 
-![](https://img.shields.io/badge/version-2.7.0-green.svg) ![](https://img.shields.io/badge/license-MIT-blue.svg)
+[![Version](https://img.shields.io/badge/version-3.0.0-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A highly customizable circular slider with no dependencies. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
+A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
 
-<img src="public/circular-slider.png" alt="An image showing the CircularSlider settings" width="100%" />
+![Circular Slider Preview](public/circular-slider.png)
 
-## install
+## TypeScript Support
 
-```
+This component now has full **TypeScript** support! Enjoy full IntelliSense and strong type-checking out of the box.  
+*JavaScript users: No worries – the published output is plain JavaScript and works exactly as before.*
+
+## Installation
+
+```bash
 npm install @fseehawer/react-circular-slider
 ```
 
@@ -18,25 +24,24 @@ npm install @fseehawer/react-circular-slider
 import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 
-const App = () => {
-    return (
-        <CircularSlider
-            onChange={ value => { console.log(value); } }
-        />
-    )
-};
+const App: React.FC = () => (
+    <div>
+        <CircularSlider onChange={value => console.log(value)} />
+    </div>
+);
 
 export default App;
 ```
+## Custom Configuration
 
-Use min and max props to define the range of numbers. Use prependToValue/appendToValue if you want to prepend/append e.g. "$" or "°" to the value. Or simply use the data prop and pass any number or string sequence as an array to be spread in 360°. See some [live demos here!](https://fseehawer.github.io/react-circular-slider/)
+Customize properties such as the label, colors, data set, and more:
 
 ```javascript
 import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 
-const App = () => {
-    return (
+const App: React.FC = () => (
+    <div>
         <CircularSlider
             label="savings"
             labelColor="#005a58"
@@ -46,61 +51,60 @@ const App = () => {
             progressSize={24}
             trackColor="#eeeeee"
             trackSize={24}
-            data={["1€","2€"]} //...
+            data={['1€', '2€']} // Custom data array
             dataIndex={10}
-            onChange={ value => { console.log(value); } }
+            onChange={value => console.log(value)}
         />
-    )
-};
+    </div>
+);
 
 export default App;
 ```
 
 ## Props
 
-prop                       | type            | default       | Affects
----------------------------|-----------------|---------------|--------
-width                      | number          | 280           | width of the slider
-direction                  | number          | 1             | clockwise (**1**) or anticlockwise (**-1**)
-min                        | number          | 0             | smallest value
-max                        | number          | 360           | largest value
-initialValue               | number          | 0             | set an initial value for the label
-data                       | array           | []            | array of data to be spread in 360°
-dataIndex                  | number          | 0             | initially place knob at a certain value in the array
-knobColor                  | string          | #4e63ea       | knob color
-knobSize                   | number          | 32            | knob size
-hideKnob                   | boolean         | false         | hide knob
-hideKnobRing               | boolean         | false         | hide the slightly transparent ring around knob
-knobDraggable              | boolean         | true          | knob draggable
-knobPosition               | string or number| top           | knob's 0 position as an angle or **top**, **right**, **bottom**, **left**
-label                      | string          | ANGLE         | label
-labelColor                 | string          | #272b77       | label and value color
-labelBottom                | boolean         | false         | label position at bottom
-labelFontSize              | string          | 1rem          | label font-size
-valueFontSize              | string          | 4rem          | label value font-size
-appendToValue              | string          | ''            | append character to value
-prependToValue             | string          | ''            | prepend character to value
-renderLabelValue           | jsx             | null          | add custom jsx code for the labels and styles
-verticalOffset             | string          | 2rem          | vertical offset of the label and value
-hideLabelValue             | boolean         | false         | hide label and value
-progressColorFrom          | string          | #80C3F3       | progress track gradient start color
-progressColorTo            | string          | #4990E2       | progress track gradient end color
-useMouseAdditionalToTouch  | boolean         | false         | allow touch and mouse events
-progressSize               | number          | 8             | progress track size
-progressLineCap            | string          | round         | progress track cap to be **round** or **flat**
-trackColor                 | string          | #DDDEFB       | background track color
-trackSize                  | number          | 8             | background track size
-trackDraggable             | boolean         | false         | make the track draggable
-onChange                   | func            | value => {}   | returns label value
-isDragging                 | func            | value => {}   | returns isDragging value
-continuous                 | object          | ...           | apply settings to enable continuous mode
-continuous.enabled         | boolean         | false         | whether continuous mode is enabled
-continuous.clicks          | number          | 120           | the amount of clicks per loop cycle
-continuous.interval        | number          | 1             | the amount to increment/decrement with each click
+The table below lists all available props along with their TypeScript types, default values, and descriptions.
 
-## 
+| Prop                      | Type                                                    | Default                                   | Description                                                                                              |
+|---------------------------|---------------------------------------------------------|-------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| `width`                   | `number`                                                | `280`                                     | Width of the slider in pixels.                                                                         |
+| `direction`               | `1 \| -1`                                               | `1`                                       | Rotation direction: `1` for clockwise, `-1` for anticlockwise.                                           |
+| `min`                     | `number`                                                | `0`                                       | Minimum value.                                                                                           |
+| `max`                     | `number`                                                | `360`                                     | Maximum value.                                                                                           |
+| `initialValue`            | `number`                                                | `0`                                       | Initial value for the label.                                                                             |
+| `data`                    | `(string \| number)[]`                                  | `[]`                                      | Array of values or labels, evenly spread over 360°.                                                     |
+| `dataIndex`               | `number`                                                | `0`                                       | Initial index position in the data array.                                                              |
+| `knobColor`               | `string`                                                | `"#4e63ea"`                               | Color of the knob.                                                                                       |
+| `knobSize`                | `number`                                                | `32`                                      | Diameter of the knob in pixels.                                                                          |
+| `hideKnob`                | `boolean`                                               | `false`                                   | If `true`, the knob is hidden.                                                                           |
+| `hideKnobRing`            | `boolean`                                               | `false`                                   | If `true`, the translucent ring around the knob is hidden.                                               |
+| `knobDraggable`           | `boolean`                                               | `true`                                    | If `true`, the knob is draggable.                                                                        |
+| `knobPosition`            | `string \| number`                                      | `"top"`                                   | Starting position: accepts `"top"`, `"right"`, `"bottom"`, `"left"` or an angle (in degrees).            |
+| `label`                   | `string`                                                | `"ANGLE"`                                 | Text label displayed on the slider.                                                                      |
+| `labelColor`              | `string`                                                | `"#272b77"`                               | Color of the label and value text.                                                                       |
+| `labelBottom`             | `boolean`                                               | `false`                                   | If `true`, the label is positioned below the slider.                                                   |
+| `labelFontSize`           | `string`                                                | `"1rem"`                                  | Font size of the label.                                                                                  |
+| `valueFontSize`           | `string`                                                | `"4rem"`                                  | Font size of the displayed value.                                                                        |
+| `appendToValue`           | `string`                                                | `""`                                      | Text appended to the value.                                                                              |
+| `prependToValue`          | `string`                                                | `""`                                      | Text prepended to the value.                                                                             |
+| `renderLabelValue`        | `React.ReactNode`                                       | `null`                                    | Custom JSX for rendering the label and value.                                                            |
+| `verticalOffset`          | `string`                                                | `"2rem"`                                  | Vertical offset for the label/value display.                                                             |
+| `hideLabelValue`          | `boolean`                                               | `false`                                   | If `true`, both the label and value are hidden.                                                          |
+| `progressColorFrom`       | `string`                                                | `"#80C3F3"`                               | Start color for the progress gradient.                                                                   |
+| `progressColorTo`         | `string`                                                | `"#4990E2"`                               | End color for the progress gradient.                                                                     |
+| `useMouseAdditionalToTouch` | `boolean`                                            | `false`                                   | Enables mouse events alongside touch events if `true`.                                                 |
+| `progressSize`            | `number`                                                | `8`                                       | Thickness of the progress track.                                                                         |
+| `progressLineCap`         | `"round" \| "butt"`                                     | `"round"`                                 | Cap style for the progress track.                                                                        |
+| `trackColor`              | `string`                                                | `"#DDDEFB"`                               | Color of the background track.                                                                           |
+| `trackSize`               | `number`                                                | `8`                                       | Thickness of the background track.                                                                       |
+| `trackDraggable`          | `boolean`                                               | `false`                                   | If `true`, allows dragging the background track.                                                       |
+| `onChange`                | `(value: string \| number) => void`                     | `() => {}`                                | Callback fired when the value changes.                                                                   |
+| `isDragging`              | `(dragging: boolean) => void`                           | `() => {}`                                | Callback to signal whether the slider is being dragged.                                                |
+| `continuous`              | `{ enabled: boolean; clicks: number; interval: number }`  | `{ enabled: false, clicks: 120, interval: 1 }` | Settings for continuous mode (e.g., like an iPod click wheel).                                          |
 
-## Please consider a small donation. Even one dollar will help to maintain and develop new features. Thanks!
+## Donation
+
+## PIf you find this component useful, please consider a small donation. Even one dollar helps maintain and develop new features!
 
 [You can find the donate button on the bottom of the example page](https://fseehawer.github.io/react-circular-slider/)
 

@@ -1,81 +1,34 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "2.9.6",
+  "version": "3.0.0",
   "description": "A customizable circular slider with no dependencies.",
-  "main": "dist/react-circular-slider.umd.js",
-  "module": "dist/react-circular-slider.es.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/react-circular-slider.es.js",
-      "require": "./dist/react-circular-slider.umd.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fseehawer/react-circular-slider.git"
-  },
-  "keywords": [
-    "react slider",
-    "round slider",
-    "circle slider",
-    "circular slider",
-    "radial slider",
-    "vite",
-    "react",
-    "circular",
-    "radial",
-    "slider",
-    "react hooks"
-  ],
-  "author": "Fidel Seehawer",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/fseehawer/react-circular-slider/issues"
-  },
-  "homepage": "https://fseehawer.github.io/react-circular-slider/",
-  "peerDependencies": {
-    "global": "^4.4.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "@babel/preset-react": "^7.9.4",
-    "@vitejs/plugin-react": "^4.3.4",
-    "babel-loader": "^8.1.0",
-    "css-loader": "^7.1.2",
-    "eslint-utils": "^1.4.1",
-    "global": "^4.4.0",
-    "prop-types": "^15.7.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-scripts": "^3.0.1",
-    "serialize-javascript": "^3.1.0",
-    "vite": "^6.2.2",
-    "vite-plugin-svgr": "^4.3.0",
-    "webpack-cli": "^6.0.1"
-  },
   "scripts": {
-    "build": "vite build",
+    "dev": "vite --config vite.demo.config.js",
+    "build": "tsup",
     "build-demo": "vite build --config vite.demo.config.js",
     "gh-pages": "npm run build-demo && git add -f build && git commit -m \"Update demo\" && git subtree push --prefix build origin gh-pages",
     "build-publish": "npm run build && npm run gh-pages && npm publish --access public"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "global": "^4.4.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2",
+    "vite-plugin-svgr": "^4.3.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "react-dom": "^19.0.0"
   }
 }
