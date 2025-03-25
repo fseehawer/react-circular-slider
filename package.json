@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "A customizable circular slider with no dependencies.",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -11,6 +11,10 @@
       "require": "./dist/index.cjs"
     }
   },
+  "files": [
+    "dist",
+    "public"
+  ],
   "scripts": {
     "dev": "vite --config vite.demo.config.js",
     "build": "tsup",
