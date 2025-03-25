@@ -5,6 +5,7 @@ import path from 'path';
 
 export default defineConfig({
     root: 'demo',
+    publicDir: '../public',
     plugins: [react(), svgr()],
     base: '/react-circular-slider/',
     resolve: {
