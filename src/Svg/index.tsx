@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 
 export interface SvgProps {
     width: number;
@@ -13,7 +13,7 @@ export interface SvgProps {
     trackColor: string;
     trackSize: number;
     radiansOffset: number;
-    svgFullPath: React.RefObject<SVGPathElement>;
+    svgFullPath: React.RefObject<SVGPathElement | null>;
     onMouseDown?: () => void;
     isDragging?: boolean;
 }
@@ -35,8 +35,7 @@ const Svg: React.FC<SvgProps> = ({
      onMouseDown,
      isDragging,
  }) => {
-    const circleRef = useRef<SVGCircleElement>(null);
-
+    const circleRef = useRef<SVGCircleElement | null>(null);
     const styles: { [key: string]: React.CSSProperties } = {
         svg: {
             position: 'relative',
@@ -50,6 +49,11 @@ const Svg: React.FC<SvgProps> = ({
 
     const halfTrack = trackSize / 2;
     const radius = width / 2 - halfTrack;
+
+    const validatedLineCap: 'round' | 'butt' =
+        progressLineCap === 'round' || progressLineCap === 'butt'
+            ? progressLineCap
+            : 'round';
 
     const handleClick = (event: React.MouseEvent | React.TouchEvent) => {
         if (!onMouseDown) return;
@@ -78,8 +82,8 @@ const Svg: React.FC<SvgProps> = ({
         >
             <defs>
                 <radialGradient id={`radial-${label}`} cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor={progressColorFrom} />
-                    <stop offset="100%" stopColor={progressColorTo} />
+                    <stop offset="0%" stopColor={progressColorFrom}/>
+                    <stop offset="100%" stopColor={progressColorTo}/>
                 </radialGradient>
             </defs>
             <circle
@@ -97,15 +101,15 @@ const Svg: React.FC<SvgProps> = ({
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
                 strokeWidth={progressSize}
-                strokeLinecap={progressLineCap}
+                strokeLinecap={validatedLineCap}
                 fill="none"
                 stroke={`url(#radial-${label})`}
                 d={`
-          M ${width / 2}, ${width / 2}
-          m 0, -${radius}
-          a ${radius},${radius} 0 0,1 0,${radius * 2}
-          a -${radius},-${radius} 0 0,1 0,-${radius * 2}
-        `}
+    M ${width / 2}, ${width / 2}
+    m 0, -${radius}
+    a ${radius},${radius} 0 0,1 0,${radius * 2}
+    a -${radius},-${radius} 0 0,1 0,-${radius * 2}
+  `}
             />
         </svg>
     );
