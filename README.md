@@ -1,11 +1,11 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.0.2-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.0.3-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
 
-<img src="public/circular-slider.png" alt="An image showing the CircularSlider settings" width="100%" />
+<img src="https://raw.githubusercontent.com/fseehawer/react-circular-slider/main/public/circular-slider.png" alt="An image showing the CircularSlider settings" width="100%" />
 
 ## TypeScript Support
 
@@ -103,7 +103,7 @@ The table below lists all available props along with their TypeScript types, def
 
 ## Donation
 
-## If you find this component useful, please consider a small donation. Even one dollar helps maintain and develop new features!
+# If you find this component useful, please consider a small donation. Even one dollar helps maintain and develop new features!
 
 [You can find the donate button on the bottom of the example page](https://fseehawer.github.io/react-circular-slider/)
 
