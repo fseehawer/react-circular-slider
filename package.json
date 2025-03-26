@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "files": [
     "dist",
     "public"
@@ -26,13 +26,24 @@
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "global": "^4.4.0",
+    "react-dom": "^19.0.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
     "vite-plugin-svgr": "^4.3.0"
   },
-  "dependencies": {
-    "react-dom": "^19.0.0"
-  }
+  "keywords": [
+    "react",
+    "round slider",
+    "circle slider",
+    "circular slider",
+    "radial slider",
+    "react",
+    "circular",
+    "radial",
+    "slider",
+    "hooks",
+    "typescript",
+    "vite"
+  ]
 }

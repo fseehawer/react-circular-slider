@@ -1,6 +1,6 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.0.7-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.0.8-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
@@ -9,7 +9,8 @@ A highly customizable circular slider with **zero dependencies**. Check out the 
 
 ## TypeScript Support
 
-This component now has full **TypeScript** support! Enjoy full IntelliSense and strong type-checking out of the box.  
+This component now has full **TypeScript** support! Enjoy full IntelliSense and strong type-checking out of the box.
+
 *JavaScript users: No worries – the published output is plain JavaScript and works exactly as before.*
 
 ## Installation
@@ -25,9 +26,9 @@ import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 
 const App: React.FC = () => (
-    <div>
+    <>
         <CircularSlider onChange={value => console.log(value)} />
-    </div>
+    </>
 );
 
 export default App;
@@ -41,7 +42,7 @@ import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 
 const App: React.FC = () => (
-    <div>
+    <>
         <CircularSlider
             label="savings"
             labelColor="#005a58"
@@ -55,7 +56,7 @@ const App: React.FC = () => (
             dataIndex={10}
             onChange={value => console.log(value)}
         />
-    </div>
+    </>
 );
 
 export default App;
