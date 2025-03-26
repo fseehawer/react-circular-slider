@@ -81,10 +81,10 @@ const Svg: React.FC<SvgProps> = ({
             onTouchStart={handleClick}
         >
             <defs>
-                <radialGradient id={`radial-${label}`} cx="50%" cy="50%" r="50%">
+                <linearGradient id={`radial-${label}`} x1="100%" x2="0%">
                     <stop offset="0%" stopColor={progressColorFrom}/>
                     <stop offset="100%" stopColor={progressColorTo}/>
-                </radialGradient>
+                </linearGradient>
             </defs>
             <circle
                 ref={circleRef}
