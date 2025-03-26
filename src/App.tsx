@@ -120,13 +120,6 @@ const App = () => {
   direction={-1}
   knobPosition="right"
   appendToValue="°"
-  valueFontSize="4rem"
-  trackColor="#eeeeee"
-  progressColorFrom={isDragging ? "#F0A367" : "#00bfbd"}
-  progressColorTo={isDragging ? "#F65749" : "#009c9a"}
-  labelColor={isDragging ? "#F0A367" : "#00bfbd"}
-  knobColor={isDragging ? "#F0A367" : "#00bfbd"}
-  isDragging={(value) => setIsDragging(value)}
 />`}</pre>
 
 				<hr style={styles.divider} />
@@ -219,42 +212,11 @@ const App = () => {
 
 				<hr style={styles.divider} />
 
-				<h3 style={styles.h3}>Slider bound to external state with control buttons:</h3>
-				<div style={styles.slider}>
-					<CircularSlider
-						value={sliderValue}
-						onChange={(value) => setSliderValue(value)}
-					/>
-				</div>
-				<div style={styles.slider}>
-					<h3>sliderValue: {sliderValue}</h3>
-					{[ -45, -1, 0, 1, 45 ].map((val) => (
-						<button
-							key={val}
-							style={styles.button}
-							onClick={() => setSliderValue(val === 0 ? 0 : sliderValue + val)}
-						>
-							{val > 0 ? `+${val}` : val}
-						</button>
-					))}
-				</div>
-				<pre style={styles.pre}>{`<CircularSlider
-  value={sliderValue}
-  onChange={(value) => setSliderValue(value)}
-/>`}</pre>
-
-				<hr style={styles.divider} />
-
 				<h3 style={styles.h3}>Continuous mode (like an iPod click wheel):</h3>
 				<div style={styles.slider}>
 					<CircularSlider
 						min={0}
 						max={360}
-						knobPosition="right"
-						appendToValue="°"
-						valueFontSize="4rem"
-						trackColor="#eeeeee"
-						trackDraggable={true}
 						continuous={{
 							enabled: true,
 							clicks: 100,
@@ -265,15 +227,10 @@ const App = () => {
 				<pre style={styles.pre}>{`<CircularSlider
   min={0}
   max={360}
-  knobPosition="right"
-  appendToValue="°"
-  valueFontSize="4rem"
-  trackColor="#eeeeee"
-  trackDraggable={true}
   continuous={{
     enabled: true,
     clicks: 100,
-    increment: 1,
+    increment: 1
   }}
 />`}</pre>
 
