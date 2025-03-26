@@ -8,46 +8,59 @@ const App = () => {
 	const [sliderValue, setSliderValue] = React.useState(0);
 
 	const styles = {
+		// Page background and global font
 		wrapper: {
-			padding: '2rem',
-			background: '#f9f9fb',
+			padding: '1rem',
+			background: '#fafafa',
 			minHeight: '100vh',
-			fontFamily: '"Inter", sans-serif',
+			fontFamily: 'Inter, sans-serif',
+			color: '#333',
 		},
+		// Central card container
 		container: {
-			maxWidth: '900px',
+			maxWidth: '680px',
 			margin: '0 auto',
 			background: '#fff',
 			padding: '2rem',
 			borderRadius: '1rem',
-			boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
+			boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
 		},
+		// Main heading
 		h1: {
-			fontSize: '2rem',
-			color: '#333',
+			fontSize: '1.7rem',
+			fontWeight: 600,
+			marginBottom: '0.5rem',
+			color: '#202124',
+			marginTop: 0
 		},
+		// Intro paragraph
 		intro: {
-			color: '#666',
 			fontSize: '1rem',
-			marginBottom: '2rem',
+			color: '#5f6368',
+			lineHeight: 1.6,
+			marginBottom: '1.5rem',
 		},
+		// Subheadings
 		h3: {
-			fontSize: '1.4rem',
-			color: '#333',
-			margin: '2.5rem 0 1rem',
+			fontSize: '1.25rem',
+			fontWeight: 500,
+			color: '#202124',
+			margin: '2rem 0 1rem',
 			borderBottom: '1px solid #ddd',
-			paddingBottom: '0.3rem',
+			paddingBottom: '0.5rem',
 		},
+		// Code blocks
 		pre: {
 			fontSize: '0.85rem',
-			background: '#ececec',
-			color: '#1e1e1e',
+			background: '#f1f3f4',
+			color: '#3c4043',
 			borderRadius: '8px',
 			padding: '1rem',
 			overflowX: 'auto',
+			lineHeight: 1.5,
 			fontFamily: 'monospace',
-			lineHeight: '1.5',
 		},
+		// Slider section wrapper
 		slider: {
 			display: 'flex',
 			justifyContent: 'center',
@@ -56,48 +69,52 @@ const App = () => {
 			marginBottom: '2rem',
 			marginTop: '1rem',
 		},
+		// Buttons
 		button: {
 			padding: '0.5rem 1rem',
-			fontSize: '1rem',
-			backgroundColor: '#00bfbd',
+			fontSize: '0.9rem',
+			backgroundColor: '#4285f4',
 			color: '#fff',
-			borderRadius: '0.5rem',
+			borderRadius: '4px',
 			border: 'none',
 			margin: '0.3rem',
 			cursor: 'pointer',
 			transition: 'background 0.2s ease-in-out',
 		},
+		// Divider line
 		divider: {
 			border: 'none',
 			height: '1px',
-			background: '#eee',
+			background: '#e0e0e0',
 			margin: '3rem 0',
-		}
+		},
 	};
 
 	return (
 		<div style={styles.wrapper}>
 			<div style={styles.container}>
-				<h1 style={styles.h1}>🎯 React Circular Slider Demo</h1>
-				<p style={styles.intro}>Explore various configurations of the customizable circular slider component.</p>
+				<h1 style={styles.h1}>🎯 React Circular Slider</h1>
+				<p style={styles.intro}>
+					Explore various configurations of the customizable circular slider component.
+				</p>
 
-				<h3 style={styles.h3}>Anticlockwise rotation with knob on right and "+°" label:</h3>
+				<h3 style={styles.h3}>Anticlockwise rotation with knob on right and "°" label:</h3>
 				<div style={styles.slider}>
 					<CircularSlider
-						label='Temperature'
+						label="Temperature"
 						direction={-1}
-						knobPosition='right'
-						appendToValue='°'
-						valueFontSize='4rem'
+						knobPosition="right"
+						appendToValue="°"
+						valueFontSize="4rem"
 						trackColor="#eeeeee"
-						progressColorFrom={isDragging ? "#F0A367" : "#00bfbd"}
-						progressColorTo={isDragging ? "#F65749" : "#009c9a"}
-						labelColor={isDragging ? "#F0A367" : "#00bfbd"}
-						knobColor={isDragging ? "#F0A367" : "#00bfbd"}
+						progressColorFrom={isDragging ? '#F0A367' : '#00bfbd'}
+						progressColorTo={isDragging ? '#F65749' : '#009c9a'}
+						labelColor={isDragging ? '#F0A367' : '#00bfbd'}
+						knobColor={isDragging ? '#F0A367' : '#00bfbd'}
 						isDragging={(value) => setIsDragging(value)}
 					/>
 				</div>
-				<div>isDragging: {isDragging ? "yes 🥵" : "no 😑"}</div>
+				<div>isDragging: {isDragging ? 'yes 🥵' : 'no 😑'}</div>
 				<pre style={styles.pre}>{`<CircularSlider
   label="Temperature"
   direction={-1}
@@ -114,25 +131,28 @@ const App = () => {
 
 				<hr style={styles.divider} />
 
-				<h3 style={styles.h3}>Initial value with "$" and "K" using a custom knob icon:</h3>
+				<h3 style={styles.h3}>
+					Initial value with "$" and "K" using a custom knob icon:
+				</h3>
 				<div style={styles.slider}>
 					<CircularSlider
-						label='savings'
+						label="savings"
 						min={0}
 						max={100}
 						dataIndex={20}
-						prependToValue='$'
-						appendToValue='K'
-						labelColor='#005a58'
+						prependToValue="$"
+						appendToValue="K"
+						labelColor="#005a58"
 						labelBottom={true}
-						knobColor='#005a58'
+						knobColor="#005a58"
 						knobSize={72}
-						progressColorFrom='#00bfbd'
-						progressColorTo='#009c9a'
+						progressColorFrom="#00bfbd"
+						progressColorTo="#009c9a"
 						progressSize={24}
-						trackColor='#eeeeee'
-						trackSize={24}>
-						<DragIcon x='22' y='22' width='28px' height='28px' />
+						trackColor="#eeeeee"
+						trackSize={24}
+					>
+						<DragIcon x="22" y="22" width="28px" height="28px" />
 					</CircularSlider>
 				</div>
 				<pre style={styles.pre}>{`<CircularSlider
@@ -160,21 +180,22 @@ const App = () => {
 				<h3 style={styles.h3}>Flat line cap with a smiley knob and character data:</h3>
 				<div style={styles.slider}>
 					<CircularSlider
-						label='Alphabet'
-						progressLineCap='flat'
+						label="Alphabet"
+						progressLineCap="flat"
 						dataIndex={1}
 						width={250}
-						labelColor='#212121'
-						valueFontSize='6rem'
-						verticalOffset='1rem'
-						knobColor='#212121'
-						progressColorFrom='#ff8500'
-						progressColorTo='#a15400'
+						labelColor="#212121"
+						valueFontSize="6rem"
+						verticalOffset="1rem"
+						knobColor="#212121"
+						progressColorFrom="#ff8500"
+						progressColorTo="#a15400"
 						progressSize={8}
-						trackColor='#eeeeee'
+						trackColor="#eeeeee"
 						trackSize={4}
-						data={'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')}>
-						<EmojiIcon x='9' y='9' width='18px' height='18px' />
+						data={'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')}
+					>
+						<EmojiIcon x="9" y="9" width="18px" height="18px" />
 					</CircularSlider>
 				</div>
 				<pre style={styles.pre}>{`<CircularSlider
@@ -207,12 +228,14 @@ const App = () => {
 				</div>
 				<div style={styles.slider}>
 					<h3>sliderValue: {sliderValue}</h3>
-					{[ -45, -1, 0, 1, 45 ].map(val => (
+					{[ -45, -1, 0, 1, 45 ].map((val) => (
 						<button
 							key={val}
 							style={styles.button}
 							onClick={() => setSliderValue(val === 0 ? 0 : sliderValue + val)}
-						>{val > 0 ? `+${val}` : val}</button>
+						>
+							{val > 0 ? `+${val}` : val}
+						</button>
 					))}
 				</div>
 				<pre style={styles.pre}>{`<CircularSlider
@@ -227,9 +250,9 @@ const App = () => {
 					<CircularSlider
 						min={0}
 						max={360}
-						knobPosition='right'
-						appendToValue='°'
-						valueFontSize='4rem'
+						knobPosition="right"
+						appendToValue="°"
+						valueFontSize="4rem"
 						trackColor="#eeeeee"
 						trackDraggable={true}
 						continuous={{
@@ -268,7 +291,13 @@ const App = () => {
 						title="PayPal - The safer, easier way to pay online!"
 						alt="Donate with PayPal button"
 					/>
-					<img alt="" border="0" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1" />
+					<img
+						alt=""
+						border="0"
+						src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
+						width="1"
+						height="1"
+					/>
 				</form>
 			</div>
 		</div>
