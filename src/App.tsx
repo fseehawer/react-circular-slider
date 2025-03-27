@@ -98,12 +98,11 @@ const App = () => {
 					Explore various configurations of the customizable circular slider component.
 				</p>
 
-				<h3 style={styles.h3}>Anticlockwise rotation with knob on right and "°" label:</h3>
+				<h3 style={styles.h3}>Knob on the left and "°" added to the value:</h3>
 				<div style={styles.slider}>
 					<CircularSlider
 						label="Temperature"
-						direction={-1}
-						knobPosition="right"
+						knobPosition="left"
 						appendToValue="°"
 						valueFontSize="4rem"
 						trackColor="#eeeeee"
@@ -114,11 +113,9 @@ const App = () => {
 						isDragging={(value) => setIsDragging(value)}
 					/>
 				</div>
-				<div>isDragging: {isDragging ? 'yes 🥵' : 'no 😑'}</div>
 				<pre style={styles.pre}>{`<CircularSlider
   label="Temperature"
-  direction={-1}
-  knobPosition="right"
+  knobPosition="left"
   appendToValue="°"
 />`}</pre>
 
@@ -233,8 +230,6 @@ const App = () => {
     increment: 1
   }}
 />`}</pre>
-
-				<hr style={styles.divider} />
 
 				<h3 style={styles.h3}>🙏 Support the project</h3>
 				<p>If you find this component useful, consider a small donation. Even one dollar helps!</p>
