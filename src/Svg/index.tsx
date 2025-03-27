@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 
 export interface SvgProps {
     width: number;
@@ -36,57 +36,29 @@ const Svg: React.FC<SvgProps> = ({
                                      isDragging,
                                  }) => {
     const circleRef = useRef<SVGCircleElement | null>(null);
-    const pathRef = useRef<SVGPathElement | null>(null);
 
+    // Keep styles simple with no transitions
     const styles: { [key: string]: React.CSSProperties } = {
         svg: {
             position: 'relative',
             zIndex: 2,
+            userSelect: isDragging ? 'none' : 'auto',
         },
         path: {
             transform: `rotate(${radiansOffset}rad) ${direction === -1 ? 'scale(-1, 1)' : 'scale(1, 1)'}`,
             transformOrigin: 'center center',
-            // Ensure no transition during resize to avoid animation bugs
-            transition: isDragging ? 'none' : 'stroke-dashoffset 0.1s ease-in-out',
+            // No transition to make movement instant
+            transition: 'none',
         },
     };
 
     const halfTrack = trackSize / 2;
     const radius = width / 2 - halfTrack;
 
-    // Ensure valid linecap value
     const validatedLineCap: 'round' | 'butt' =
         progressLineCap === 'round' || progressLineCap === 'butt'
             ? progressLineCap
             : 'round';
-
-    // Link the internal path ref to the forwarded ref
-    useEffect(() => {
-        if (pathRef.current) {
-            svgFullPath.current = pathRef.current;
-
-            // Calculate path length on mount and when width changes
-            if (svgFullPath.current && svgFullPath.current?.getTotalLength) {
-                const length = svgFullPath.current?.getTotalLength();
-                // Dispatch this measurement if needed via a provided callback
-            }
-        }
-
-        // Clean up ref on unmount
-        return () => {
-            svgFullPath.current = null;
-        };
-    }, [svgFullPath, width]);
-
-    // Create the SVG path definition based on current dimensions
-    const createPathDefinition = () => {
-        return `
-            M ${width / 2}, ${width / 2}
-            m 0, -${radius}
-            a ${radius},${radius} 0 0,1 0,${radius * 2}
-            a -${radius},-${radius} 0 0,1 0,-${radius * 2}
-        `;
-    };
 
     const handleClick = (event: React.MouseEvent | React.TouchEvent) => {
         if (!onMouseDown) return;
@@ -103,8 +75,8 @@ const Svg: React.FC<SvgProps> = ({
         onMouseDown();
     };
 
-    // Unique ID for the gradient to avoid conflicts with multiple instances
-    const gradientId = `radial-${label}-${width.toString().replace('.', '-')}`;
+    // Create a unique gradient ID to avoid conflicts with multiple instances
+    const gradientId = `radial-${label}-${Math.random().toString(36).substr(2, 9)}`;
 
     return (
         <svg
@@ -133,18 +105,19 @@ const Svg: React.FC<SvgProps> = ({
             />
             <path
                 style={styles.path}
-                ref={(node) => {
-                    // Assign to both refs
-                    pathRef.current = node;
-                    svgFullPath.current = node;
-                }}
+                ref={svgFullPath}
                 strokeDasharray={strokeDasharray || 0}
                 strokeDashoffset={strokeDashoffset || 0}
                 strokeWidth={progressSize}
                 strokeLinecap={validatedLineCap}
                 fill="none"
                 stroke={`url(#${gradientId})`}
-                d={createPathDefinition()}
+                d={`
+    M ${width / 2}, ${width / 2}
+    m 0, -${radius}
+    a ${radius},${radius} 0 0,1 0,${radius * 2}
+    a -${radius},-${radius} 0 0,1 0,-${radius * 2}
+  `}
             />
         </svg>
     );

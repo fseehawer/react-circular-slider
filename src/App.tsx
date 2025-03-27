@@ -2,6 +2,7 @@ import React from 'react';
 import CircularSlider from './CircularSlider';
 import DragIcon from './assets/drag.svg?react';
 import EmojiIcon from './assets/emoji.svg?react';
+import ChartIcon from './assets/chart.svg?react'; // Assuming you'll create this icon
 
 const App = () => {
 	const [isDragging, setIsDragging] = React.useState(false);
@@ -230,12 +231,12 @@ const App = () => {
 		},
 	};
 
-	// Example information
+	// Example information - removed Continuous, added Rating example
 	const tabs = [
 		{ title: "Temperature", description: "Knob on the left with '°' added to the value" },
 		{ title: "Investment", description: "Initial value with '$' and 'K' using a custom knob icon" },
 		{ title: "Alphabet", description: "Butt line cap with a smiley knob and character data" },
-		{ title: "Continuous", description: "Continuous mode (like an iPod click wheel)" }
+		{ title: "Rating", description: "Star rating selector with custom icon and color gradient" }
 	];
 
 	// Toggle the code visibility on mobile
@@ -362,20 +363,26 @@ const App = () => {
 						{activeTab === 3 && (
 							<CircularSlider
 								ref={sliderRefs.current[3]}
+								label="Star Rating"
 								min={0}
-								max={360}
-								progressColorFrom="#8b5cf6"
-								progressColorTo="#6d28d9"
-								knobColor="#6d28d9"
-								label="Rotation"
-								trackColor="#e5e7eb"
+								max={5}
+								dataIndex={3}
 								width={isMobile ? 220 : 250}
-								continuous={{
-									enabled: true,
-									clicks: 100,
-									increment: 1
-								}}
-							/>
+								labelColor="#f59e0b"
+								valueFontSize={isMobile ? "4rem" : "5rem"}
+								knobColor="#facc15"
+								progressColorFrom="#fbbf24"
+								progressColorTo="#f59e0b"
+								progressSize={10}
+								trackColor="#fef3c7"
+								trackSize={6}
+								knobSize={isMobile ? 60 : 68}
+							>
+								{/* You'll need to create a StarIcon SVG or use another icon here */}
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="#fff" x="14" y="14">
+									<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+								</svg>
+							</CircularSlider>
 						)}
 					</div>
 				</div>
@@ -466,19 +473,22 @@ const App = () => {
 							{activeTab === 3 && (
 								<pre style={styles.pre}>
 {`<CircularSlider
+  label="Star Rating"
   min={0}
-  max={360}
-  progressColorFrom="#8b5cf6"
-  progressColorTo="#6d28d9"
-  knobColor="#6d28d9"
-  label="Rotation"
-  trackColor="#e5e7eb"
-  continuous={{
-    enabled: true,
-    clicks: 100,
-    increment: 1
-  }}
-/>`}
+  max={5}
+  dataIndex={3}
+  labelColor="#b45309"
+  valueFontSize="5rem"
+  knobColor="#facc15"
+  progressColorFrom="#fbbf24"
+  progressColorTo="#f59e0b"
+  progressSize={10}
+  trackColor="#fef3c7"
+  trackSize={6}
+  knobSize={68}
+>
+  <StarIcon width="24" height="24" fill="#fff" />
+</CircularSlider>`}
 								</pre>
 							)}
 						</div>
@@ -552,19 +562,22 @@ const App = () => {
 						{activeTab === 3 && (
 							<pre style={styles.pre}>
 {`<CircularSlider
+  label="Star Rating"
   min={0}
-  max={360}
-  progressColorFrom="#8b5cf6"
-  progressColorTo="#6d28d9"
-  knobColor="#6d28d9"
-  label="Rotation"
-  trackColor="#e5e7eb"
-  continuous={{
-    enabled: true,
-    clicks: 100,
-    increment: 1
-  }}
-/>`}
+  max={5}
+  dataIndex={3}
+  labelColor="#b45309"
+  valueFontSize="5rem"
+  knobColor="#facc15"
+  progressColorFrom="#fbbf24"
+  progressColorTo="#f59e0b"
+  progressSize={10}
+  trackColor="#fef3c7"
+  trackSize={6}
+  knobSize={68}
+>
+  <StarIcon width="24" height="24" fill="#fff" />
+</CircularSlider>`}
 							</pre>
 						)}
 					</>

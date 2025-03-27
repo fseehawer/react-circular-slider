@@ -1,6 +1,6 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.2.1-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.2.2-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
@@ -100,7 +100,6 @@ The table below lists all available props along with their TypeScript types, def
 | `trackDraggable`          | `boolean`                                               | `false`                                   | If `true`, allows dragging the background track.                                                       |
 | `onChange`                | `(value: string \| number) => void`                     | `() => {}`                                | Callback fired when the value changes.                                                                   |
 | `isDragging`              | `(dragging: boolean) => void`                           | `() => {}`                                | Callback to signal whether the slider is being dragged.                                                |
-| `continuous`              | `{ enabled: boolean; clicks: number; interval: number }`  | `{ enabled: false, clicks: 120, interval: 1 }` | Settings for continuous mode (e.g., like an iPod click wheel).                                          |
 
 ## Donation
 

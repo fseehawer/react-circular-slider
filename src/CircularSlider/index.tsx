@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useReducer, useRef, useState, forwardRef, useImperativeHandle} from 'react';
+import React, {useCallback, useEffect, useReducer, useRef, forwardRef, useImperativeHandle} from 'react';
 import reducer from '../redux/reducer';
 import useEventListener from '../hooks/useEventListener';
 import useIsServer from '../hooks/useIsServer';
@@ -15,11 +15,6 @@ const knobOffsetConsts = {
 } as const;
 
 export type KnobPosition = keyof typeof knobOffsetConsts | number | string;
-export interface ContinuousOptions {
-    enabled: boolean;
-    clicks: number;
-    interval: number;
-}
 
 export interface CircularSliderProps {
     label?: string;
@@ -57,7 +52,6 @@ export interface CircularSliderProps {
     onChange?: (value: string | number) => void;
     isDragging?: (dragging: boolean) => void;
     children?: React.ReactNode;
-    continuous?: ContinuousOptions;
 }
 
 // Export the handle type for TypeScript users
@@ -113,30 +107,35 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         children,
         onChange = () => {},
         isDragging = () => {},
-        continuous = { enabled: false, clicks: 120, interval: 1 },
     } = props;
 
-    const continuousPreviousIndex = useRef(-1);
-    const clicksPerLoop = continuous.clicks || Math.floor((max - min) / 3);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
     // Reference to track dragging state internally
     const draggingRef = useRef(false);
 
-    // We'll use this to store the last position when dragging ends
-    const lastDragPositionRef = useRef<{
+    // Prevent reset issues by tracking the current value position
+    const currentPositionRef = useRef<{
         radians: number;
         label: string | number;
         knob: { x: number; y: number };
         dashOffset: number;
     } | null>(null);
 
+    // Store the last data index to detect changes
+    const lastDataIndexRef = useRef(dataIndex);
+
+    // Flag to track if a click operation is in progress
+    const clickInProgressRef = useRef(false);
+
+    // Flag to disable effects temporarily
+    const disableEffectsRef = useRef(false);
+
+    // Flag to prevent effect execution during specific operations
+    const preventPositionResetRef = useRef(false);
+
     // Initialize state with proper data
-    const dataArray = continuous.enabled
-        ? Array.from(Array(clicksPerLoop).keys())
-        : data.length > 0
-            ? [...data]
-            : [...generateRange(min, max)];
+    const dataArray = data.length > 0 ? [...data] : [...generateRange(min, max)];
 
     const initialState = {
         mounted: false,
@@ -159,25 +158,54 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     const svgFullPath = useRef<SVGPathElement | null>(null);
     const touchSupported = !isServer && 'ontouchstart' in window;
     const useMouse = !touchSupported || (touchSupported && useMouseAdditionalToTouch);
-    const [valueFromParent, setValueFromParent] = useState<number | undefined>();
+
+    // Use ref for valueFromParent instead of state to prevent render cycles
+    const valueFromParentRef = useRef<number | undefined>(undefined);
     const initCompletedRef = useRef(false);
 
-    // Tracks whether we need to skip effects to prevent loops
-    const skipEffectsRef = useRef(false);
+    // Track if the component is currently mounted to prevent state updates after unmount
+    const isMountedRef = useRef(false);
 
-    const setKnobPosition = useCallback((radians: number) => {
+    // Track if the current position was set by dragging
+    const positionSetByDragRef = useRef(false);
+
+    // Add this to setKnobPosition to ensure the SVG path is correctly initialized at zero
+    const setKnobPosition = useCallback((radians: number, fromDrag = false) => {
+        // Skip updates if disabled
+        if (disableEffectsRef.current && !fromDrag) return;
+
+        // Track if this position was set by dragging
+        if (fromDrag) {
+            positionSetByDragRef.current = true;
+            // Reset after a short delay
+            setTimeout(() => {
+                positionSetByDragRef.current = false;
+            }, 300);
+        }
+
         // Calculate position
         const radius = state.radius - trackSize / 2;
         const offsetRadians = radians + getKnobOffsetAmount(knobPosition);
-        let degrees = ((offsetRadians > 0 ? offsetRadians : (2 * Math.PI) + offsetRadians) * spreadDegrees) / (2 * Math.PI);
-        const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
-        degrees = getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees;
-        const pointsInCircle = Math.max(1, (state.data.length - 1) / spreadDegrees);
-        const currentPoint = Math.round(degrees * pointsInCircle);
 
-        // Ensure currentPoint is within bounds
-        const safeCurrentPoint = Math.min(Math.max(0, currentPoint), state.data.length - 1);
-        const labelValue = state.data[safeCurrentPoint];
+        // Convert radians to degrees (0-360)
+        let degrees = ((offsetRadians > 0 ? offsetRadians : (2 * Math.PI) + offsetRadians) * spreadDegrees) / (2 * Math.PI);
+
+        // Apply direction
+        degrees = getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees;
+
+        // Calculate dash offset for SVG path
+        const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
+        const dashOffsetValue = getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset;
+
+        // Map the angle to an index in the data array
+        // Ensure we map to the full 360 degrees range
+        const dataArrayLength = state.data.length;
+        const normalizedDegrees = (degrees + 360) % 360; // Ensure positive value 0-360
+        const dataPointIndex = Math.round((normalizedDegrees / 360) * (dataArrayLength - 1));
+
+        // Ensure the index is within bounds
+        const safeIndex = Math.min(Math.max(0, dataPointIndex), dataArrayLength - 1);
+        const labelValue = state.data[safeIndex];
 
         // Calculate the knob x,y position
         const knobXY = {
@@ -185,70 +213,26 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             y: radius * Math.sin(radians) + radius,
         };
 
-        // Save this position in case we need to restore it
-        lastDragPositionRef.current = {
+        // Handle special case for zero value
+        // Only apply the special case if we're at the true zero and not in the
+        // middle of a drag operation
+        const isZeroValue = (
+            (!fromDrag && dataIndex === 0) ||
+            (!fromDrag && safeIndex === 0 && dataArrayLength > 1) ||
+            (typeof labelValue === 'number' && labelValue === 0 && !fromDrag) ||
+            (typeof labelValue === 'string' && labelValue === '0' && !fromDrag)
+        );
+
+        // If it's a true zero value (not during dragging), set dashFullOffset appropriately
+        const finalDashOffset = isZeroValue ? state.dashFullArray : dashOffsetValue;
+
+        // Save this position as the current position
+        currentPositionRef.current = {
             radians,
             label: labelValue,
             knob: knobXY,
-            dashOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset
+            dashOffset: finalDashOffset
         };
-
-        if (continuous.enabled) {
-            if (continuousPreviousIndex.current === -1) {
-                continuousPreviousIndex.current = currentPoint;
-                return;
-            }
-
-            if (continuousPreviousIndex.current === currentPoint) {
-                dispatch({
-                    type: 'setKnobPosition',
-                    payload: {
-                        dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-                        label: labelValue,
-                        knob: knobXY,
-                    },
-                });
-                return;
-            }
-
-            const positiveDistance = (currentPoint - continuousPreviousIndex.current + clicksPerLoop) % clicksPerLoop;
-            const negativeDistance = (continuousPreviousIndex.current - currentPoint + clicksPerLoop) % clicksPerLoop;
-            const positive = positiveDistance <= Math.max(1, clicksPerLoop * 0.02);
-            const negative = negativeDistance <= Math.max(1, clicksPerLoop * 0.02);
-
-            if (!positive && !negative) {
-                dispatch({
-                    type: 'setKnobPosition',
-                    payload: {
-                        dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-                        label: labelValue,
-                        knob: knobXY,
-                    },
-                });
-                continuousPreviousIndex.current = currentPoint;
-                return;
-            }
-
-            const interval = continuous.interval ?? 1;
-            const increment = positive ? interval * positiveDistance : -interval * negativeDistance;
-            continuousPreviousIndex.current = currentPoint;
-            const newValue = Math.min(max, Math.max(min, Number(state.label) + increment));
-
-            // Only trigger onChange when not in initial setup
-            if (initCompletedRef.current) {
-                onChange(newValue);
-            }
-
-            dispatch({
-                type: 'setKnobPosition',
-                payload: {
-                    dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-                    label: newValue,
-                    knob: knobXY,
-                },
-            });
-            return;
-        }
 
         // Trigger onChange if needed and not in initial setup
         if (labelValue !== state.label && initCompletedRef.current) {
@@ -259,48 +243,99 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         dispatch({
             type: 'setKnobPosition',
             payload: {
-                dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                dashFullOffset: finalDashOffset,
                 label: labelValue,
                 knob: knobXY,
             },
         });
-    }, [state, trackSize, knobPosition, direction, continuous, onChange, min, max]);
+    }, [state, trackSize, knobPosition, direction, onChange, dataIndex]);
 
-    const onMouseDown = () => {
+    // Position the dataIndex to the correct position in the circle
+    const positionForDataIndex = useCallback(() => {
+        if (!state.mounted || state.data.length === 0) return;
+
+        // Don't reposition if this position was set by dragging
+        if (positionSetByDragRef.current) return;
+
+        // Don't reposition if we're trying to prevent reset
+        if (preventPositionResetRef.current) return;
+
+        // Ensure dataIndex is within bounds
+        const dataIndexSafe = Math.min(Math.max(0, dataIndex), state.data.length - 1);
+
+        // Calculate the angle in degrees based on the dataIndex
+        // Map the dataIndex to the full 360-degree circle
+        const degrees = (dataIndexSafe / (state.data.length - 1)) * 360 * getSliderRotation(direction);
+
+        // Convert to radians and adjust for knob offset
+        const radians = getRadians(degrees) - state.knobOffset;
+
+        // Apply the position
+        setKnobPosition(radians);
+
+        // Update last known data index
+        lastDataIndexRef.current = dataIndex;
+    }, [dataIndex, state.mounted, state.data.length, state.knobOffset, direction, setKnobPosition]);
+
+    const onMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
+        // Prevent clicking during ongoing drag operation
+        if (clickInProgressRef.current) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
+        // Set flags to track dragging state
         draggingRef.current = true;
-        skipEffectsRef.current = true;
+        disableEffectsRef.current = true;
+        clickInProgressRef.current = true;
+        preventPositionResetRef.current = true;
 
+        // Notify parent
         isDragging(true);
+
+        // Update component state
         dispatch({ type: 'onMouseDown', payload: { isDragging: true } });
+
+        // Reset click flag after a short delay
+        setTimeout(() => {
+            clickInProgressRef.current = false;
+        }, 100);
     };
 
     const onMouseUp = () => {
-        if (continuous.enabled) {
-            continuousPreviousIndex.current = -1;
-        }
-
+        // Only process if we're actually dragging
         if (state.isDragging) {
+            // Update dragging state
             isDragging(false);
             draggingRef.current = false;
+
+            // Update component state
             dispatch({ type: 'onMouseUp', payload: { isDragging: false } });
 
-            // Ensure we maintain the last position
-            if (lastDragPositionRef.current) {
-                // Keep effects disabled a bit longer
-                skipEffectsRef.current = true;
+            // Keep prevention active for a bit longer to avoid reset on release
+            setTimeout(() => {
+                if (isMountedRef.current) {
+                    disableEffectsRef.current = false;
 
-                // Re-enable effects after a short delay
-                setTimeout(() => {
-                    skipEffectsRef.current = false;
-                }, 100);
-            }
+                    // Keep preventing position reset for longer
+                    setTimeout(() => {
+                        if (isMountedRef.current) {
+                            preventPositionResetRef.current = false;
+                        }
+                    }, 250);
+                }
+            }, 50);
         }
     };
 
     const onMouseMove = useCallback((event: MouseEvent | TouchEvent) => {
         if (!state.isDragging || (!knobDraggable && !trackDraggable) || (event.type === 'mousemove' && !useMouse)) return;
+
+        // Prevent default to avoid browser behaviors
         event.preventDefault();
 
+        // Get mouse/touch position
         const touch = (event as TouchEvent).type === 'touchmove' ? (event as TouchEvent).changedTouches[0] : null;
         const getOffset = (ref: React.RefObject<HTMLElement | null>): { top: number; left: number } => {
             const element = ref.current;
@@ -316,19 +351,23 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             };
         };
 
+        // Calculate mouse position relative to component center
         const offset = getOffset(circularSlider);
         const pageX = touch ? touch.pageX : (event as MouseEvent).pageX;
         const pageY = touch ? touch.pageY : (event as MouseEvent).pageY;
         const mouseX = pageX - (offset.left + state.radius);
         const mouseY = pageY - (offset.top + state.radius);
+
+        // Convert to radians
         const radians = Math.atan2(mouseY, mouseX);
 
-        setKnobPosition(radians);
+        // Apply the new position, specifying it comes from drag
+        setKnobPosition(radians, true);
     }, [state.isDragging, state.radius, knobDraggable, trackDraggable, useMouse, setKnobPosition]);
 
     // Function to recalculate and update values when resized
     const refresh = useCallback(() => {
-        if (!circularSlider.current || !svgFullPath.current) return;
+        if (!circularSlider.current || !svgFullPath.current || !isMountedRef.current) return;
 
         // Don't refresh during dragging
         if (draggingRef.current) return;
@@ -348,10 +387,21 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         });
 
         // Reposition the knob based on the last position
-        if (lastDragPositionRef.current) {
+        if (currentPositionRef.current) {
+            // Small timeout to let the dimensions update first
             setTimeout(() => {
-                if (!draggingRef.current && lastDragPositionRef.current) {
-                    setKnobPosition(lastDragPositionRef.current.radians);
+                if (!draggingRef.current && currentPositionRef.current && isMountedRef.current) {
+                    disableEffectsRef.current = true;
+
+                    // Use the current position's radians to preserve exact position
+                    setKnobPosition(currentPositionRef.current.radians);
+
+                    // Re-enable effects after a short delay
+                    setTimeout(() => {
+                        if (isMountedRef.current) {
+                            disableEffectsRef.current = false;
+                        }
+                    }, 50);
                 }
             }, 10);
         }
@@ -364,6 +414,9 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
 
     // Initialize the component
     useEffect(() => {
+        isMountedRef.current = true;
+        disableEffectsRef.current = true;
+
         dispatch({
             type: 'init',
             payload: {
@@ -371,63 +424,77 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 dashFullArray: svgFullPath.current?.getTotalLength?.() ?? 0,
             },
         });
+
+        // Re-enable effects after initialization
+        setTimeout(() => {
+            if (isMountedRef.current) {
+                disableEffectsRef.current = false;
+            }
+        }, 100);
+
+        // Cleanup on unmount
+        return () => {
+            isMountedRef.current = false;
+        };
     }, []);
 
-    // Initial position setup
+    // Setup initial position
     useEffect(() => {
-        if (!state.mounted || state.dashFullArray === 0 || skipEffectsRef.current) return;
+        if (!state.mounted || state.dashFullArray === 0 || disableEffectsRef.current || initCompletedRef.current) return;
 
-        // Calculate initial position
-        const dataArrayLength = state.data.length;
-        const index = dataIndex >= dataArrayLength ? dataArrayLength - 1 : dataIndex;
-        const pointsInCircle = spreadDegrees / dataArrayLength;
-        const offset = getRadians(pointsInCircle) / 2;
-
+        // Initialize with offset configuration
         dispatch({
             type: 'setInitialKnobPosition',
             payload: {
                 radians: Math.PI / 2 - state.knobOffset,
-                offset,
+                offset: 0,
             },
         });
 
-        // Only continue if we haven't already initialized
-        if (!initCompletedRef.current) {
-            const degrees = getSliderRotation(direction) * index * pointsInCircle;
-            const radians = getRadians(degrees) - state.knobOffset;
-            const positioningRadians = radians + offset * getSliderRotation(direction);
+        // Initialize with correct data index position
+        positionForDataIndex();
 
-            setKnobPosition(positioningRadians);
-            initCompletedRef.current = true;
+        // Mark initialization as complete
+        initCompletedRef.current = true;
+    }, [state.mounted, state.dashFullArray, state.knobOffset, positionForDataIndex]);
+
+    // Handle dataIndex changes after initialization
+    useEffect(() => {
+        if (!state.mounted || !initCompletedRef.current || disableEffectsRef.current || draggingRef.current) return;
+
+        // Only update if the dataIndex actually changed
+        if (dataIndex !== lastDataIndexRef.current) {
+            // Update position when dataIndex changes
+            positionForDataIndex();
         }
-    }, [state.mounted, state.dashFullArray, state.knobOffset, direction, state.data.length, dataIndex, setKnobPosition]);
+    }, [dataIndex, positionForDataIndex, state.mounted]);
 
     // Handle external value prop changes
     useEffect(() => {
-        if (!state.mounted || skipEffectsRef.current || draggingRef.current) return;
+        if (!state.mounted || disableEffectsRef.current || draggingRef.current || preventPositionResetRef.current) return;
 
-        if (typeof value === 'number') {
-            setValueFromParent(value);
+        if (typeof value === 'number' && value !== valueFromParentRef.current) {
+            valueFromParentRef.current = value;
             const radians = getRadians(value);
             const offsetRadians = -state.knobOffset + radians * getSliderRotation(direction);
 
-            // Use timeout to break the update cycle
+            // Use a small delay to break the update cycle
             setTimeout(() => {
-                if (!draggingRef.current) {
+                if (!draggingRef.current && isMountedRef.current && !preventPositionResetRef.current) {
                     setKnobPosition(offsetRadians);
                 }
             }, 0);
         }
     }, [direction, state.knobOffset, value, state.mounted, setKnobPosition]);
 
-    // Setup ResizeObserver
+    // Setup ResizeObserver to watch for container size changes
     useEffect(() => {
         if (typeof ResizeObserver === 'undefined') return;
 
         const observeResize = () => {
             if (circularSlider.current) {
                 resizeObserverRef.current = new ResizeObserver(() => {
-                    if (!draggingRef.current) {
+                    if (!draggingRef.current && isMountedRef.current) {
                         refresh();
                     }
                 });
@@ -447,7 +514,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     // Window resize fallback
     useEffect(() => {
         const handleResize = () => {
-            if (!draggingRef.current) {
+            if (!draggingRef.current && isMountedRef.current) {
                 refresh();
             }
         };
@@ -470,6 +537,11 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         opacity: state.mounted ? 1 : 0,
         transition: 'opacity 1s ease-in',
     };
+
+    // Prepare display value from either parent prop or internal state
+    const displayValue = typeof valueFromParentRef.current !== 'undefined'
+        ? `${valueFromParentRef.current}`
+        : `${state.label}`;
 
     return (
         <div style={sliderStyle} ref={circularSlider}>
@@ -514,7 +586,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                     appendToValue={appendToValue}
                     prependToValue={prependToValue}
                     hideLabelValue={hideLabelValue}
-                    value={`${valueFromParent ?? state.label}`}
+                    value={displayValue}
                 />
             )}
         </div>
