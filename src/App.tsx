@@ -10,6 +10,22 @@ const App = () => {
 	const [isMobile, setIsMobile] = React.useState(false);
 	const [showMobileCode, setShowMobileCode] = React.useState(false);
 
+	// Check for mobile screen size on component mount and resize
+	React.useEffect(() => {
+		const checkScreenSize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		// Initial check
+		checkScreenSize();
+
+		// Listen for window resize
+		window.addEventListener('resize', checkScreenSize);
+
+		// Cleanup
+		return () => window.removeEventListener('resize', checkScreenSize);
+	}, []);
+
 	// Store a reference to each slider component for refreshing
 	const sliderRefs = React.useRef([
 		React.createRef(),
@@ -45,12 +61,22 @@ const App = () => {
 			marginTop: 0,
 			display: 'flex',
 			alignItems: 'center',
-			flexWrap: isMobile ? 'nowrap' : 'wrap',
+			flexWrap: isMobile ? 'wrap' : 'nowrap', // Changed to wrap on mobile
+			justifyContent: isMobile ? 'center' : 'flex-start', // Center on mobile
 		},
-		// Icon sizing
+		// Icon sizing - updated for mobile
 		icon: {
-			fontSize: isMobile ? '1.25rem' : '1.5em',
-			marginRight: '0.3em',
+			fontSize: isMobile ? '2.5rem' : '1.5em',
+			marginRight: isMobile ? 0 : '0.3em',
+			marginBottom: isMobile ? '0.5rem' : 0,
+			display: 'block',
+			width: isMobile ? '100%' : 'auto',
+			textAlign: isMobile ? 'center' : 'left',
+		},
+		// Title text container for mobile
+		titleText: {
+			width: isMobile ? '100%' : 'auto',
+			textAlign: isMobile ? 'center' : 'left',
 		},
 		// More refined intro paragraph
 		intro: {
@@ -59,6 +85,7 @@ const App = () => {
 			lineHeight: 1.6,
 			marginBottom: isMobile ? '1.5rem' : '2.5rem',
 			maxWidth: '100%',
+			textAlign: isMobile ? 'center' : 'left',
 		},
 		// Improved subheadings with accent color
 		h3: {
@@ -236,7 +263,7 @@ const App = () => {
 			<div style={styles.container}>
 				<h1 style={styles.h1}>
 					<span style={styles.icon}>🎯</span>
-					React Circular Slider
+					<span style={styles.titleText}>React Circular Slider</span>
 				</h1>
 
 				<p style={styles.intro}>

@@ -118,11 +118,25 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
 
     const continuousPreviousIndex = useRef(-1);
     const clicksPerLoop = continuous.clicks || Math.floor((max - min) / 3);
-    const currentValueRef = useRef<number | string>(initialValue);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
-    const lastKnownRadiansRef = useRef<number | null>(null);
-    const lastPositioningTimestampRef = useRef<number>(0);
-    const positioningInProgressRef = useRef<boolean>(false);
+
+    // Reference to track dragging state internally
+    const draggingRef = useRef(false);
+
+    // We'll use this to store the last position when dragging ends
+    const lastDragPositionRef = useRef<{
+        radians: number;
+        label: string | number;
+        knob: { x: number; y: number };
+        dashOffset: number;
+    } | null>(null);
+
+    // Initialize state with proper data
+    const dataArray = continuous.enabled
+        ? Array.from(Array(clicksPerLoop).keys())
+        : data.length > 0
+            ? [...data]
+            : [...generateRange(min, max)];
 
     const initialState = {
         mounted: false,
@@ -131,7 +145,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         radius: width / 2,
         knobOffset: getKnobOffsetAmount(knobPosition),
         label: initialValue,
-        data: continuous.enabled ? Array.from(Array(clicksPerLoop).keys()) : data,
+        data: dataArray,
         radians: 0,
         offset: 0,
         knob: { x: 0, y: 0 },
@@ -146,49 +160,54 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     const touchSupported = !isServer && 'ontouchstart' in window;
     const useMouse = !touchSupported || (touchSupported && useMouseAdditionalToTouch);
     const [valueFromParent, setValueFromParent] = useState<number | undefined>();
+    const initCompletedRef = useRef(false);
+
+    // Tracks whether we need to skip effects to prevent loops
+    const skipEffectsRef = useRef(false);
 
     const setKnobPosition = useCallback((radians: number) => {
-        // Prevent recursive calls or running during component updates
-        if (positioningInProgressRef.current) return;
-
-        positioningInProgressRef.current = true;
+        // Calculate position
         const radius = state.radius - trackSize / 2;
         const offsetRadians = radians + getKnobOffsetAmount(knobPosition);
         let degrees = ((offsetRadians > 0 ? offsetRadians : (2 * Math.PI) + offsetRadians) * spreadDegrees) / (2 * Math.PI);
         const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
         degrees = getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees;
-        const pointsInCircle = (state.data.length - 1) / spreadDegrees;
+        const pointsInCircle = Math.max(1, (state.data.length - 1) / spreadDegrees);
         const currentPoint = Math.round(degrees * pointsInCircle);
 
-        // Store the last known radians position
-        lastKnownRadiansRef.current = radians;
+        // Ensure currentPoint is within bounds
+        const safeCurrentPoint = Math.min(Math.max(0, currentPoint), state.data.length - 1);
+        const labelValue = state.data[safeCurrentPoint];
 
-        const updateKnob = (labelValue: string | number) => {
-            // Store the current value for refresh operations
-            currentValueRef.current = labelValue;
+        // Calculate the knob x,y position
+        const knobXY = {
+            x: radius * Math.cos(radians) + radius,
+            y: radius * Math.sin(radians) + radius,
+        };
 
-            dispatch({
-                type: 'setKnobPosition',
-                payload: {
-                    dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
-                    label: labelValue,
-                    knob: {
-                        x: radius * Math.cos(radians) + radius,
-                        y: radius * Math.sin(radians) + radius,
-                    },
-                },
-            });
+        // Save this position in case we need to restore it
+        lastDragPositionRef.current = {
+            radians,
+            label: labelValue,
+            knob: knobXY,
+            dashOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset
         };
 
         if (continuous.enabled) {
             if (continuousPreviousIndex.current === -1) {
                 continuousPreviousIndex.current = currentPoint;
-                positioningInProgressRef.current = false;
                 return;
             }
+
             if (continuousPreviousIndex.current === currentPoint) {
-                updateKnob(Number(state.label));
-                positioningInProgressRef.current = false;
+                dispatch({
+                    type: 'setKnobPosition',
+                    payload: {
+                        dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                        label: labelValue,
+                        knob: knobXY,
+                    },
+                });
                 return;
             }
 
@@ -198,9 +217,15 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             const negative = negativeDistance <= Math.max(1, clicksPerLoop * 0.02);
 
             if (!positive && !negative) {
-                updateKnob(Number(state.label));
+                dispatch({
+                    type: 'setKnobPosition',
+                    payload: {
+                        dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                        label: labelValue,
+                        knob: knobXY,
+                    },
+                });
                 continuousPreviousIndex.current = currentPoint;
-                positioningInProgressRef.current = false;
                 return;
             }
 
@@ -208,31 +233,68 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             const increment = positive ? interval * positiveDistance : -interval * negativeDistance;
             continuousPreviousIndex.current = currentPoint;
             const newValue = Math.min(max, Math.max(min, Number(state.label) + increment));
-            onChange(newValue);
-            updateKnob(newValue);
-            positioningInProgressRef.current = false;
+
+            // Only trigger onChange when not in initial setup
+            if (initCompletedRef.current) {
+                onChange(newValue);
+            }
+
+            dispatch({
+                type: 'setKnobPosition',
+                payload: {
+                    dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                    label: newValue,
+                    knob: knobXY,
+                },
+            });
             return;
         }
 
-        const labelValue = state.data[currentPoint];
-        if (labelValue !== state.label) onChange(labelValue);
-        updateKnob(labelValue);
+        // Trigger onChange if needed and not in initial setup
+        if (labelValue !== state.label && initCompletedRef.current) {
+            onChange(labelValue);
+        }
 
-        // Allow positioning again after a short delay to avoid rapid state changes
-        setTimeout(() => {
-            positioningInProgressRef.current = false;
-        }, 10);
-    }, [state, direction, trackSize, knobPosition, continuous, max, min, onChange]);
+        // Update state with new position
+        dispatch({
+            type: 'setKnobPosition',
+            payload: {
+                dashFullOffset: getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset,
+                label: labelValue,
+                knob: knobXY,
+            },
+        });
+    }, [state, trackSize, knobPosition, direction, continuous, onChange, min, max]);
 
     const onMouseDown = () => {
+        draggingRef.current = true;
+        skipEffectsRef.current = true;
+
         isDragging(true);
         dispatch({ type: 'onMouseDown', payload: { isDragging: true } });
     };
 
     const onMouseUp = () => {
-        if (continuous.enabled) continuousPreviousIndex.current = -1;
-        state.isDragging && isDragging(false);
-        dispatch({ type: 'onMouseUp', payload: { isDragging: false } });
+        if (continuous.enabled) {
+            continuousPreviousIndex.current = -1;
+        }
+
+        if (state.isDragging) {
+            isDragging(false);
+            draggingRef.current = false;
+            dispatch({ type: 'onMouseUp', payload: { isDragging: false } });
+
+            // Ensure we maintain the last position
+            if (lastDragPositionRef.current) {
+                // Keep effects disabled a bit longer
+                skipEffectsRef.current = true;
+
+                // Re-enable effects after a short delay
+                setTimeout(() => {
+                    skipEffectsRef.current = false;
+                }, 100);
+            }
+        }
     };
 
     const onMouseMove = useCallback((event: MouseEvent | TouchEvent) => {
@@ -260,12 +322,16 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         const mouseX = pageX - (offset.left + state.radius);
         const mouseY = pageY - (offset.top + state.radius);
         const radians = Math.atan2(mouseY, mouseX);
+
         setKnobPosition(radians);
-    }, [state.isDragging, knobDraggable, trackDraggable, useMouse, isServer, state.radius, setKnobPosition]);
+    }, [state.isDragging, state.radius, knobDraggable, trackDraggable, useMouse, setKnobPosition]);
 
     // Function to recalculate and update values when resized
     const refresh = useCallback(() => {
         if (!circularSlider.current || !svgFullPath.current) return;
+
+        // Don't refresh during dragging
+        if (draggingRef.current) return;
 
         // Get new measurements
         const newWidth = width;
@@ -277,18 +343,17 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             payload: {
                 width: newWidth,
                 radius: newRadius,
-                dashFullArray: svgFullPath.current?.getTotalLength() || 0,
+                dashFullArray: svgFullPath.current.getTotalLength() || 0,
             },
         });
 
-        // Reposition the knob based on the last known value
-        if (lastKnownRadiansRef.current !== null) {
+        // Reposition the knob based on the last position
+        if (lastDragPositionRef.current) {
             setTimeout(() => {
-                // Only update if last radians is known and not already positioning
-                if (lastKnownRadiansRef.current !== null && !positioningInProgressRef.current) {
-                    setKnobPosition(lastKnownRadiansRef.current ?? 0);
+                if (!draggingRef.current && lastDragPositionRef.current) {
+                    setKnobPosition(lastDragPositionRef.current.radians);
                 }
-            }, 0);
+            }, 10);
         }
     }, [width, setKnobPosition]);
 
@@ -303,16 +368,16 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             type: 'init',
             payload: {
                 mounted: true,
-                data: state.data.length ? [...state.data] : [...generateRange(min, max)],
                 dashFullArray: svgFullPath.current?.getTotalLength?.() ?? 0,
             },
         });
-    }, [max, min]);
+    }, []);
 
-    // Set initial knob position values without triggering positioning
+    // Initial position setup
     useEffect(() => {
-        if (!state.mounted) return;
+        if (!state.mounted || state.dashFullArray === 0 || skipEffectsRef.current) return;
 
+        // Calculate initial position
         const dataArrayLength = state.data.length;
         const index = dataIndex >= dataArrayLength ? dataArrayLength - 1 : dataIndex;
         const pointsInCircle = spreadDegrees / dataArrayLength;
@@ -325,65 +390,48 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 offset,
             },
         });
-    }, [state.mounted, state.data.length, state.knobOffset, dataIndex]);
 
-    // Actually position the knob based on calculated values
-    useEffect(() => {
-        // Skip running this effect until the slider is properly initialized
-        if (!state.mounted || state.dashFullArray === 0) return;
+        // Only continue if we haven't already initialized
+        if (!initCompletedRef.current) {
+            const degrees = getSliderRotation(direction) * index * pointsInCircle;
+            const radians = getRadians(degrees) - state.knobOffset;
+            const positioningRadians = radians + offset * getSliderRotation(direction);
 
-        // Prevent running this effect if positioning is in progress
-        if (positioningInProgressRef.current) return;
-
-        const dataArrayLength = state.data.length;
-        const index = dataIndex >= dataArrayLength ? dataArrayLength - 1 : dataIndex;
-        const pointsInCircle = spreadDegrees / dataArrayLength;
-        const offset = getRadians(pointsInCircle) / 2;
-
-        const degrees = getSliderRotation(direction) * index * pointsInCircle;
-        const radians = getRadians(degrees) - state.knobOffset;
-
-        // Use a ref to track the positioning radians value
-        const positioningRadians = radians + offset * getSliderRotation(direction);
-        lastKnownRadiansRef.current = positioningRadians;
-
-        // Only call setKnobPosition if this is not a result of a previous call
-        const currentTimeStamp = Date.now();
-        if (currentTimeStamp - lastPositioningTimestampRef.current > 50 && !positioningInProgressRef.current) {
-            lastPositioningTimestampRef.current = currentTimeStamp;
             setKnobPosition(positioningRadians);
+            initCompletedRef.current = true;
         }
-    }, [state.mounted, state.dashFullArray, state.knobOffset, state.data.length, dataIndex, direction, setKnobPosition]);
+    }, [state.mounted, state.dashFullArray, state.knobOffset, direction, state.data.length, dataIndex, setKnobPosition]);
 
-    // Handle value prop changes
+    // Handle external value prop changes
     useEffect(() => {
-        if (typeof value === 'number' && !positioningInProgressRef.current && state.mounted) {
+        if (!state.mounted || skipEffectsRef.current || draggingRef.current) return;
+
+        if (typeof value === 'number') {
             setValueFromParent(value);
             const radians = getRadians(value);
             const offsetRadians = -state.knobOffset + radians * getSliderRotation(direction);
 
-            // Track that this is a deliberate update of position
-            lastKnownRadiansRef.current = offsetRadians;
-
-            // Debounce parent-initiated positioning to avoid loops
-            const currentTimeStamp = Date.now();
-            if (currentTimeStamp - lastPositioningTimestampRef.current > 50) {
-                lastPositioningTimestampRef.current = currentTimeStamp;
-                setKnobPosition(offsetRadians);
-            }
+            // Use timeout to break the update cycle
+            setTimeout(() => {
+                if (!draggingRef.current) {
+                    setKnobPosition(offsetRadians);
+                }
+            }, 0);
         }
     }, [direction, state.knobOffset, value, state.mounted, setKnobPosition]);
 
-    // Setup ResizeObserver to watch for container size changes
+    // Setup ResizeObserver
     useEffect(() => {
         if (typeof ResizeObserver === 'undefined') return;
 
         const observeResize = () => {
             if (circularSlider.current) {
                 resizeObserverRef.current = new ResizeObserver(() => {
-                    refresh();
+                    if (!draggingRef.current) {
+                        refresh();
+                    }
                 });
-                resizeObserverRef.current?.observe(circularSlider.current);
+                resizeObserverRef.current.observe(circularSlider.current);
             }
         };
 
@@ -391,15 +439,17 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
 
         return () => {
             if (resizeObserverRef.current) {
-                resizeObserverRef.current?.disconnect();
+                resizeObserverRef.current.disconnect();
             }
         };
     }, [refresh]);
 
-    // Add window resize event listener as fallback for browsers without ResizeObserver
+    // Window resize fallback
     useEffect(() => {
         const handleResize = () => {
-            refresh();
+            if (!draggingRef.current) {
+                refresh();
+            }
         };
 
         window.addEventListener('resize', handleResize);
