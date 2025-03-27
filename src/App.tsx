@@ -8,22 +8,15 @@ const App = () => {
 	const [sliderValue, setSliderValue] = React.useState(0);
 	const [activeTab, setActiveTab] = React.useState(0);
 	const [isMobile, setIsMobile] = React.useState(false);
+	const [showMobileCode, setShowMobileCode] = React.useState(false);
 
-	// Check for mobile screen size on component mount and resize
-	React.useEffect(() => {
-		const checkScreenSize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-
-		// Initial check
-		checkScreenSize();
-
-		// Listen for window resize
-		window.addEventListener('resize', checkScreenSize);
-
-		// Cleanup
-		return () => window.removeEventListener('resize', checkScreenSize);
-	}, []);
+	// Store a reference to each slider component for refreshing
+	const sliderRefs = React.useRef([
+		React.createRef(),
+		React.createRef(),
+		React.createRef(),
+		React.createRef()
+	]);
 
 	const styles = {
 		// Page background with gradient
@@ -123,6 +116,18 @@ const App = () => {
 			transition: 'all 0.2s ease-in-out',
 			fontWeight: 500,
 			boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)',
+			outline: 'none',
+		},
+		// Code toggle button
+		codeToggleButton: {
+			backgroundColor: '#f1f5f9',
+			color: '#475569',
+			boxShadow: 'none',
+			border: '1px solid #e2e8f0',
+			display: 'inline-flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			gap: '0.4rem',
 		},
 		// Refined divider line
 		divider: {
@@ -141,9 +146,14 @@ const App = () => {
 			// Hide scrollbar but allow scrolling
 			msOverflowStyle: 'none', /* IE and Edge */
 			scrollbarWidth: 'none', /* Firefox */
-			'&::-webkit-scrollbar': {
-				display: 'none', /* Chrome, Safari, Opera */
-			},
+		},
+		// Animation for showing/hiding code
+		codeContainer: {
+			transition: 'max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin 0.3s ease-in-out',
+			maxHeight: showMobileCode ? '500px' : '0',
+			opacity: showMobileCode ? 1 : 0,
+			overflow: 'hidden',
+			margin: showMobileCode ? '1rem 0' : '0',
 		},
 		tab: {
 			padding: isMobile ? '0.5rem 0.75rem' : '0.75rem 1.25rem',
@@ -189,6 +199,7 @@ const App = () => {
 			textAlign: 'center',
 			fontSize: isMobile ? '0.8rem' : '0.9rem',
 			color: '#64748b',
+			paddingBottom: '1rem',
 		},
 	};
 
@@ -199,6 +210,26 @@ const App = () => {
 		{ title: "Alphabet", description: "Butt line cap with a smiley knob and character data" },
 		{ title: "Continuous", description: "Continuous mode (like an iPod click wheel)" }
 	];
+
+	// Toggle the code visibility on mobile
+	const toggleMobileCode = () => {
+		setShowMobileCode(!showMobileCode);
+	};
+
+	// Function called when changing tabs to reset states and refresh slider
+	const handleTabChange = (index) => {
+		setActiveTab(index);
+		setIsDragging(false);
+
+		// Add small delay to make sure the new tab's slider is mounted
+		setTimeout(() => {
+			if (sliderRefs.current[index] &&
+				sliderRefs.current[index].current &&
+				typeof sliderRefs.current[index].current.refresh === 'function') {
+				sliderRefs.current[index].current.refresh();
+			}
+		}, 50);
+	};
 
 	return (
 		<div style={styles.wrapper}>
@@ -224,7 +255,7 @@ const App = () => {
 								...styles.tab,
 								...(activeTab === index ? styles.activeTab : {})
 							}}
-							onClick={() => setActiveTab(index)}
+							onClick={() => handleTabChange(index)}
 						>
 							{tab.title}
 						</div>
@@ -240,6 +271,7 @@ const App = () => {
 					<div style={styles.slider}>
 						{activeTab === 0 && (
 							<CircularSlider
+								ref={sliderRefs.current[0]}
 								label="Temperature"
 								knobPosition="left"
 								appendToValue="°"
@@ -256,6 +288,7 @@ const App = () => {
 
 						{activeTab === 1 && (
 							<CircularSlider
+								ref={sliderRefs.current[1]}
 								label="savings"
 								min={0}
 								max={100}
@@ -279,6 +312,7 @@ const App = () => {
 
 						{activeTab === 2 && (
 							<CircularSlider
+								ref={sliderRefs.current[2]}
 								label="Alphabet"
 								progressLineCap="butt"
 								dataIndex={1}
@@ -300,6 +334,7 @@ const App = () => {
 
 						{activeTab === 3 && (
 							<CircularSlider
+								ref={sliderRefs.current[3]}
 								min={0}
 								max={360}
 								progressColorFrom="#8b5cf6"
@@ -320,21 +355,107 @@ const App = () => {
 
 				{/* Code display section - conditionally render based on mobile or not */}
 				{isMobile ? (
-					// On mobile, only show code when expanded (could add a toggle button)
-					<div style={{ textAlign: 'center', margin: '1rem 0' }}>
-						<button
-							onClick={() => {}}
-							style={{
-								...styles.button,
-								backgroundColor: '#f1f5f9',
-								color: '#475569',
-								boxShadow: 'none',
-								border: '1px solid #e2e8f0'
-							}}
-						>
-							View Code Sample
-						</button>
-					</div>
+					// On mobile, toggle code visibility
+					<>
+						<div style={{ textAlign: 'center', margin: '1rem 0' }}>
+							<button
+								onClick={toggleMobileCode}
+								style={{
+									...styles.button,
+									...styles.codeToggleButton
+								}}
+							>
+								{showMobileCode ? 'Hide Code Sample' : 'View Code Sample'}
+								<span style={{ fontSize: '0.8rem', marginTop: '2px' }}>
+									{showMobileCode ? '▲' : '▼'}
+								</span>
+							</button>
+						</div>
+
+						<div style={styles.codeContainer}>
+							{activeTab === 0 && (
+								<pre style={styles.pre}>
+{`<CircularSlider
+  label="Temperature"
+  knobPosition="left"
+  appendToValue="°"
+  valueFontSize="4rem"
+  trackColor="#e2e8f0"
+  progressColorFrom="#38bdf8"
+  progressColorTo="#0284c7"
+  labelColor="#0284c7"
+  knobColor="#0284c7"
+/>`}
+								</pre>
+							)}
+
+							{activeTab === 1 && (
+								<pre style={styles.pre}>
+{`<CircularSlider
+  label="savings"
+  min={0}
+  max={100}
+  dataIndex={20}
+  prependToValue="$"
+  appendToValue="K"
+  labelColor="#166534"
+  labelBottom={true}
+  knobColor="#166534"
+  knobSize={72}
+  progressColorFrom="#22c55e"
+  progressColorTo="#16a34a"
+  progressSize={24}
+  trackColor="#e2e8f0"
+  trackSize={24}
+>
+  <DragIcon x="22" y="22" width="28px" height="28px" />
+</CircularSlider>`}
+								</pre>
+							)}
+
+							{activeTab === 2 && (
+								<pre style={styles.pre}>
+{`<CircularSlider
+  label="Alphabet"
+  progressLineCap="butt"
+  dataIndex={1}
+  width={250}
+  labelColor="#4b5563"
+  valueFontSize="6rem"
+  verticalOffset="1rem"
+  knobColor="#4b5563"
+  progressColorFrom="#f59e0b"
+  progressColorTo="#d97706"
+  progressSize={8}
+  trackColor="#e5e7eb"
+  trackSize={4}
+  data={["A", "B", "C", "D", "E", ...]}
+>
+  <EmojiIcon x="9" y="9" width="18px" height="18px" />
+</CircularSlider>`}
+								</pre>
+							)}
+
+							{activeTab === 3 && (
+								<pre style={styles.pre}>
+{`<CircularSlider
+  min={0}
+  max={360}
+  progressColorFrom="#8b5cf6"
+  progressColorTo="#6d28d9"
+  knobColor="#6d28d9"
+  label="Rotation"
+  trackColor="#e5e7eb"
+  continuous={{
+    enabled: true,
+    clicks: 100,
+    increment: 1
+  }}
+/>`}
+								</pre>
+							)}
+						</div>
+					</>
 				) : (
 					// On desktop, always show the code
 					<>

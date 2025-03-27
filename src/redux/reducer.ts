@@ -4,7 +4,8 @@ export type ActionType =
     | { type: 'setKnobPosition'; payload: Partial<State> }
     | { type: 'onMouseDown'; payload: Partial<State> }
     | { type: 'onMouseUp'; payload: Partial<State> }
-    | { type: 'setInitialKnobPosition'; payload: Partial<State> };
+    | { type: 'setInitialKnobPosition'; payload: Partial<State> }
+    | { type: 'updateDimensions'; payload: Partial<State> };
 
 export interface State {
     mounted: boolean;
@@ -31,6 +32,7 @@ const reducer = (state: State, action: ActionType): State => {
         case 'onMouseDown':
         case 'onMouseUp':
         case 'setInitialKnobPosition':
+        case 'updateDimensions':
             return {
                 ...state,
                 ...action.payload,
