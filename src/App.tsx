@@ -114,7 +114,7 @@ const App = () => {
 		sliderSection: {
 			background: '#f8fafc',
 			borderRadius: '1rem',
-			padding: isMobile ? '0.25rem 0.75rem' : '2rem 1rem',
+			padding: isMobile ? '0.25rem 0.75rem' : '0.5rem 1.5rem',
 			boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
 		},
 		// Slider display area
@@ -379,8 +379,20 @@ const App = () => {
 								knobSize={isMobile ? 60 : 68}
 							>
 								{/* You'll need to create a StarIcon SVG or use another icon here */}
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="#fff" x="14" y="14">
-									<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+								<svg
+									width={isMobile ? 25 : 35}
+									height={isMobile ? 25 : 35}
+									viewBox="0 0 24 24"
+									fill="#fff"
+									preserveAspectRatio="xMidYMid meet"
+									style={{
+										filter: 'drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.2))'
+									}}
+									x="17"
+									y="17"
+								>
+									<path
+										d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
 								</svg>
 							</CircularSlider>
 						)}
@@ -391,7 +403,7 @@ const App = () => {
 				{isMobile ? (
 					// On mobile, toggle code visibility
 					<>
-						<div style={{ textAlign: 'center', margin: '1rem 0' }}>
+						<div style={{textAlign: 'center', margin: '1rem 0'}}>
 							<button
 								onClick={toggleMobileCode}
 								style={{
