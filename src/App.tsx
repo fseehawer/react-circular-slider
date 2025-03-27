@@ -7,11 +7,28 @@ const App = () => {
 	const [isDragging, setIsDragging] = React.useState(false);
 	const [sliderValue, setSliderValue] = React.useState(0);
 	const [activeTab, setActiveTab] = React.useState(0);
+	const [isMobile, setIsMobile] = React.useState(false);
+
+	// Check for mobile screen size on component mount and resize
+	React.useEffect(() => {
+		const checkScreenSize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		// Initial check
+		checkScreenSize();
+
+		// Listen for window resize
+		window.addEventListener('resize', checkScreenSize);
+
+		// Cleanup
+		return () => window.removeEventListener('resize', checkScreenSize);
+	}, []);
 
 	const styles = {
 		// Page background with gradient
 		wrapper: {
-			padding: '1rem',
+			padding: isMobile ? '0.75rem 0.5rem' : '1rem',
 			background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
 			minHeight: '100vh',
 			fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
@@ -20,47 +37,52 @@ const App = () => {
 		// Central card container with improved shadow
 		container: {
 			maxWidth: '780px',
-			margin: '1rem auto',
+			margin: isMobile ? '0 auto' : '1rem auto',
 			background: '#fff',
-			padding: '2rem',
-			borderRadius: '1.25rem',
+			padding: isMobile ? '1.4rem 1.25rem' : '1.5rem 2rem',
+			borderRadius: isMobile ? '1rem' : '1.25rem',
 			boxShadow: '0 10px 30px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05)',
 		},
 		// Main heading with accent color
 		h1: {
-			fontSize: '2rem',
+			fontSize: isMobile ? '1.6rem' : '2rem',
 			fontWeight: 700,
-			marginBottom: '1rem',
+			marginBottom: isMobile ? '0.75rem' : '1rem',
 			color: '#2c3e50',
 			marginTop: 0,
 			display: 'flex',
 			alignItems: 'center',
-			gap: '0.5rem',
+			flexWrap: isMobile ? 'nowrap' : 'wrap',
+		},
+		// Icon sizing
+		icon: {
+			fontSize: isMobile ? '1.25rem' : '1.5em',
+			marginRight: '0.3em',
 		},
 		// More refined intro paragraph
 		intro: {
-			fontSize: '1.125rem',
+			fontSize: isMobile ? '1rem' : '1.125rem',
 			color: '#5a6a7d',
-			lineHeight: 1.7,
-			marginBottom: '2.5rem',
-			maxWidth: '90%',
+			lineHeight: 1.6,
+			marginBottom: isMobile ? '1.5rem' : '2.5rem',
+			maxWidth: '100%',
 		},
 		// Improved subheadings with accent color
 		h3: {
-			fontSize: '1.35rem',
+			fontSize: isMobile ? '1.1rem' : '1.35rem',
 			fontWeight: 600,
 			color: '#334155',
-			margin: '2.5rem 0 1.25rem',
+			margin: isMobile ? '1.5rem 0 1rem' : '2.5rem 0 1.25rem',
 			borderBottom: '2px solid #f0f4f8',
 			paddingBottom: '0.75rem',
 		},
 		// Enhanced code blocks
 		pre: {
-			fontSize: '0.9rem',
+			fontSize: isMobile ? '0.8rem' : '0.9rem',
 			background: '#f8fafc',
 			color: '#334155',
 			borderRadius: '0.75rem',
-			padding: '1.25rem',
+			padding: isMobile ? '1rem' : '1.25rem',
 			overflowX: 'auto',
 			lineHeight: 1.6,
 			fontFamily: '"Fira Code", "Roboto Mono", monospace',
@@ -71,7 +93,7 @@ const App = () => {
 		sliderSection: {
 			background: '#f8fafc',
 			borderRadius: '1rem',
-			padding: '2rem 1rem',
+			padding: isMobile ? '0.25rem 0.75rem' : '2rem 1rem',
 			boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
 		},
 		// Slider display area
@@ -80,15 +102,18 @@ const App = () => {
 			justifyContent: 'center',
 			alignItems: 'center',
 			flexWrap: 'wrap',
-			marginBottom: '1.5rem',
-			marginTop: '1rem',
-			padding: '1rem',
+			marginBottom: isMobile ? '1rem' : '1.5rem',
+			marginTop: isMobile ? '0.75rem' : '1rem',
+			padding: isMobile ? '0.5rem' : '1rem',
 			position: 'relative',
+			// Scale down for mobile to fit better
+			transform: isMobile ? 'scale(0.85)' : 'scale(1)',
+			transformOrigin: 'center center',
 		},
 		// Improved buttons
 		button: {
-			padding: '0.6rem 1.2rem',
-			fontSize: '0.95rem',
+			padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
+			fontSize: isMobile ? '0.9rem' : '0.95rem',
 			backgroundColor: '#3b82f6',
 			color: '#fff',
 			borderRadius: '0.5rem',
@@ -104,19 +129,25 @@ const App = () => {
 			border: 'none',
 			height: '1px',
 			background: 'linear-gradient(to right, transparent, #cbd5e1, transparent)',
-			margin: '4rem 0',
+			margin: isMobile ? '3rem 0' : '4rem 0',
 		},
 		// Navigation tabs for examples
 		tabContainer: {
 			display: 'flex',
 			borderBottom: '2px solid #e2e8f0',
-			marginBottom: '2rem',
+			marginBottom: isMobile ? '1.25rem' : '2rem',
 			overflowX: 'auto',
 			paddingBottom: '1px',
+			// Hide scrollbar but allow scrolling
+			msOverflowStyle: 'none', /* IE and Edge */
+			scrollbarWidth: 'none', /* Firefox */
+			'&::-webkit-scrollbar': {
+				display: 'none', /* Chrome, Safari, Opera */
+			},
 		},
 		tab: {
-			padding: '0.75rem 1.25rem',
-			fontSize: '0.95rem',
+			padding: isMobile ? '0.5rem 0.75rem' : '0.75rem 1.25rem',
+			fontSize: isMobile ? '0.85rem' : '0.95rem',
 			fontWeight: 500,
 			color: '#64748b',
 			cursor: 'pointer',
@@ -130,15 +161,15 @@ const App = () => {
 		},
 		// Donation section styling
 		donationSection: {
-			marginTop: '3rem',
-			padding: '1.5rem',
+			marginTop: isMobile ? '2rem' : '3rem',
+			padding: isMobile ? '1.25rem 1rem' : '1.5rem',
 			background: 'linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%)',
 			borderRadius: '0.75rem',
 			border: '1px solid #c2e0ff',
 			textAlign: 'center',
 		},
 		donationTitle: {
-			fontSize: '1.25rem',
+			fontSize: isMobile ? '1.1rem' : '1.25rem',
 			fontWeight: 600,
 			color: '#0369a1',
 			marginBottom: '0.75rem',
@@ -150,35 +181,38 @@ const App = () => {
 		donationText: {
 			color: '#0c4a6e',
 			marginBottom: '1rem',
+			fontSize: isMobile ? '0.9rem' : 'inherit',
 		},
 		// Footer credits
 		footer: {
-			marginTop: '3rem',
+			marginTop: isMobile ? '2rem' : '3rem',
 			textAlign: 'center',
-			fontSize: '0.9rem',
+			fontSize: isMobile ? '0.8rem' : '0.9rem',
 			color: '#64748b',
 		},
 	};
 
 	// Example information
 	const tabs = [
-		{ title: "Temperature Dial", description: "Knob on the left and '°' added to the value" },
-		{ title: "Investment Tracker", description: "Initial value with '$' and 'K' using a custom knob icon" },
-		{ title: "Character Selector", description: "butt line cap with a smiley knob and character data" },
-		{ title: "Continuous Rotation", description: "Continuous mode (like an iPod click wheel)" }
+		{ title: "Temperature", description: "Knob on the left with '°' added to the value" },
+		{ title: "Investment", description: "Initial value with '$' and 'K' using a custom knob icon" },
+		{ title: "Alphabet", description: "Butt line cap with a smiley knob and character data" },
+		{ title: "Continuous", description: "Continuous mode (like an iPod click wheel)" }
 	];
 
 	return (
 		<div style={styles.wrapper}>
 			<div style={styles.container}>
 				<h1 style={styles.h1}>
-					<span style={{ fontSize: '1.5em', marginRight: '0.2em' }}>🎯</span>
+					<span style={styles.icon}>🎯</span>
 					React Circular Slider
 				</h1>
 
 				<p style={styles.intro}>
-					A highly customizable circular slider component for React applications. Perfect for temperature controls,
-					volume knobs, timer selectors, and any UI that requires an intuitive dial interface.
+					{isMobile ?
+						"A customizable circular slider for React apps. Perfect for intuitive dial interfaces." :
+						"A highly customizable circular slider component for React applications. Perfect for temperature controls, volume knobs, timer selectors, and any UI that requires an intuitive dial interface."
+					}
 				</p>
 
 				{/* Tab navigation for examples */}
@@ -199,8 +233,8 @@ const App = () => {
 
 				{/* Current example section */}
 				<div style={styles.sliderSection}>
-					<h3 style={{ ...styles.h3, marginTop: '0.5rem' }}>
-						{tabs[activeTab].description}:
+					<h3 style={{ ...styles.h3, marginTop: isMobile ? '0.25rem' : '0.5rem' }}>
+						{tabs[activeTab].description}
 					</h3>
 
 					<div style={styles.slider}>
@@ -209,13 +243,14 @@ const App = () => {
 								label="Temperature"
 								knobPosition="left"
 								appendToValue="°"
-								valueFontSize="4rem"
+								valueFontSize={isMobile ? "3.5rem" : "4rem"}
 								trackColor="#e2e8f0"
 								progressColorFrom={isDragging ? '#F0A367' : '#38bdf8'}
 								progressColorTo={isDragging ? '#F65749' : '#0284c7'}
 								labelColor={isDragging ? '#F0A367' : '#0284c7'}
 								knobColor={isDragging ? '#F0A367' : '#0284c7'}
 								isDragging={(value) => setIsDragging(value)}
+								width={isMobile ? 220 : 250}
 							/>
 						)}
 
@@ -230,14 +265,15 @@ const App = () => {
 								labelColor="#166534"
 								labelBottom={true}
 								knobColor="#166534"
-								knobSize={72}
+								knobSize={isMobile ? 60 : 72}
 								progressColorFrom="#22c55e"
 								progressColorTo="#16a34a"
-								progressSize={24}
+								progressSize={isMobile ? 20 : 24}
 								trackColor="#e2e8f0"
-								trackSize={24}
+								trackSize={isMobile ? 20 : 24}
+								width={isMobile ? 220 : 250}
 							>
-								<DragIcon x="22" y="22" width="28px" height="28px" />
+								<DragIcon x={isMobile ? "18" : "22"} y={isMobile ? "18" : "22"} width={isMobile ? "24px" : "28px"} height={isMobile ? "24px" : "28px"} />
 							</CircularSlider>
 						)}
 
@@ -246,10 +282,10 @@ const App = () => {
 								label="Alphabet"
 								progressLineCap="butt"
 								dataIndex={1}
-								width={250}
+								width={isMobile ? 220 : 250}
 								labelColor="#4b5563"
-								valueFontSize="6rem"
-								verticalOffset="1rem"
+								valueFontSize={isMobile ? "5rem" : "6rem"}
+								verticalOffset={isMobile ? "0.75rem" : "1rem"}
 								knobColor="#4b5563"
 								progressColorFrom="#f59e0b"
 								progressColorTo="#d97706"
@@ -271,6 +307,7 @@ const App = () => {
 								knobColor="#6d28d9"
 								label="Rotation"
 								trackColor="#e5e7eb"
+								width={isMobile ? 220 : 250}
 								continuous={{
 									enabled: true,
 									clicks: 100,
@@ -281,9 +318,28 @@ const App = () => {
 					</div>
 				</div>
 
-				{/* Code display section */}
-				{activeTab === 0 && (
-					<pre style={styles.pre}>
+				{/* Code display section - conditionally render based on mobile or not */}
+				{isMobile ? (
+					// On mobile, only show code when expanded (could add a toggle button)
+					<div style={{ textAlign: 'center', margin: '1rem 0' }}>
+						<button
+							onClick={() => {}}
+							style={{
+								...styles.button,
+								backgroundColor: '#f1f5f9',
+								color: '#475569',
+								boxShadow: 'none',
+								border: '1px solid #e2e8f0'
+							}}
+						>
+							View Code Sample
+						</button>
+					</div>
+				) : (
+					// On desktop, always show the code
+					<>
+						{activeTab === 0 && (
+							<pre style={styles.pre}>
 {`<CircularSlider
   label="Temperature"
   knobPosition="left"
@@ -295,11 +351,11 @@ const App = () => {
   labelColor="#0284c7"
   knobColor="#0284c7"
 />`}
-					</pre>
-				)}
+							</pre>
+						)}
 
-				{activeTab === 1 && (
-					<pre style={styles.pre}>
+						{activeTab === 1 && (
+							<pre style={styles.pre}>
 {`<CircularSlider
   label="savings"
   min={0}
@@ -319,11 +375,11 @@ const App = () => {
 >
   <DragIcon x="22" y="22" width="28px" height="28px" />
 </CircularSlider>`}
-					</pre>
-				)}
+							</pre>
+						)}
 
-				{activeTab === 2 && (
-					<pre style={styles.pre}>
+						{activeTab === 2 && (
+							<pre style={styles.pre}>
 {`<CircularSlider
   label="Alphabet"
   progressLineCap="butt"
@@ -342,11 +398,11 @@ const App = () => {
 >
   <EmojiIcon x="9" y="9" width="18px" height="18px" />
 </CircularSlider>`}
-					</pre>
-				)}
+							</pre>
+						)}
 
-				{activeTab === 3 && (
-					<pre style={styles.pre}>
+						{activeTab === 3 && (
+							<pre style={styles.pre}>
 {`<CircularSlider
   min={0}
   max={360}
@@ -361,7 +417,9 @@ const App = () => {
     increment: 1
   }}
 />`}
-					</pre>
+							</pre>
+						)}
+					</>
 				)}
 
 				{/* Donation section with improved styling */}
@@ -370,7 +428,10 @@ const App = () => {
 						<span role="img" aria-label="Praying hands">🙏</span> Support the project
 					</div>
 					<p style={styles.donationText}>
-						If you find this component useful for your projects, consider a small donation. Every contribution helps maintain and improve this tool!
+						{isMobile ?
+							"If you find this component useful, please consider a small donation." :
+							"If you find this component useful for your projects, consider a small donation. Every contribution helps maintain and improve this tool!"
+						}
 					</p>
 					<form action="https://www.paypal.com/donate" method="post" target="_top">
 						<input type="hidden" name="hosted_button_id" value="GGLRKKGFPTXJW" />
