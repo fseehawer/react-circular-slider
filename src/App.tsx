@@ -22,7 +22,7 @@ const App = () => {
 			maxWidth: '780px',
 			margin: '1rem auto',
 			background: '#fff',
-			padding: '3rem',
+			padding: '2rem',
 			borderRadius: '1.25rem',
 			boxShadow: '0 10px 30px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05)',
 		},
