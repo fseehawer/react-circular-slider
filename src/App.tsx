@@ -11,7 +11,7 @@ const App = () => {
 	const styles = {
 		// Page background with gradient
 		wrapper: {
-			padding: '2rem 1rem',
+			padding: '1rem',
 			background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
 			minHeight: '100vh',
 			fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
@@ -20,7 +20,7 @@ const App = () => {
 		// Central card container with improved shadow
 		container: {
 			maxWidth: '780px',
-			margin: '2rem auto',
+			margin: '1rem auto',
 			background: '#fff',
 			padding: '3rem',
 			borderRadius: '1.25rem',
@@ -28,7 +28,7 @@ const App = () => {
 		},
 		// Main heading with accent color
 		h1: {
-			fontSize: '2.25rem',
+			fontSize: '2rem',
 			fontWeight: 700,
 			marginBottom: '1rem',
 			color: '#2c3e50',
