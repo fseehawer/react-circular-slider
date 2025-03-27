@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 export interface SvgProps {
     width: number;
@@ -8,11 +8,12 @@ export interface SvgProps {
     strokeDashoffset: number;
     progressColorFrom: string;
     progressColorTo: string;
-    progressLineCap?: 'round' | 'butt';
-    progressSize: number;
+    progressLineCap?: 'round' | 'butt'; // Not directly used in CSS gradient approach
+    progressSize: number; // Thickness of the progress ring
     trackColor: string;
     trackSize: number;
     radiansOffset: number;
+    // Retaining this for compatibility, though it's no longer used for drawing the gradient:
     svgFullPath: React.RefObject<SVGPathElement | null>;
     onMouseDown?: () => void;
     isDragging?: boolean;
@@ -35,91 +36,80 @@ const Svg: React.FC<SvgProps> = ({
                                      onMouseDown,
                                      isDragging,
                                  }) => {
-    const circleRef = useRef<SVGCircleElement | null>(null);
-
-    // Keep styles simple with no transitions
-    const styles: { [key: string]: React.CSSProperties } = {
-        svg: {
-            position: 'relative',
-            zIndex: 2,
-            userSelect: isDragging ? 'none' : 'auto',
-        },
-        path: {
-            transform: `rotate(${radiansOffset}rad) ${direction === -1 ? 'scale(-1, 1)' : 'scale(1, 1)'}`,
-            transformOrigin: 'center center',
-            // No transition to make movement instant
-            transition: 'none',
-        },
-    };
-
+    // Calculate radius for the track circle
     const halfTrack = trackSize / 2;
     const radius = width / 2 - halfTrack;
+    const circumference = 2 * Math.PI * radius;
+    // Compute the progress fraction (0 = empty, 1 = full)
+    const progressFraction = 1 - strokeDashoffset / circumference;
 
-    const validatedLineCap: 'round' | 'butt' =
-        progressLineCap === 'round' || progressLineCap === 'butt'
-            ? progressLineCap
-            : 'round';
+    // Convert knob rotation (radiansOffset) to degrees for the CSS gradient start angle
+    const startAngleDeg = (radiansOffset * 180) / Math.PI;
+
+    // Build a CSS conic gradient.
+    // It will show the progress colors up to the percentage indicated by progressFraction,
+    // and then transition to transparent.
+    const gradient = `conic-gradient(
+    from ${startAngleDeg}deg,
+    ${progressColorFrom} 0%,
+    ${progressColorTo} ${progressFraction * 100}%,
+    transparent ${progressFraction * 100}%
+  )`;
+
+    // Calculate the inner circle size (mask) so that only a ring of thickness ~progressSize is visible.
+    const innerRadius = (width / 2) - progressSize;
+    const innerPercent = (innerRadius / (width / 2)) * 100;
 
     const handleClick = (event: React.MouseEvent | React.TouchEvent) => {
         if (!onMouseDown) return;
-        const bounds = circleRef.current?.getBoundingClientRect();
-        if (!bounds) return;
-
-        const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
-        const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
-        const centerX = bounds.left + bounds.width / 2;
-        const centerY = bounds.top + bounds.height / 2;
-        const distance = Math.sqrt((clientX - centerX) ** 2 + (clientY - centerY) ** 2);
-        const threshold = bounds.width / (isDragging ? 4 : 2) - trackSize;
-        if (distance < threshold) return;
         onMouseDown();
     };
 
-    // Create a unique gradient ID to avoid conflicts with multiple instances
-    const gradientId = `radial-${label}-${Math.random().toString(36).substr(2, 9)}`;
-
     return (
-        <svg
-            width={`${width}px`}
-            height={`${width}px`}
-            viewBox={`0 0 ${width} ${width}`}
-            overflow="visible"
-            style={styles.svg}
+        <div
+            style={{
+                position: 'relative',
+                width: `${width}px`,
+                height: `${width}px`,
+                userSelect: isDragging ? 'none' : 'auto',
+            }}
             onMouseDown={handleClick}
             onTouchStart={handleClick}
         >
-            <defs>
-                <linearGradient id={gradientId} x1="100%" x2="0%">
-                    <stop offset="0%" stopColor={progressColorFrom}/>
-                    <stop offset="100%" stopColor={progressColorTo}/>
-                </linearGradient>
-            </defs>
-            <circle
-                ref={circleRef}
-                strokeWidth={trackSize}
-                fill="none"
-                stroke={trackColor}
-                cx={width / 2}
-                cy={width / 2}
-                r={radius}
+            {/* Render the track as an SVG circle */}
+            <svg
+                width={width}
+                height={width}
+                viewBox={`0 0 ${width} ${width}`}
+                style={{ position: 'absolute', top: 0, left: 0 }}
+            >
+                <circle
+                    strokeWidth={trackSize}
+                    fill="none"
+                    stroke={trackColor}
+                    cx={width / 2}
+                    cy={width / 2}
+                    r={radius}
+                />
+            </svg>
+
+            {/* Overlay a div with a CSS conic gradient to represent the progress */}
+            <div
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: `${width}px`,
+                    height: `${width}px`,
+                    borderRadius: '50%',
+                    background: gradient,
+                    transform: direction === -1 ? 'scale(-1, 1)' : undefined,
+                    // Apply a radial mask to cut out the inner circle, leaving a ring of thickness ~progressSize.
+                    maskImage: `radial-gradient(circle, transparent ${innerPercent}%, black ${innerPercent}%)`,
+                    WebkitMaskImage: `radial-gradient(circle, transparent ${innerPercent}%, black ${innerPercent}%)`,
+                }}
             />
-            <path
-                style={styles.path}
-                ref={svgFullPath}
-                strokeDasharray={strokeDasharray || 0}
-                strokeDashoffset={strokeDashoffset || 0}
-                strokeWidth={progressSize}
-                strokeLinecap={validatedLineCap}
-                fill="none"
-                stroke={`url(#${gradientId})`}
-                d={`
-    M ${width / 2}, ${width / 2}
-    m 0, -${radius}
-    a ${radius},${radius} 0 0,1 0,${radius * 2}
-    a -${radius},-${radius} 0 0,1 0,-${radius * 2}
-  `}
-            />
-        </svg>
+        </div>
     );
 };
 

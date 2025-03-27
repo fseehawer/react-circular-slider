@@ -382,7 +382,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             payload: {
                 width: newWidth,
                 radius: newRadius,
-                dashFullArray: svgFullPath.current.getTotalLength() || 0,
+                dashFullArray: svgFullPath.current?.getTotalLength() || 0,
             },
         });
 
@@ -394,7 +394,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                     disableEffectsRef.current = true;
 
                     // Use the current position's radians to preserve exact position
-                    setKnobPosition(currentPositionRef.current.radians);
+                    setKnobPosition(currentPositionRef.current?.radians ?? 0);
 
                     // Re-enable effects after a short delay
                     setTimeout(() => {
@@ -498,7 +498,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                         refresh();
                     }
                 });
-                resizeObserverRef.current.observe(circularSlider.current);
+                resizeObserverRef.current?.observe(circularSlider.current);
             }
         };
 
@@ -506,7 +506,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
 
         return () => {
             if (resizeObserverRef.current) {
-                resizeObserverRef.current.disconnect();
+                resizeObserverRef.current?.disconnect();
             }
         };
     }, [refresh]);
