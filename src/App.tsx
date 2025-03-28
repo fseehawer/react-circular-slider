@@ -67,7 +67,7 @@ const App = () => {
 		},
 		// Icon sizing - updated for mobile
 		icon: {
-			fontSize: isMobile ? '2.5rem' : '1.5em',
+			fontSize: isMobile ? '3rem' : '1.5em',
 			marginRight: isMobile ? 0 : '0.3em',
 			marginBottom: isMobile ? '0.5rem' : 0,
 			display: 'block',
@@ -310,7 +310,7 @@ const App = () => {
 								labelColor={isDragging ? '#F0A367' : '#0284c7'}
 								knobColor={isDragging ? '#F0A367' : '#0284c7'}
 								isDragging={(value) => setIsDragging(value)}
-								width={isMobile ? 220 : 250}
+								width={250}
 							/>
 						)}
 
@@ -332,7 +332,7 @@ const App = () => {
 								progressSize={isMobile ? 20 : 24}
 								trackColor="#e2e8f0"
 								trackSize={isMobile ? 20 : 24}
-								width={isMobile ? 220 : 250}
+								width={250}
 							>
 								<DragIcon x={isMobile ? "18" : "22"} y={isMobile ? "18" : "22"} width={isMobile ? "24px" : "28px"} height={isMobile ? "24px" : "28px"} />
 							</CircularSlider>
@@ -344,7 +344,7 @@ const App = () => {
 								label="Alphabet"
 								progressLineCap="butt"
 								dataIndex={1}
-								width={isMobile ? 220 : 250}
+								width={250}
 								labelColor="#4b5563"
 								valueFontSize={isMobile ? "5rem" : "6rem"}
 								verticalOffset={isMobile ? "0.75rem" : "1rem"}
@@ -367,7 +367,7 @@ const App = () => {
 								min={0}
 								max={5}
 								dataIndex={3}
-								width={isMobile ? 220 : 250}
+								width={250}
 								labelColor="#f59e0b"
 								valueFontSize={isMobile ? "4rem" : "5rem"}
 								knobColor="#facc15"
