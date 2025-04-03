@@ -2,11 +2,9 @@ import React from 'react';
 import CircularSlider from './CircularSlider';
 import DragIcon from './assets/drag.svg?react';
 import EmojiIcon from './assets/emoji.svg?react';
-import ChartIcon from './assets/chart.svg?react'; // Assuming you'll create this icon
 
 const App = () => {
 	const [isDragging, setIsDragging] = React.useState(false);
-	const [sliderValue, setSliderValue] = React.useState(0);
 	const [activeTab, setActiveTab] = React.useState(0);
 	const [isMobile, setIsMobile] = React.useState(false);
 	const [showMobileCode, setShowMobileCode] = React.useState(false);
@@ -628,7 +626,7 @@ const App = () => {
 
 				{/* Footer with credits */}
 				<div style={styles.footer}>
-					<p>© 2025 React Circular Slider • Made with ❤️ by developers, for developers</p>
+					<p>© 2025 React Circular Slider • Made with ❤️ by a developer, for developers</p>
 				</div>
 			</div>
 		</div>
