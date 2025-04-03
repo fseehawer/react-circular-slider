@@ -1,6 +1,6 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "files": [
     "dist",
     "public"
@@ -21,6 +21,10 @@
     "build-demo": "vite build --config vite.demo.config.js",
     "gh-pages": "npm run build-demo && git add -f build && git commit -m \"Update demo\" && git subtree push --prefix build origin gh-pages",
     "build-publish": "npm run build && npm run gh-pages && npm publish --access public"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.12",

@@ -1,3 +1,4 @@
+"use client";
 import React, {useCallback, useEffect, useReducer, useRef, forwardRef, useImperativeHandle} from 'react';
 import reducer from '../redux/reducer';
 import useEventListener from '../hooks/useEventListener';
