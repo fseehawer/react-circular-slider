@@ -4,7 +4,7 @@ import DragIcon from './assets/drag.svg?react';
 import EmojiIcon from './assets/emoji.svg?react';
 
 const App = () => {
-	const [isDragging, setIsDragging] = React.useState(false);
+	const [isHot, setIsHot] = React.useState(true);
 	const [activeTab, setActiveTab] = React.useState(0);
 	const [isMobile, setIsMobile] = React.useState(false);
 	const [showMobileCode, setShowMobileCode] = React.useState(false);
@@ -231,7 +231,7 @@ const App = () => {
 
 	// Example information - removed Continuous, added Rating example
 	const tabs = [
-		{ title: "Temperature", description: "Knob on the left with '°' added to the value" },
+		{ title: "Temperature", description: "The starting knob is positioned on the left, displaying the value with a '°' symbol. The color changes when the value exceeds 0°." },
 		{ title: "Investment", description: "Initial value with '$' and 'K' using a custom knob icon" },
 		{ title: "Alphabet", description: "Butt line cap with a smiley knob and character data" },
 		{ title: "Rating", description: "Star rating selector with custom icon and color gradient" }
@@ -245,7 +245,7 @@ const App = () => {
 	// Function called when changing tabs to reset states and refresh slider
 	const handleTabChange = (index) => {
 		setActiveTab(index);
-		setIsDragging(false);
+		setIsHot(false);
 
 		// Add small delay to make sure the new tab's slider is mounted
 		setTimeout(() => {
@@ -301,13 +301,16 @@ const App = () => {
 								label="Temperature"
 								knobPosition="left"
 								appendToValue="°"
+								min={-100}
+								max={100}
+								dataIndex={120}
 								valueFontSize={isMobile ? "3.5rem" : "4rem"}
 								trackColor="#e2e8f0"
-								progressColorFrom={isDragging ? '#F0A367' : '#38bdf8'}
-								progressColorTo={isDragging ? '#F65749' : '#0284c7'}
-								labelColor={isDragging ? '#F0A367' : '#0284c7'}
-								knobColor={isDragging ? '#F0A367' : '#0284c7'}
-								isDragging={(value) => setIsDragging(value)}
+								progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
+								progressColorTo={isHot ? '#F65749' : '#0284c7'}
+								labelColor={isHot ? '#F0A367' : '#0284c7'}
+								knobColor={isHot ? '#F0A367' : '#0284c7'}
+								onChange={(value) => setIsHot(Number(value) > 0)}
 								width={250}
 							/>
 						)}
@@ -363,8 +366,8 @@ const App = () => {
 								ref={sliderRefs.current[3]}
 								label="Star Rating"
 								min={0}
-								max={5}
-								dataIndex={3}
+								max={10}
+								dataIndex={5}
 								width={250}
 								labelColor="#f59e0b"
 								valueFontSize={isMobile ? "4rem" : "5rem"}
@@ -423,12 +426,14 @@ const App = () => {
   label="Temperature"
   knobPosition="left"
   appendToValue="°"
-  valueFontSize="4rem"
-  trackColor="#e2e8f0"
-  progressColorFrom="#38bdf8"
-  progressColorTo="#0284c7"
-  labelColor="#0284c7"
-  knobColor="#0284c7"
+  min={-100}
+  max={100}
+  dataIndex={120}
+  progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
+  progressColorTo={isHot ? '#F65749' : '#0284c7'}
+  labelColor={isHot ? '#F0A367' : '#0284c7'}
+  knobColor={isHot ? '#F0A367' : '#0284c7'}
+  onChange={(value) => setIsHot(Number(value) > 0)}
 />`}
 								</pre>
 							)}
@@ -485,8 +490,8 @@ const App = () => {
 {`<CircularSlider
   label="Star Rating"
   min={0}
-  max={5}
-  dataIndex={3}
+  max={10}
+  dataIndex={5}
   labelColor="#b45309"
   valueFontSize="5rem"
   knobColor="#facc15"
@@ -512,12 +517,14 @@ const App = () => {
   label="Temperature"
   knobPosition="left"
   appendToValue="°"
-  valueFontSize="4rem"
-  trackColor="#e2e8f0"
-  progressColorFrom="#38bdf8"
-  progressColorTo="#0284c7"
-  labelColor="#0284c7"
-  knobColor="#0284c7"
+  min={-100}
+  max={100}
+  dataIndex={120}
+  progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
+  progressColorTo={isHot ? '#F65749' : '#0284c7'}
+  labelColor={isHot ? '#F0A367' : '#0284c7'}
+  knobColor={isHot ? '#F0A367' : '#0284c7'}
+  onChange={(value) => setIsHot(Number(value) > 0)}
 />`}
 							</pre>
 						)}
@@ -574,8 +581,8 @@ const App = () => {
 {`<CircularSlider
   label="Star Rating"
   min={0}
-  max={5}
-  dataIndex={3}
+  max={10}
+  dataIndex={5}
   labelColor="#b45309"
   valueFontSize="5rem"
   knobColor="#facc15"
