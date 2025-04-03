@@ -535,6 +535,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     const sliderStyle: React.CSSProperties = {
         position: 'relative',
         display: 'inline-block',
+        width: 'max-content',
         opacity: state.mounted ? 1 : 0,
         transition: 'opacity 1s ease-in',
     };
