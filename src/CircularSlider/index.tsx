@@ -126,6 +126,9 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     // Store the last data index to detect changes
     const lastDataIndexRef = useRef(dataIndex);
 
+    // Store the last direction to detect changes
+    const lastDirectionRef = useRef(direction);
+
     // Flag to track if a click operation is in progress
     const clickInProgressRef = useRef(false);
 
@@ -469,6 +472,16 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             positionForDataIndex();
         }
     }, [dataIndex, positionForDataIndex, state.mounted]);
+
+    // Handle direction changes after initialization
+    useEffect(() => {
+        if (!state.mounted || !initCompletedRef.current || disableEffectsRef.current || draggingRef.current) return;
+
+        if (direction !== lastDirectionRef.current) {
+            lastDirectionRef.current = direction;
+            positionForDataIndex();
+        }
+    }, [direction, positionForDataIndex, state.mounted]);
 
     // Handle external value prop changes
     useEffect(() => {
