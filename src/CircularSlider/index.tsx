@@ -196,7 +196,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
 
         // Calculate dash offset for SVG path
         const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
-        const dashOffsetValue = getSliderRotation(direction) === -1 ? dashOffset : state.dashFullArray - dashOffset;
+        const dashOffsetValue = state.dashFullArray - dashOffset;
 
         // Map the angle to an index in the data array
         // Ensure we map to the full 360 degrees range
