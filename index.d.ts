@@ -17,6 +17,8 @@ declare module '@fseehawer/react-circular-slider' {
     min?: number;
     max?: number;
     initialValue?: number;
+    defaultValue?: number;
+    value?: number;
     knobColor?: string;
     knobPosition?: KnobPosition | number;
     knobSize?: number;

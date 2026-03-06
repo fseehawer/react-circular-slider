@@ -24,6 +24,7 @@ export interface CircularSliderProps {
     min?: number;
     max?: number;
     initialValue?: number;
+    defaultValue?: number;
     value?: number;
     knobColor?: string;
     knobSize?: number;
@@ -82,6 +83,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         min = 0,
         max = 360,
         initialValue = 0,
+        defaultValue,
         value = null,
         knobColor = '#4e63ea',
         knobSize = 36,
@@ -147,13 +149,20 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     // Initialize state with proper data
     const dataArray = data.length > 0 ? [...data] : [...generateRange(min, max)];
 
+    // Determine initial value based on controlled/uncontrolled pattern
+    const getInitialValue = () => {
+        if (typeof value === 'number') return value;
+        if (typeof defaultValue === 'number') return defaultValue;
+        return initialValue;
+    };
+
     const initialState = {
         mounted: false,
         isDragging: false,
         width,
         radius: width / 2,
         knobOffset: getKnobOffsetAmount(knobPosition),
-        label: initialValue,
+        label: getInitialValue(),
         data: dataArray,
         radians: 0,
         offset: 0,
@@ -590,23 +599,49 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         }
     }, [direction, positionForDataIndex, state.mounted]);
 
-    // Handle external value prop changes
+    // Handle external value prop changes (controlled mode)
     useEffect(() => {
         if (!state.mounted || disableEffectsRef.current || draggingRef.current || preventPositionResetRef.current) return;
 
         if (typeof value === 'number' && value !== valueFromParentRef.current) {
             valueFromParentRef.current = value;
-            const radians = getRadians(value);
-            const offsetRadians = -state.knobOffset + radians * getSliderRotation(direction);
+            
+            // Find the index in data array that corresponds to this value
+            let targetIndex = 0;
+            if (state.data.length > 0) {
+                // If using custom data array, find closest match
+                if (data.length > 0) {
+                    targetIndex = state.data.findIndex(item => item === value);
+                    if (targetIndex === -1) {
+                        // If exact match not found, find closest numeric value
+                        let closestDiff = Infinity;
+                        state.data.forEach((item, index) => {
+                            const numItem = typeof item === 'number' ? item : parseFloat(String(item));
+                            const diff = Math.abs(numItem - value);
+                            if (diff < closestDiff) {
+                                closestDiff = diff;
+                                targetIndex = index;
+                            }
+                        });
+                    }
+                } else {
+                    // Using generated range, map value directly to index
+                    targetIndex = Math.max(0, Math.min(value - min, max - min));
+                }
+            }
+            
+            // Calculate the angle based on the target index
+            const degrees = (targetIndex / Math.max(1, state.data.length - 1)) * 360 * getSliderRotation(direction);
+            const radians = getRadians(degrees) - state.knobOffset;
 
             // Use a small delay to break the update cycle
             setTimeout(() => {
                 if (!draggingRef.current && isMountedRef.current && !preventPositionResetRef.current) {
-                    setKnobPosition(offsetRadians);
+                    setKnobPosition(radians);
                 }
             }, 0);
         }
-    }, [direction, state.knobOffset, value, state.mounted, setKnobPosition]);
+    }, [direction, state.knobOffset, value, state.mounted, state.data, data, min, max, setKnobPosition]);
 
     // Setup ResizeObserver to watch for container size changes
     useEffect(() => {
