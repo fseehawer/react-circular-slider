@@ -1,5 +1,11 @@
 "use client";
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
+
+export type GradientStop = {
+    offset?: string;
+    stopColor: string;
+    stopOpacity?: number;
+};
 
 export interface SvgProps {
     width: number;
@@ -9,9 +15,11 @@ export interface SvgProps {
     strokeDashoffset: number;
     progressColorFrom: string;
     progressColorTo: string;
+    progressGradient?: (string | GradientStop)[];
     progressLineCap?: 'round' | 'butt';
     progressSize: number;
     trackColor: string;
+    trackGradient?: (string | GradientStop)[];
     trackSize: number;
     radiansOffset: number;
     svgFullPath: React.RefObject<SVGPathElement | null>;
@@ -27,9 +35,11 @@ const Svg: React.FC<SvgProps> = ({
                                      strokeDashoffset,
                                      progressColorFrom,
                                      progressColorTo,
+                                     progressGradient,
                                      progressLineCap = 'round',
                                      progressSize,
                                      trackColor,
+                                     trackGradient,
                                      trackSize,
                                      radiansOffset,
                                      svgFullPath,
@@ -76,10 +86,51 @@ const Svg: React.FC<SvgProps> = ({
         onMouseDown(event);
     };
 
-    // Create a stable unique gradient ID to avoid conflicts with multiple instances
-    // Using useRef so the ID is generated once and remains stable across re-renders
-    const gradientIdRef = useRef(`radial-${label}-${Math.random().toString(36).substr(2, 9)}`);
-    const gradientId = gradientIdRef.current;
+    // Create stable unique gradient IDs to avoid conflicts with multiple instances
+    const progressGradientIdRef = useRef(`progress-${label}-${Math.random().toString(36).substr(2, 9)}`);
+    const trackGradientIdRef = useRef(`track-${label}-${Math.random().toString(36).substr(2, 9)}`);
+    const progressGradientId = progressGradientIdRef.current;
+    const trackGradientId = trackGradientIdRef.current;
+
+    // Helper function to create color stops
+    const createColorStops = useMemo(() => {
+        return (colors: (string | GradientStop)[]) => {
+            return colors.map((color, index) => {
+                let stopData: GradientStop;
+                if (typeof color === 'string') {
+                    stopData = { stopColor: color };
+                } else {
+                    stopData = color;
+                }
+
+                const { offset, stopColor, stopOpacity } = stopData;
+
+                let finalOffset: string;
+                if (offset) {
+                    finalOffset = offset;
+                } else if (index === 0) {
+                    finalOffset = '0%';
+                } else if (index === colors.length - 1) {
+                    finalOffset = '100%';
+                } else {
+                    finalOffset = `${(100 / (colors.length - 1)) * index}%`;
+                }
+
+                return (
+                    <stop
+                        key={index}
+                        offset={finalOffset}
+                        stopColor={stopColor}
+                        stopOpacity={stopOpacity ?? 1}
+                    />
+                );
+            });
+        };
+    }, []);
+
+    // Determine stroke values
+    const trackStroke = trackGradient ? `url(#${trackGradientId})` : trackColor;
+    const progressStroke = progressGradient ? `url(#${progressGradientId})` : `url(#${progressGradientId})`;
 
     return (
         <svg
@@ -92,16 +143,27 @@ const Svg: React.FC<SvgProps> = ({
             onTouchStart={handleClick}
         >
             <defs>
-                <linearGradient id={gradientId} x1="100%" x2="0%">
-                    <stop offset="0%" stopColor={progressColorFrom}/>
-                    <stop offset="100%" stopColor={progressColorTo}/>
+                {trackGradient && (
+                    <linearGradient id={trackGradientId} x1="100%" x2="0%">
+                        {createColorStops(trackGradient)}
+                    </linearGradient>
+                )}
+                <linearGradient id={progressGradientId} x1="100%" x2="0%">
+                    {progressGradient ? (
+                        createColorStops(progressGradient)
+                    ) : (
+                        <>
+                            <stop offset="0%" stopColor={progressColorFrom}/>
+                            <stop offset="100%" stopColor={progressColorTo}/>
+                        </>
+                    )}
                 </linearGradient>
             </defs>
             <circle
                 ref={circleRef}
                 strokeWidth={trackSize}
                 fill="none"
-                stroke={trackColor}
+                stroke={trackStroke}
                 cx={width / 2}
                 cy={width / 2}
                 r={radius}
@@ -114,7 +176,7 @@ const Svg: React.FC<SvgProps> = ({
                 strokeWidth={progressSize}
                 strokeLinecap={validatedLineCap}
                 fill="none"
-                stroke={`url(#${gradientId})`}
+                stroke={progressStroke}
                 d={`
     M ${width / 2}, ${width / 2}
     m 0, -${radius}

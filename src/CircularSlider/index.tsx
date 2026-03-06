@@ -17,6 +17,12 @@ const knobOffsetConsts = {
 
 export type KnobPosition = keyof typeof knobOffsetConsts | number | string;
 
+export type GradientStop = {
+    offset?: string;
+    stopColor: string;
+    stopOpacity?: number;
+};
+
 export interface CircularSliderProps {
     label?: string;
     width?: number;
@@ -41,9 +47,11 @@ export interface CircularSliderProps {
     knobDraggable?: boolean;
     progressColorFrom?: string;
     progressColorTo?: string;
+    progressGradient?: (string | GradientStop)[];
     useMouseAdditionalToTouch?: boolean;
     progressSize?: number;
     trackColor?: string;
+    trackGradient?: (string | GradientStop)[];
     trackSize?: number;
     trackDraggable?: boolean;
     data?: (string | number)[];
@@ -97,6 +105,8 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         knobDraggable = true,
         progressColorFrom = '#80C3F3',
         progressColorTo = '#4990E2',
+        progressGradient,
+        trackGradient,
         useMouseAdditionalToTouch = false,
         progressSize = 8,
         trackColor = '#DDDEFB',
@@ -646,8 +656,10 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 progressSize={progressSize}
                 progressColorFrom={progressColorFrom}
                 progressColorTo={progressColorTo}
+                progressGradient={progressGradient}
                 progressLineCap={progressLineCap as 'round' | 'butt'}
                 trackColor={trackColor}
+                trackGradient={trackGradient}
                 trackSize={trackSize}
                 radiansOffset={state.radians}
                 onMouseDown={trackDraggable ? onMouseDown : undefined}
