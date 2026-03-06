@@ -333,6 +333,46 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         }
     };
 
+    const onKeyDown = useCallback((event: KeyboardEvent) => {
+        if (!knobDraggable && !trackDraggable) return;
+        
+        const step = state.data.length > 1 ? 1 : (max - min) / 100;
+        let newIndex = dataIndex;
+        
+        switch (event.key) {
+            case 'ArrowRight':
+            case 'ArrowUp':
+                event.preventDefault();
+                newIndex = Math.min(dataIndex + step, state.data.length - 1);
+                break;
+            case 'ArrowLeft':
+            case 'ArrowDown':
+                event.preventDefault();
+                newIndex = Math.max(dataIndex - step, 0);
+                break;
+            case 'Home':
+                event.preventDefault();
+                newIndex = 0;
+                break;
+            case 'End':
+                event.preventDefault();
+                newIndex = state.data.length - 1;
+                break;
+            case 'Enter':
+            case ' ':
+                event.preventDefault();
+                return;
+            default:
+                return;
+        }
+        
+        if (newIndex !== dataIndex) {
+            const degrees = (newIndex / (state.data.length - 1)) * 360 * getSliderRotation(direction);
+            const radians = getRadians(degrees) - state.knobOffset;
+            setKnobPosition(radians);
+        }
+    }, [knobDraggable, trackDraggable, state.data.length, dataIndex, max, min, direction, state.knobOffset, setKnobPosition]);
+
     const onMouseMove = useCallback((event: MouseEvent | TouchEvent) => {
         if (!state.isDragging || (!knobDraggable && !trackDraggable) || (event.type === 'mousemove' && !useMouse)) return;
 
@@ -543,6 +583,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     useEventListener('mouseup', onMouseUp);
     useEventListener('touchmove', onMouseMove);
     useEventListener('mousemove', onMouseMove);
+    useEventListener('keydown', onKeyDown);
 
     const sanitizedLabel = label.replace(/[^a-zA-Z0-9-_]/g, '_');
     const sliderStyle: React.CSSProperties = {
@@ -559,7 +600,17 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         : `${state.label}`;
 
     return (
-        <div style={sliderStyle} ref={circularSlider}>
+        <div 
+            style={sliderStyle} 
+            ref={circularSlider}
+            role="slider"
+            aria-label={`${label}: ${displayValue}`}
+            aria-valuemin={data.length > 0 ? 0 : min}
+            aria-valuemax={data.length > 0 ? data.length - 1 : max}
+            aria-valuenow={data.length > 0 ? dataIndex : parseFloat(displayValue)}
+            aria-valuetext={`${prependToValue}${displayValue}${appendToValue}`}
+            tabIndex={0}
+        >
             <Svg
                 width={width}
                 label={sanitizedLabel}
