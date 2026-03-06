@@ -1,0 +1,62 @@
+name: Auto-Triage Issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Analyze and label issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = (issue.title || '').toLowerCase();
+            const body = (issue.body || '').toLowerCase();
+            const combined = `${title} ${body}`;
+
+            const labels = [];
+
+            // Detect bug reports
+            const bugKeywords = ['bug', 'error', 'crash', 'broken', 'not working', 'fix', 'issue', 'wrong', 'incorrect', 'fail'];
+            if (bugKeywords.some(k => combined.includes(k))) {
+              labels.push('bug');
+            }
+
+            // Detect feature requests
+            const featureKeywords = ['feature', 'request', 'enhance', 'add', 'support', 'would be nice', 'suggestion'];
+            if (featureKeywords.some(k => combined.includes(k))) {
+              labels.push('enhancement');
+            }
+
+            // Detect accessibility issues
+            if (combined.includes('accessibility') || combined.includes('a11y') || combined.includes('screen reader') || combined.includes('aria')) {
+              labels.push('accessibility');
+            }
+
+            // Detect TypeScript-related issues
+            if (combined.includes('typescript') || combined.includes('type') || combined.includes('.d.ts') || combined.includes('typing')) {
+              labels.push('typescript');
+            }
+
+            // Auto-add ai-fix label for bug reports (triggers the AI fix workflow)
+            if (labels.includes('bug')) {
+              labels.push('ai-fix');
+            }
+
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels,
+              });
+              console.log(`Added labels: ${labels.join(', ')}`);
+            } else {
+              console.log('No labels to add');
+            }
