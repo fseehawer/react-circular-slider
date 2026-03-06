@@ -1,6 +1,6 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.2.7-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.3.1-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
@@ -98,8 +98,65 @@ The table below lists all available props along with their TypeScript types, def
 | `trackColor`              | `string`                                                | `"#DDDEFB"`                               | Color of the background track.                                                                           |
 | `trackSize`               | `number`                                                | `8`                                       | Thickness of the background track.                                                                       |
 | `trackDraggable`          | `boolean`                                               | `false`                                   | If `true`, allows dragging the background track.                                                       |
+| `progressGradient`        | `(string \| GradientStop)[]`                            | `undefined`                               | Array of color stops for a multi-stop progress gradient. Overrides `progressColorFrom`/`To`. Each stop can be a color string or `{ offset, stopColor, stopOpacity }`. |
+| `trackGradient`           | `(string \| GradientStop)[]`                            | `undefined`                               | Array of color stops for a multi-stop track gradient. Overrides `trackColor`.                           |
+| `arcStart`                | `number`                                                | `undefined`                               | Start angle (in degrees) for arc mode. Use with `arcEnd` to create a partial-circle gauge (e.g. `225` for lower-left). |
+| `arcEnd`                  | `number`                                                | `undefined`                               | End angle (in degrees) for arc mode. Use with `arcStart` (e.g. `135` for lower-right = 270° speedometer sweep). |
 | `onChange`                | `(value: string \| number) => void`                     | `() => {}`                                | Callback fired when the value changes.                                                                   |
 | `isDragging`              | `(dragging: boolean) => void`                           | `() => {}`                                | Callback to signal whether the slider is being dragged.                                                |
+
+## Multi-Stop Gradient Example
+
+Use `progressGradient` and/or `trackGradient` for rich multi-color arcs:
+
+```jsx
+<CircularSlider
+  label="Spectrum"
+  min={0}
+  max={360}
+  dataIndex={180}
+  progressGradient={[
+    { offset: '0%', stopColor: '#ef4444' },
+    { offset: '20%', stopColor: '#f97316' },
+    { offset: '40%', stopColor: '#eab308' },
+    { offset: '55%', stopColor: '#22c55e' },
+    { offset: '70%', stopColor: '#3b82f6' },
+    { offset: '85%', stopColor: '#6366f1' },
+    { offset: '100%', stopColor: '#8b5cf6' },
+  ]}
+  trackGradient={[
+    { offset: '0%', stopColor: '#fecaca', stopOpacity: 0.4 },
+    { offset: '50%', stopColor: '#bbf7d0', stopOpacity: 0.4 },
+    { offset: '100%', stopColor: '#c4b5fd', stopOpacity: 0.4 },
+  ]}
+  progressSize={12}
+  trackSize={12}
+/>
+```
+
+## Arc (Gauge) Example
+
+Use `arcStart` and `arcEnd` to create a partial-circle gauge, like a car speedometer:
+
+```jsx
+<CircularSlider
+  label="km/h"
+  min={0}
+  max={250}
+  dataIndex={80}
+  progressGradient={[
+    { offset: '0%', stopColor: '#22c55e' },
+    { offset: '50%', stopColor: '#eab308' },
+    { offset: '100%', stopColor: '#dc2626' },
+  ]}
+  progressSize={14}
+  trackColor="#e5e7eb"
+  trackSize={14}
+  progressLineCap="butt"
+  arcStart={225}
+  arcEnd={135}
+/>
+```
 
 ## Donation
 

@@ -30,6 +30,8 @@ const App = () => {
 		React.createRef<CircularSliderHandle>(),
 		React.createRef<CircularSliderHandle>(),
 		React.createRef<CircularSliderHandle>(),
+		React.createRef<CircularSliderHandle>(),
+		React.createRef<CircularSliderHandle>(),
 		React.createRef<CircularSliderHandle>()
 	]);
 
@@ -234,7 +236,9 @@ const App = () => {
 		{ title: "Temperature", description: "The starting knob is positioned on the left, displaying the value with a '°' symbol. The color changes when the value exceeds 0°." },
 		{ title: "Investment", description: "Initial value with '$' and 'K' using a custom knob icon" },
 		{ title: "Alphabet", description: "Butt line cap with a smiley knob and character data" },
-		{ title: "Rating", description: "Star rating selector with custom icon and color gradient" }
+		{ title: "Rating", description: "Star rating selector with custom icon and color gradient" },
+		{ title: "Multi-Stop", description: "Rainbow progress gradient with a multi-stop track using progressGradient and trackGradient" },
+		{ title: "Arc", description: "Partial arc slider using arcStart and arcEnd to create a gauge-style control" }
 	];
 
 	// Toggle the code visibility on mobile
@@ -397,6 +401,69 @@ const App = () => {
 								</svg>
 							</CircularSlider>
 						)}
+
+						{activeTab === 4 && (
+							<CircularSlider
+								ref={sliderRefs.current[4]}
+								label="Spectrum"
+								min={0}
+								max={360}
+								dataIndex={180}
+								width={250}
+								appendToValue="°"
+								labelColor="#7c3aed"
+								valueFontSize={isMobile ? "3.5rem" : "4rem"}
+								knobColor="#7c3aed"
+								knobSize={isMobile ? 40 : 42}
+								progressColorFrom="#ef4444"
+								progressColorTo="#8b5cf6"
+								progressGradient={[
+									{ offset: '0%', stopColor: '#ef4444' },
+									{ offset: '20%', stopColor: '#f97316' },
+									{ offset: '40%', stopColor: '#eab308' },
+									{ offset: '55%', stopColor: '#22c55e' },
+									{ offset: '70%', stopColor: '#3b82f6' },
+									{ offset: '85%', stopColor: '#6366f1' },
+									{ offset: '100%', stopColor: '#8b5cf6' },
+								]}
+								progressSize={12}
+								trackGradient={[
+									{ offset: '0%', stopColor: '#fecaca', stopOpacity: 0.4 },
+									{ offset: '50%', stopColor: '#bbf7d0', stopOpacity: 0.4 },
+									{ offset: '100%', stopColor: '#c4b5fd', stopOpacity: 0.4 },
+								]}
+								trackSize={12}
+									progressLineCap="round"
+							/>
+						)}
+
+						{activeTab === 5 && (
+							<CircularSlider
+								ref={sliderRefs.current[5]}
+								label="km/h"
+								min={0}
+								max={250}
+								dataIndex={80}
+								width={250}
+								labelColor="#dc2626"
+								valueFontSize={isMobile ? "2rem" : "2.5rem"}
+								knobColor="#dc2626"
+								knobSize={isMobile ? 36 : 40}
+								progressColorFrom="#22c55e"
+								progressColorTo="#dc2626"
+								progressGradient={[
+									{ offset: '0%', stopColor: '#dc2626' },
+									{ offset: '50%', stopColor: '#eab308' },
+									{ offset: '100%', stopColor: '#22c55e' },
+								]}
+								progressSize={14}
+								trackColor="#e5e7eb"
+								trackSize={14}
+								progressLineCap="butt"
+								arcStart={225}
+								arcEnd={135}
+							/>
+						)}
 					</div>
 				</div>
 
@@ -506,6 +573,62 @@ const App = () => {
 </CircularSlider>`}
 								</pre>
 							)}
+
+							{activeTab === 4 && (
+								<pre style={styles.pre}>
+{`<CircularSlider
+  label="Spectrum"
+  min={0}
+  max={360}
+  dataIndex={180}
+  appendToValue="°"
+  labelColor="#7c3aed"
+  knobColor="#7c3aed"
+  progressGradient={[
+    { offset: '0%', stopColor: '#ef4444' },
+    { offset: '20%', stopColor: '#f97316' },
+    { offset: '40%', stopColor: '#eab308' },
+    { offset: '55%', stopColor: '#22c55e' },
+    { offset: '70%', stopColor: '#3b82f6' },
+    { offset: '85%', stopColor: '#6366f1' },
+    { offset: '100%', stopColor: '#8b5cf6' },
+  ]}
+  progressSize={12}
+  trackGradient={[
+    { offset: '0%', stopColor: '#fecaca', stopOpacity: 0.4 },
+    { offset: '50%', stopColor: '#bbf7d0', stopOpacity: 0.4 },
+    { offset: '100%', stopColor: '#c4b5fd', stopOpacity: 0.4 },
+  ]}
+  trackSize={12}
+/>`}
+								</pre>
+							)}
+
+							{activeTab === 5 && (
+								<pre style={styles.pre}>
+{`<CircularSlider
+  label="km/h"
+  min={0}
+  max={250}
+  dataIndex={80}
+  labelColor="#dc2626"
+  valueFontSize="2.5rem"
+  knobColor="#dc2626"
+  knobSize={40}
+  progressGradient={[
+    { offset: '0%', stopColor: '#dc2626' },
+	{ offset: '50%', stopColor: '#eab308' },
+	{ offset: '100%', stopColor: '#22c55e' },
+  ]}
+  progressSize={14}
+  trackColor="#e5e7eb"
+  trackSize={14}
+  progressLineCap="butt"
+  arcStart={225}
+  arcEnd={135}
+/>`}
+								</pre>
+							)}
 						</div>
 					</>
 				) : (
@@ -595,6 +718,62 @@ const App = () => {
 >
   <StarIcon width="24" height="24" fill="#fff" />
 </CircularSlider>`}
+							</pre>
+						)}
+
+						{activeTab === 4 && (
+							<pre style={styles.pre}>
+{`<CircularSlider
+  label="Spectrum"
+  min={0}
+  max={360}
+  dataIndex={180}
+  appendToValue="°"
+  labelColor="#7c3aed"
+  knobColor="#7c3aed"
+  progressGradient={[
+    { offset: '0%', stopColor: '#ef4444' },
+    { offset: '20%', stopColor: '#f97316' },
+    { offset: '40%', stopColor: '#eab308' },
+    { offset: '55%', stopColor: '#22c55e' },
+    { offset: '70%', stopColor: '#3b82f6' },
+    { offset: '85%', stopColor: '#6366f1' },
+    { offset: '100%', stopColor: '#8b5cf6' },
+  ]}
+  progressSize={12}
+  trackGradient={[
+    { offset: '0%', stopColor: '#fecaca', stopOpacity: 0.4 },
+    { offset: '50%', stopColor: '#bbf7d0', stopOpacity: 0.4 },
+    { offset: '100%', stopColor: '#c4b5fd', stopOpacity: 0.4 },
+  ]}
+  trackSize={12}
+/>`}
+							</pre>
+						)}
+
+						{activeTab === 5 && (
+							<pre style={styles.pre}>
+{`<CircularSlider
+  label="km/h"
+  min={0}
+  max={250}
+  dataIndex={80}
+  labelColor="#dc2626"
+  valueFontSize="2.5rem"
+  knobColor="#dc2626"
+  knobSize={40}
+  progressGradient={[
+    { offset: '0%', stopColor: '#22c55e' },
+    { offset: '50%', stopColor: '#eab308' },
+    { offset: '100%', stopColor: '#dc2626' },
+  ]}
+  progressSize={14}
+  trackColor="#e5e7eb"
+  trackSize={14}
+  progressLineCap="butt"
+  arcStart={225}
+  arcEnd={135}
+/>`}
 							</pre>
 						)}
 					</>

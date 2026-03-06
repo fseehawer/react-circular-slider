@@ -251,15 +251,37 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             radians = constrainedRadians;
         }
 
-        // Calculate dash offset for SVG path
-        const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
-        const dashOffsetValue = state.dashFullArray - dashOffset;
-
-        // Map the angle to an index in the data array
-        // Ensure we map to the full 360 degrees range
+        // Calculate dash offset and data index
         const dataArrayLength = state.data.length;
-        const normalizedDegrees = (degrees + 360) % 360; // Ensure positive value 0-360
-        const dataPointIndex = Math.round((normalizedDegrees / 360) * (dataArrayLength - 1));
+        const normalizedDegrees = (degrees + 360) % 360;
+        let dashOffsetValue: number;
+        let dataPointIndex: number;
+
+        if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
+            // Arc mode: map position within the arc to data and dash
+            const arcSpan = ((arcEnd - arcStart) + 360) % 360;
+            const normArcStart = (arcStart + 360) % 360;
+            const normArcEnd = (arcEnd + 360) % 360;
+            const arcCrosses = normArcEnd < normArcStart;
+
+            let degreesInArc: number;
+            if (arcCrosses) {
+                degreesInArc = normalizedDegrees >= normArcStart
+                    ? normalizedDegrees - normArcStart
+                    : (360 - normArcStart) + normalizedDegrees;
+            } else {
+                degreesInArc = normalizedDegrees - normArcStart;
+            }
+
+            const arcProgress = Math.max(0, Math.min(1, degreesInArc / arcSpan));
+            dataPointIndex = Math.round(arcProgress * (dataArrayLength - 1));
+            dashOffsetValue = state.dashFullArray - arcProgress * state.dashFullArray;
+        } else {
+            // Full circle mode
+            const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
+            dashOffsetValue = state.dashFullArray - dashOffset;
+            dataPointIndex = Math.round((normalizedDegrees / 360) * (dataArrayLength - 1));
+        }
 
         // Ensure the index is within bounds
         const safeIndex = Math.min(Math.max(0, dataPointIndex), dataArrayLength - 1);
@@ -321,19 +343,27 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         // Ensure dataIndex is within bounds
         const dataIndexSafe = Math.min(Math.max(0, dataIndex), state.data.length - 1);
 
-        // Calculate the angle in degrees based on the dataIndex
-        // Map the dataIndex to the full 360-degree circle
-        const degrees = (dataIndexSafe / (state.data.length - 1)) * 360 * getSliderRotation(direction);
+        let radians: number;
 
-        // Convert to radians and adjust for knob offset
-        const radians = getRadians(degrees) - state.knobOffset;
+        if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
+            // Arc mode: map dataIndex to the arc span instead of full 360°
+            const arcSpan = ((arcEnd - arcStart) + 360) % 360;
+            const progress = dataIndexSafe / Math.max(state.data.length - 1, 1);
+            const targetDegrees = ((arcStart + progress * arcSpan) + 360) % 360;
+            // Convert to internal radians (setKnobPosition will add knobOffset back)
+            radians = getRadians(targetDegrees) - state.knobOffset;
+        } else {
+            // Full circle: map dataIndex to 0-360°
+            const degrees = (dataIndexSafe / (state.data.length - 1)) * 360 * getSliderRotation(direction);
+            radians = getRadians(degrees) - state.knobOffset;
+        }
 
         // Apply the position
         setKnobPosition(radians);
 
         // Update last known data index
         lastDataIndexRef.current = dataIndex;
-    }, [dataIndex, state.mounted, state.data.length, state.knobOffset, direction, setKnobPosition]);
+    }, [dataIndex, state.mounted, state.data.length, state.knobOffset, direction, setKnobPosition, arcStart, arcEnd]);
 
     const onMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
         // Prevent clicking during ongoing drag operation

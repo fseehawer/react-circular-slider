@@ -52,6 +52,12 @@ const Svg: React.FC<SvgProps> = ({
                                  }) => {
     const circleRef = useRef<SVGCircleElement | null>(null);
 
+    const halfTrack = trackSize / 2;
+    const radius = width / 2 - halfTrack;
+
+    // Calculate arc path if arcStart and arcEnd are defined
+    const isArcMode = typeof arcStart === 'number' && typeof arcEnd === 'number';
+
     // Keep styles simple with no transitions
     const styles: { [key: string]: React.CSSProperties } = {
         svg: {
@@ -60,15 +66,14 @@ const Svg: React.FC<SvgProps> = ({
             userSelect: isDragging ? 'none' : 'auto',
         },
         path: {
-            transform: `rotate(${radiansOffset}rad) ${direction === -1 ? 'scale(-1, 1)' : 'scale(1, 1)'}`,
+            transform: isArcMode
+                ? `${direction === -1 ? 'scale(-1, 1)' : 'scale(1, 1)'}`
+                : `rotate(${radiansOffset}rad) ${direction === -1 ? 'scale(-1, 1)' : 'scale(1, 1)'}`,
             transformOrigin: 'center center',
             // No transition to make movement instant
             transition: 'none',
         },
     };
-
-    const halfTrack = trackSize / 2;
-    const radius = width / 2 - halfTrack;
 
     const validatedLineCap: 'round' | 'butt' =
         progressLineCap === 'round' || progressLineCap === 'butt'
@@ -76,7 +81,6 @@ const Svg: React.FC<SvgProps> = ({
             : 'round';
 
     // Calculate arc path if arcStart and arcEnd are defined
-    const isArcMode = typeof arcStart === 'number' && typeof arcEnd === 'number';
     let trackPath = '';
     let progressPath = '';
     
@@ -238,8 +242,8 @@ const Svg: React.FC<SvgProps> = ({
             <path
                 style={styles.path}
                 ref={svgFullPath}
-                strokeDasharray={isArcMode ? 'none' : (strokeDasharray || 0)}
-                strokeDashoffset={isArcMode ? 0 : (strokeDashoffset || 0)}
+                strokeDasharray={strokeDasharray || 0}
+                strokeDashoffset={strokeDashoffset || 0}
                 strokeWidth={progressSize}
                 strokeLinecap={validatedLineCap}
                 fill="none"
