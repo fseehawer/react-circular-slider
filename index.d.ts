@@ -10,6 +10,12 @@ declare module '@fseehawer/react-circular-slider' {
 
   type KnobPosition = 'top' | 'right' | 'bottom' | 'left';
 
+  export interface GradientStop {
+    offset?: string;
+    stopColor: string;
+    stopOpacity?: number;
+  }
+
   export interface CircularSliderProps {
     label?: string;
     width?: number;
@@ -34,9 +40,11 @@ declare module '@fseehawer/react-circular-slider' {
     progressLineCap?: string;
     progressColorFrom?: string;
     progressColorTo?: string;
+    progressGradient?: (string | GradientStop)[];
     useMouseAdditionalToTouch?: boolean;
     progressSize?: number;
     trackColor?: string;
+    trackGradient?: (string | GradientStop)[];
     trackSize?: number;
     trackDraggable?: boolean;
     data?: any[];

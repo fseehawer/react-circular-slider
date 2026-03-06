@@ -1,5 +1,11 @@
 "use client";
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
+
+export type GradientStop = {
+    offset?: string;
+    stopColor: string;
+    stopOpacity?: number;
+};
 
 export interface SvgProps {
     width: number;
@@ -9,9 +15,11 @@ export interface SvgProps {
     strokeDashoffset: number;
     progressColorFrom: string;
     progressColorTo: string;
+    progressGradient?: (string | GradientStop)[];
     progressLineCap?: 'round' | 'butt';
     progressSize: number;
     trackColor: string;
+    trackGradient?: (string | GradientStop)[];
     trackSize: number;
     radiansOffset: number;
     svgFullPath: React.RefObject<SVGPathElement | null>;
@@ -29,9 +37,11 @@ const Svg: React.FC<SvgProps> = ({
                                      strokeDashoffset,
                                      progressColorFrom,
                                      progressColorTo,
+                                     progressGradient,
                                      progressLineCap = 'round',
                                      progressSize,
                                      trackColor,
+                                     trackGradient,
                                      trackSize,
                                      radiansOffset,
                                      svgFullPath,
@@ -114,6 +124,83 @@ const Svg: React.FC<SvgProps> = ({
     // Using useRef so the ID is generated once and remains stable across re-renders
     const gradientIdRef = useRef(`radial-${label}-${Math.random().toString(36).substr(2, 9)}`);
     const gradientId = gradientIdRef.current;
+    const trackGradientId = `track-${gradientId}`;
+    const progressGradientId = `progress-${gradientId}`;
+
+    // Helper function to create color stops
+    const createColorStops = (colors: (string | GradientStop)[]) => {
+        return colors.map((color, index) => {
+            let stopProps: GradientStop;
+            
+            if (typeof color === 'string') {
+                stopProps = { stopColor: color };
+            } else {
+                stopProps = color;
+            }
+            
+            let { offset, stopColor, stopOpacity } = stopProps;
+            
+            // Auto-calculate offset if not provided
+            if (!offset) {
+                if (index === 0) {
+                    offset = '0%';
+                } else if (index === colors.length - 1) {
+                    offset = '100%';
+                } else {
+                    offset = `${(100 / (colors.length - 1)) * index}%`;
+                }
+            }
+            
+            return (
+                <stop
+                    key={index}
+                    offset={offset}
+                    stopColor={stopColor}
+                    stopOpacity={stopOpacity ?? 1}
+                />
+            );
+        });
+    };
+
+    // Memoize gradient definitions to avoid unnecessary recalculations
+    const gradientDefs = useMemo(() => {
+        const defs = [];
+        
+        if (trackGradient && trackGradient.length > 0) {
+            defs.push(
+                <linearGradient key="track" id={trackGradientId} x1="100%" x2="0%">
+                    {createColorStops(trackGradient)}
+                </linearGradient>
+            );
+        }
+        
+        if (progressGradient && progressGradient.length > 0) {
+            defs.push(
+                <linearGradient key="progress" id={progressGradientId} x1="100%" x2="0%">
+                    {createColorStops(progressGradient)}
+                </linearGradient>
+            );
+        } else {
+            // Default gradient for backward compatibility
+            defs.push(
+                <linearGradient key="progress-default" id={gradientId} x1="100%" x2="0%">
+                    <stop offset="0%" stopColor={progressColorFrom}/>
+                    <stop offset="100%" stopColor={progressColorTo}/>
+                </linearGradient>
+            );
+        }
+        
+        return defs;
+    }, [trackGradient, progressGradient, trackGradientId, progressGradientId, gradientId, progressColorFrom, progressColorTo]);
+
+    // Determine stroke colors
+    const actualTrackStroke = trackGradient && trackGradient.length > 0 
+        ? `url(#${trackGradientId})` 
+        : trackColor;
+    
+    const actualProgressStroke = progressGradient && progressGradient.length > 0 
+        ? `url(#${progressGradientId})` 
+        : `url(#${gradientId})`;
 
     return (
         <svg
@@ -126,17 +213,14 @@ const Svg: React.FC<SvgProps> = ({
             onTouchStart={handleClick}
         >
             <defs>
-                <linearGradient id={gradientId} x1="100%" x2="0%">
-                    <stop offset="0%" stopColor={progressColorFrom}/>
-                    <stop offset="100%" stopColor={progressColorTo}/>
-                </linearGradient>
+                {gradientDefs}
             </defs>
             {isArcMode ? (
                 <path
                     ref={circleRef}
                     strokeWidth={trackSize}
                     fill="none"
-                    stroke={trackColor}
+                    stroke={actualTrackStroke}
                     strokeLinecap={validatedLineCap}
                     d={trackPath}
                 />
@@ -145,7 +229,7 @@ const Svg: React.FC<SvgProps> = ({
                     ref={circleRef}
                     strokeWidth={trackSize}
                     fill="none"
-                    stroke={trackColor}
+                    stroke={actualTrackStroke}
                     cx={width / 2}
                     cy={width / 2}
                     r={radius}
@@ -159,7 +243,7 @@ const Svg: React.FC<SvgProps> = ({
                 strokeWidth={progressSize}
                 strokeLinecap={validatedLineCap}
                 fill="none"
-                stroke={`url(#${gradientId})`}
+                stroke={actualProgressStroke}
                 d={progressPath}
             />
         </svg>
