@@ -53,6 +53,7 @@ export interface CircularSliderProps {
     onChange?: (value: string | number) => void;
     isDragging?: (dragging: boolean) => void;
     children?: React.ReactNode;
+    limitDragRange?: boolean;
 }
 
 // Export the handle type for TypeScript users
@@ -108,6 +109,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         children,
         onChange = () => {},
         isDragging = () => {},
+        limitDragRange = false,
     } = props;
 
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -403,11 +405,34 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         const mouseY = pageY - (offset.top + state.radius);
 
         // Convert to radians
-        const radians = Math.atan2(mouseY, mouseX);
+        let radians = Math.atan2(mouseY, mouseX);
+
+        // If limitDragRange is enabled, constrain the radians to prevent multiple rounds
+        if (limitDragRange) {
+            // Normalize radians to 0 to 2π range
+            let normalizedRadians = radians;
+            while (normalizedRadians < 0) normalizedRadians += 2 * Math.PI;
+            while (normalizedRadians >= 2 * Math.PI) normalizedRadians -= 2 * Math.PI;
+            
+            // Calculate the target data index based on the angle
+            const degrees = (normalizedRadians * 180) / Math.PI;
+            const adjustedDegrees = getSliderRotation(direction) === -1 ? 360 - degrees : degrees;
+            const normalizedDegrees = (adjustedDegrees + 360) % 360;
+            const dataArrayLength = state.data.length;
+            const targetIndex = Math.round((normalizedDegrees / 360) * (dataArrayLength - 1));
+            
+            // Clamp the target index to valid range
+            const clampedIndex = Math.min(Math.max(0, targetIndex), dataArrayLength - 1);
+            
+            // Convert back to radians for the clamped position
+            const clampedDegrees = (clampedIndex / (dataArrayLength - 1)) * 360;
+            const adjustedClampedDegrees = getSliderRotation(direction) === -1 ? 360 - clampedDegrees : clampedDegrees;
+            radians = (adjustedClampedDegrees * Math.PI) / 180 - getKnobOffsetAmount(knobPosition);
+        }
 
         // Apply the new position, specifying it comes from drag
         setKnobPosition(radians, true);
-    }, [state.isDragging, state.radius, knobDraggable, trackDraggable, useMouse, setKnobPosition]);
+    }, [state.isDragging, state.radius, knobDraggable, trackDraggable, useMouse, setKnobPosition, limitDragRange, state.data.length, direction, knobPosition]);
 
     // Function to recalculate and update values when resized
     const refresh = useCallback(() => {
