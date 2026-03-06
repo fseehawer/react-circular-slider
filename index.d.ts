@@ -46,6 +46,8 @@ declare module '@fseehawer/react-circular-slider' {
     isDragging?: Function;
     continuous?: Continuous;
     limitDragRange?: boolean;
+    arcStart?: number;
+    arcEnd?: number;
   }
 
   const CircularSlider: React.FC<CircularSliderProps>;

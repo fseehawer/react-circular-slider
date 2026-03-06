@@ -17,6 +17,8 @@ export interface SvgProps {
     svgFullPath: React.RefObject<SVGPathElement | null>;
     onMouseDown?: (event: React.MouseEvent | React.TouchEvent) => void;
     isDragging?: boolean;
+    arcStart?: number;
+    arcEnd?: number;
 }
 
 const Svg: React.FC<SvgProps> = ({
@@ -35,6 +37,8 @@ const Svg: React.FC<SvgProps> = ({
                                      svgFullPath,
                                      onMouseDown,
                                      isDragging,
+                                     arcStart,
+                                     arcEnd,
                                  }) => {
     const circleRef = useRef<SVGCircleElement | null>(null);
 
@@ -60,6 +64,36 @@ const Svg: React.FC<SvgProps> = ({
         progressLineCap === 'round' || progressLineCap === 'butt'
             ? progressLineCap
             : 'round';
+
+    // Calculate arc path if arcStart and arcEnd are defined
+    const isArcMode = typeof arcStart === 'number' && typeof arcEnd === 'number';
+    let trackPath = '';
+    let progressPath = '';
+    
+    if (isArcMode) {
+        const startAngle = (arcStart - 90) * Math.PI / 180; // Convert to radians, offset by -90° to start at top
+        const endAngle = (arcEnd - 90) * Math.PI / 180;
+        
+        const startX = width / 2 + radius * Math.cos(startAngle);
+        const startY = width / 2 + radius * Math.sin(startAngle);
+        const endX = width / 2 + radius * Math.cos(endAngle);
+        const endY = width / 2 + radius * Math.sin(endAngle);
+        
+        const arcSpan = ((arcEnd - arcStart) + 360) % 360;
+        const largeArc = arcSpan > 180 ? 1 : 0;
+        
+        trackPath = `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArc} 1 ${endX} ${endY}`;
+        progressPath = trackPath;
+    } else {
+        // Full circle path for non-arc mode
+        trackPath = `
+            M ${width / 2}, ${width / 2}
+            m 0, -${radius}
+            a ${radius},${radius} 0 0,1 0,${radius * 2}
+            a -${radius},-${radius} 0 0,1 0,-${radius * 2}
+        `;
+        progressPath = trackPath;
+    }
 
     const handleClick = (event: React.MouseEvent | React.TouchEvent) => {
         if (!onMouseDown) return;
@@ -97,30 +131,36 @@ const Svg: React.FC<SvgProps> = ({
                     <stop offset="100%" stopColor={progressColorTo}/>
                 </linearGradient>
             </defs>
-            <circle
-                ref={circleRef}
-                strokeWidth={trackSize}
-                fill="none"
-                stroke={trackColor}
-                cx={width / 2}
-                cy={width / 2}
-                r={radius}
-            />
+            {isArcMode ? (
+                <path
+                    ref={circleRef}
+                    strokeWidth={trackSize}
+                    fill="none"
+                    stroke={trackColor}
+                    strokeLinecap={validatedLineCap}
+                    d={trackPath}
+                />
+            ) : (
+                <circle
+                    ref={circleRef}
+                    strokeWidth={trackSize}
+                    fill="none"
+                    stroke={trackColor}
+                    cx={width / 2}
+                    cy={width / 2}
+                    r={radius}
+                />
+            )}
             <path
                 style={styles.path}
                 ref={svgFullPath}
-                strokeDasharray={strokeDasharray || 0}
-                strokeDashoffset={strokeDashoffset || 0}
+                strokeDasharray={isArcMode ? 'none' : (strokeDasharray || 0)}
+                strokeDashoffset={isArcMode ? 0 : (strokeDashoffset || 0)}
                 strokeWidth={progressSize}
                 strokeLinecap={validatedLineCap}
                 fill="none"
                 stroke={`url(#${gradientId})`}
-                d={`
-    M ${width / 2}, ${width / 2}
-    m 0, -${radius}
-    a ${radius},${radius} 0 0,1 0,${radius * 2}
-    a -${radius},-${radius} 0 0,1 0,-${radius * 2}
-  `}
+                d={progressPath}
             />
         </svg>
     );

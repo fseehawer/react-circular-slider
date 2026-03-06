@@ -54,6 +54,8 @@ export interface CircularSliderProps {
     isDragging?: (dragging: boolean) => void;
     children?: React.ReactNode;
     limitDragRange?: boolean;
+    arcStart?: number;
+    arcEnd?: number;
 }
 
 // Export the handle type for TypeScript users
@@ -110,6 +112,8 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         onChange = () => {},
         isDragging = () => {},
         limitDragRange = false,
+        arcStart,
+        arcEnd,
     } = props;
 
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -199,6 +203,44 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         // Apply direction
         degrees = getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees;
 
+        // Handle arc constraints if defined
+        if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
+            const arcSpan = arcEnd - arcStart;
+            const normalizedArcStart = (arcStart + 360) % 360;
+            const normalizedArcEnd = (arcEnd + 360) % 360;
+            
+            // Normalize degrees to 0-360 range
+            const normalizedDegrees = (degrees + 360) % 360;
+            
+            // Check if the arc crosses the 0/360 boundary
+            const arcCrossesBoundary = normalizedArcEnd < normalizedArcStart;
+            
+            let constrainedDegrees = normalizedDegrees;
+            
+            if (!arcCrossesBoundary) {
+                // Normal case: arc doesn't cross boundary
+                if (normalizedDegrees < normalizedArcStart) {
+                    constrainedDegrees = normalizedArcStart;
+                } else if (normalizedDegrees > normalizedArcEnd) {
+                    constrainedDegrees = normalizedArcEnd;
+                }
+            } else {
+                // Arc crosses 0/360 boundary
+                if (normalizedDegrees > normalizedArcEnd && normalizedDegrees < normalizedArcStart) {
+                    // Point is in the forbidden zone, snap to nearest boundary
+                    const distToStart = Math.min(Math.abs(normalizedDegrees - normalizedArcStart), 360 - Math.abs(normalizedDegrees - normalizedArcStart));
+                    const distToEnd = Math.min(Math.abs(normalizedDegrees - normalizedArcEnd), 360 - Math.abs(normalizedDegrees - normalizedArcEnd));
+                    constrainedDegrees = distToStart <= distToEnd ? normalizedArcStart : normalizedArcEnd;
+                }
+            }
+            
+            degrees = constrainedDegrees;
+            
+            // Recalculate radians based on constrained degrees
+            const constrainedRadians = getRadians(degrees) - getKnobOffsetAmount(knobPosition);
+            radians = constrainedRadians;
+        }
+
         // Calculate dash offset for SVG path
         const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
         const dashOffsetValue = state.dashFullArray - dashOffset;
@@ -254,7 +296,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 knob: knobXY,
             },
         });
-    }, [state, trackSize, knobPosition, direction, onChange, dataIndex]);
+    }, [state, trackSize, knobPosition, direction, onChange, dataIndex, arcStart, arcEnd]);
 
     // Position the dataIndex to the correct position in the circle
     const positionForDataIndex = useCallback(() => {
@@ -652,6 +694,8 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 radiansOffset={state.radians}
                 onMouseDown={trackDraggable ? onMouseDown : undefined}
                 isDragging={state.isDragging}
+                arcStart={arcStart}
+                arcEnd={arcEnd}
             />
             <Knob
                 isDragging={state.isDragging}
