@@ -1,5 +1,5 @@
 import React from 'react';
-import CircularSlider from './CircularSlider';
+import CircularSlider, { CircularSliderHandle } from './CircularSlider';
 import DragIcon from './assets/drag.svg?react';
 import EmojiIcon from './assets/emoji.svg?react';
 
@@ -26,14 +26,14 @@ const App = () => {
 	}, []);
 
 	// Store a reference to each slider component for refreshing
-	const sliderRefs = React.useRef([
-		React.createRef(),
-		React.createRef(),
-		React.createRef(),
-		React.createRef()
+	const sliderRefs = React.useRef<React.RefObject<CircularSliderHandle | null>[]>([
+		React.createRef<CircularSliderHandle>(),
+		React.createRef<CircularSliderHandle>(),
+		React.createRef<CircularSliderHandle>(),
+		React.createRef<CircularSliderHandle>()
 	]);
 
-	const styles = {
+	const styles: Record<string, React.CSSProperties> = {
 		// Page background with gradient
 		wrapper: {
 			padding: isMobile ? '0.75rem 0.5rem' : '1rem',
@@ -243,7 +243,7 @@ const App = () => {
 	};
 
 	// Function called when changing tabs to reset states and refresh slider
-	const handleTabChange = (index) => {
+	const handleTabChange = (index: number) => {
 		setActiveTab(index);
 		setIsHot(false);
 
@@ -616,14 +616,14 @@ const App = () => {
 						<input
 							type="image"
 							src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-							border="0"
+							style={{ border: 0 }}
 							name="submit"
 							title="PayPal - The safer, easier way to pay online!"
 							alt="Donate with PayPal button"
 						/>
 						<img
 							alt=""
-							border="0"
+							style={{ border: 0 }}
 							src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
 							width="1"
 							height="1"

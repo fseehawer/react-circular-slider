@@ -73,11 +73,13 @@ const Svg: React.FC<SvgProps> = ({
         const distance = Math.sqrt((clientX - centerX) ** 2 + (clientY - centerY) ** 2);
         const threshold = bounds.width / (isDragging ? 4 : 2) - trackSize;
         if (distance < threshold) return;
-        onMouseDown();
+        onMouseDown(event);
     };
 
-    // Create a unique gradient ID to avoid conflicts with multiple instances
-    const gradientId = `radial-${label}-${Math.random().toString(36).substr(2, 9)}`;
+    // Create a stable unique gradient ID to avoid conflicts with multiple instances
+    // Using useRef so the ID is generated once and remains stable across re-renders
+    const gradientIdRef = useRef(`radial-${label}-${Math.random().toString(36).substr(2, 9)}`);
+    const gradientId = gradientIdRef.current;
 
     return (
         <svg
