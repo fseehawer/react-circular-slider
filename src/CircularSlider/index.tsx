@@ -450,10 +450,11 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 return;
         }
         
-        if (newIndex !== dataIndex) {
-            const degrees = (newIndex / (state.data.length - 1)) * 360 * getSliderRotation(direction);
+        if (newIndex !== dataIndex && newIndex >= 0 && newIndex < state.data.length) {
+            const degrees = (newIndex / Math.max(state.data.length - 1, 1)) * 360 * getSliderRotation(direction);
             const radians = getRadians(degrees) - state.knobOffset;
             setKnobPosition(radians);
+            onChange(state.data[newIndex]);
         }
     }, [knobDraggable, trackDraggable, state.data.length, dataIndex, max, min, direction, state.knobOffset, setKnobPosition]);
 
@@ -716,7 +717,8 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             aria-valuemax={data.length > 0 ? data.length - 1 : max}
             aria-valuenow={data.length > 0 ? dataIndex : parseFloat(displayValue)}
             aria-valuetext={`${prependToValue}${displayValue}${appendToValue}`}
-            tabIndex={0}
+            aria-orientation="vertical"
+            tabIndex={knobDraggable || trackDraggable ? 0 : -1}
         >
             <Svg
                 width={width}
