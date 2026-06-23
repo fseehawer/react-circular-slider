@@ -29,12 +29,12 @@
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^4.7.0",
+    "@vitejs/plugin-react": "^6.0.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vite": "^6.4.1",
+    "vite": "^8.1.0",
     "vite-plugin-svgr": "^4.5.0"
   },
   "keywords": [
