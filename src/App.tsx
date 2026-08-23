@@ -12,6 +12,68 @@ type DemoExample = {
 	render: () => React.ReactNode;
 };
 
+type CodeSampleProps = {
+	code: string;
+	styles: Record<string, React.CSSProperties>;
+};
+
+const CODE_TOKEN_PATTERN =
+	/('(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`)|(\/?>|<\/?|[{}\[\](),.:?=])|(\b\d+(?:\.\d+)?\b)|(\b(?:true|false|null|undefined)\b)|(\b[A-Z][A-Za-z0-9_]*(?=\s|>|\/|$))|(\b[A-Za-z_$][\w$]*(?=\s*=|\s*:))/g;
+
+const tokenColor = (match: RegExpExecArray) => {
+	if (match[1]) {
+		return '#fde68a';
+	}
+
+	if (match[2]) {
+		return '#94a3b8';
+	}
+
+	if (match[3]) {
+		return '#c4b5fd';
+	}
+
+	if (match[4]) {
+		return '#f0abfc';
+	}
+
+	if (match[5]) {
+		return '#67e8f9';
+	}
+
+	if (match[6]) {
+		return '#93c5fd';
+	}
+
+	return '#e5e7eb';
+};
+
+const highlightCodeLine = (line: string) => {
+	const tokens: React.ReactNode[] = [];
+	let lastIndex = 0;
+	CODE_TOKEN_PATTERN.lastIndex = 0;
+	let match: RegExpExecArray | null;
+
+	while ((match = CODE_TOKEN_PATTERN.exec(line)) !== null) {
+		if (match.index > lastIndex) {
+			tokens.push(line.slice(lastIndex, match.index));
+		}
+
+		tokens.push(
+			<span key={`${match.index}-${match[0]}`} style={{ color: tokenColor(match) }}>
+				{match[0]}
+			</span>,
+		);
+		lastIndex = match.index + match[0].length;
+	}
+
+	if (lastIndex < line.length) {
+		tokens.push(line.slice(lastIndex));
+	}
+
+	return tokens.length > 0 ? tokens : ' ';
+};
+
 const StarIcon = ({ size, offset }: { size: number; offset: number }) => (
 	<svg
 		x={offset}
@@ -26,6 +88,104 @@ const StarIcon = ({ size, offset }: { size: number; offset: number }) => (
 		<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
 	</svg>
 );
+
+const CopyIcon = ({ styles }: { styles: Record<string, React.CSSProperties> }) => (
+	<svg
+		aria-hidden="true"
+		focusable="false"
+		style={styles.copyIcon}
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		strokeWidth="2"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+	>
+		<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+		<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+	</svg>
+);
+
+const CodeSample = ({ code, styles }: CodeSampleProps) => {
+	const [copied, setCopied] = React.useState(false);
+	const copyResetTimer = React.useRef<number | null>(null);
+	const lines = React.useMemo(() => code.split('\n'), [code]);
+
+	const handleCopy = React.useCallback(async () => {
+		try {
+			if (navigator.clipboard?.writeText) {
+				await navigator.clipboard.writeText(code);
+			} else {
+				const textarea = document.createElement('textarea');
+				textarea.value = code;
+				textarea.setAttribute('readonly', '');
+				textarea.style.position = 'fixed';
+				textarea.style.opacity = '0';
+				document.body.appendChild(textarea);
+				textarea.select();
+				document.execCommand('copy');
+				document.body.removeChild(textarea);
+			}
+
+			setCopied(true);
+
+			if (copyResetTimer.current !== null) {
+				window.clearTimeout(copyResetTimer.current);
+			}
+
+			copyResetTimer.current = window.setTimeout(() => {
+				setCopied(false);
+			}, 1400);
+		} catch {
+			setCopied(false);
+		}
+	}, [code]);
+
+	React.useEffect(() => {
+		setCopied(false);
+	}, [code]);
+
+	React.useEffect(() => {
+		return () => {
+			if (copyResetTimer.current !== null) {
+				window.clearTimeout(copyResetTimer.current);
+			}
+		};
+	}, []);
+
+	return (
+		<div style={styles.codeSample}>
+			<div style={styles.codeToolbar}>
+				<span style={styles.codeLanguage}>tsx</span>
+				<button
+					type="button"
+					aria-label={copied ? 'Copied code' : 'Copy code'}
+					title={copied ? 'Copied code' : 'Copy code'}
+					onClick={handleCopy}
+					style={{
+						...styles.copyButton,
+						...(copied ? styles.copyButtonCopied : {}),
+					}}
+				>
+					<CopyIcon styles={styles} />
+					<span>{copied ? 'Copied' : 'Copy'}</span>
+				</button>
+			</div>
+			<pre style={styles.codePre}>
+				<code style={styles.codeGrid}>
+					{lines.map((line, index) => (
+						<span key={`${index}-${line}`} style={styles.codeLine}>
+							<span aria-hidden="true" style={styles.lineNumber}>
+								{index + 1}
+							</span>
+							<span style={styles.lineContent}>{highlightCodeLine(line)}</span>
+						</span>
+					))}
+				</code>
+			</pre>
+		</div>
+	);
+};
 
 const App = () => {
 	const [isHot, setIsHot] = React.useState(true);
@@ -532,22 +692,94 @@ const App = () => {
 		},
 		codeContainer: {
 			transition: 'max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease',
-			maxHeight: showMobileCode ? '760px' : '0',
+			maxHeight: showMobileCode ? '980px' : '0',
 			opacity: showMobileCode ? 1 : 0,
 			overflow: 'hidden',
 			margin: showMobileCode ? '1rem 0 0' : '0',
 		},
-		pre: {
-			background: '#111827',
-			border: '1px solid #1f2937',
+		codeSample: {
+			background: '#0f172a',
+			border: '1px solid #1e293b',
 			borderRadius: '0.75rem',
-			color: '#e5e7eb',
-			fontFamily: '"Fira Code", "Roboto Mono", monospace',
-			fontSize: isMobile ? '0.78rem' : '0.88rem',
-			lineHeight: 1.6,
+			boxShadow: '0 12px 24px rgba(15, 23, 42, 0.14)',
 			margin: isMobile ? 0 : '1.25rem 0 0',
+			overflow: 'hidden',
+		},
+		codeToolbar: {
+			alignItems: 'center',
+			background: '#111827',
+			borderBottom: '1px solid rgba(148, 163, 184, 0.18)',
+			display: 'flex',
+			gap: '0.75rem',
+			justifyContent: 'space-between',
+			padding: isMobile ? '0.65rem 0.75rem' : '0.7rem 0.9rem',
+		},
+		codeLanguage: {
+			color: '#94a3b8',
+			fontFamily: '"Fira Code", "Roboto Mono", monospace',
+			fontSize: '0.72rem',
+			fontWeight: 700,
+			letterSpacing: 0,
+			textTransform: 'uppercase',
+		},
+		copyButton: {
+			alignItems: 'center',
+			background: '#1e293b',
+			border: '1px solid #334155',
+			borderRadius: '0.45rem',
+			color: '#e2e8f0',
+			cursor: 'pointer',
+			display: 'inline-flex',
+			font: 'inherit',
+			fontSize: isMobile ? '0.76rem' : '0.8rem',
+			fontWeight: 600,
+			gap: '0.35rem',
+			justifyContent: 'center',
+			lineHeight: 1,
+			minHeight: '2rem',
+			minWidth: isMobile ? '4.25rem' : '4.6rem',
+			padding: '0 0.65rem',
+			transition: 'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
+		},
+		copyButtonCopied: {
+			background: '#064e3b',
+			borderColor: '#047857',
+			color: '#d1fae5',
+		},
+		copyIcon: {
+			flex: '0 0 auto',
+			height: '0.95rem',
+			width: '0.95rem',
+		},
+		codePre: {
+			color: '#d1d5db',
+			fontFamily: '"Fira Code", "Roboto Mono", monospace',
+			fontSize: isMobile ? '0.76rem' : '0.86rem',
+			lineHeight: 1.6,
+			margin: 0,
 			overflowX: 'auto',
-			padding: isMobile ? '1rem' : '1.1rem 1.25rem',
+			padding: isMobile ? '0.8rem 0' : '1rem 0',
+		},
+		codeGrid: {
+			display: 'grid',
+			minWidth: 'max-content',
+		},
+		codeLine: {
+			display: 'grid',
+			gridTemplateColumns: isMobile ? '2.25rem minmax(0, 1fr)' : '2.75rem minmax(0, 1fr)',
+			minHeight: '1.35rem',
+		},
+		lineNumber: {
+			borderRight: '1px solid rgba(148, 163, 184, 0.18)',
+			color: '#64748b',
+			fontVariantNumeric: 'tabular-nums',
+			padding: '0 0.75rem 0 0',
+			textAlign: 'right',
+			userSelect: 'none',
+		},
+		lineContent: {
+			padding: '0 1rem',
+			whiteSpace: 'pre',
 		},
 		footer: {
 			marginTop: isMobile ? '1.5rem' : '2rem',
@@ -637,11 +869,11 @@ const App = () => {
 								</button>
 							</div>
 							<div style={styles.codeContainer}>
-								<pre style={styles.pre}>{activeExample.code}</pre>
+								<CodeSample code={activeExample.code} styles={styles} />
 							</div>
 						</>
 					) : (
-						<pre style={styles.pre}>{activeExample.code}</pre>
+						<CodeSample code={activeExample.code} styles={styles} />
 					)}
 				</section>
 
