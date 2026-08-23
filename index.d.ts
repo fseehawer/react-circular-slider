@@ -1,43 +1,35 @@
-// Definitions by: Augusto Lopez <https://github.com/augustolopez>
 import React from 'react';
-declare module '@fseehawer/react-circular-slider' {
 
-  interface Continuous {
-    enabled: boolean;
-    clicks: number;
-    interval: number;
-  }
-
-  type KnobPosition = 'top' | 'right' | 'bottom' | 'left';
-
-  export interface GradientStop {
+export type GradientStop = {
     offset?: string;
     stopColor: string;
     stopOpacity?: number;
-  }
+};
 
-  export interface CircularSliderProps {
+export type KnobPosition = 'top' | 'right' | 'bottom' | 'left' | number | string;
+
+export interface CircularSliderProps {
     label?: string;
     width?: number;
-    direction?: number;
+    direction?: 1 | -1;
     min?: number;
     max?: number;
     initialValue?: number;
+    value?: number;
     knobColor?: string;
-    knobPosition?: KnobPosition | number;
     knobSize?: number;
-    hideKnob?: boolean;
-    knobDraggable?: boolean;
+    knobPosition?: KnobPosition;
     labelColor?: string;
     labelBottom?: boolean;
     labelFontSize?: string;
     valueFontSize?: string;
     appendToValue?: string;
-    renderLabelValue?: any;
     prependToValue?: string;
     verticalOffset?: string;
     hideLabelValue?: boolean;
-    progressLineCap?: string;
+    hideKnob?: boolean;
+    hideKnobRing?: boolean;
+    knobDraggable?: boolean;
     progressColorFrom?: string;
     progressColorTo?: string;
     progressGradient?: (string | GradientStop)[];
@@ -47,17 +39,24 @@ declare module '@fseehawer/react-circular-slider' {
     trackGradient?: (string | GradientStop)[];
     trackSize?: number;
     trackDraggable?: boolean;
-    data?: any[];
+    data?: (string | number)[];
     dataIndex?: number;
-    onChange?: Function;
+    progressLineCap?: 'round' | 'butt';
+    renderLabelValue?: React.ReactNode;
+    onChange?: (value: string | number) => void;
+    isDragging?: (dragging: boolean) => void;
     children?: React.ReactNode;
-    isDragging?: Function;
-    continuous?: Continuous;
     limitDragRange?: boolean;
     arcStart?: number;
     arcEnd?: number;
-  }
-
-  const CircularSlider: React.FC<CircularSliderProps>;
-  export default CircularSlider;
 }
+
+export interface CircularSliderHandle {
+    refresh: () => void;
+}
+
+declare const CircularSlider: React.ForwardRefExoticComponent<
+    CircularSliderProps & React.RefAttributes<CircularSliderHandle>
+>;
+
+export default CircularSlider;

@@ -1,18 +1,18 @@
 {
   "name": "@fseehawer/react-circular-slider",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "files": [
     "dist",
     "public"
   ],
   "description": "A customizable circular slider with no dependencies.",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     }
   },
   "scripts": {

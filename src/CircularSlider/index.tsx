@@ -1,11 +1,11 @@
 "use client";
-import React, {useCallback, useEffect, useReducer, useRef, forwardRef, useImperativeHandle} from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useRef, forwardRef } from 'react';
 import reducer from '../redux/reducer';
 import useEventListener from '../hooks/useEventListener';
 import useIsServer from '../hooks/useIsServer';
 import Knob from '../Knob';
 import Labels from '../Labels';
-import Svg from '../Svg';
+import Svg, { type GradientStop } from '../Svg';
 
 const spreadDegrees = 360;
 const knobOffsetConsts = {
@@ -16,12 +16,7 @@ const knobOffsetConsts = {
 } as const;
 
 export type KnobPosition = keyof typeof knobOffsetConsts | number | string;
-
-export type GradientStop = {
-    offset?: string;
-    stopColor: string;
-    stopOpacity?: number;
-};
+export type { GradientStop };
 
 export interface CircularSliderProps {
     label?: string;
@@ -74,12 +69,53 @@ export interface CircularSliderHandle {
 const getSliderRotation = (value: number) => (value < 0 ? -1 : 1);
 const getRadians = (degrees: number) => (degrees * Math.PI) / 180;
 const generateRange = (min: number, max: number) => Array.from({ length: max - min + 1 }, (_, i) => i + min);
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(min, value), max);
+const normalizeDegrees = (degrees: number) => ((degrees % spreadDegrees) + spreadDegrees) % spreadDegrees;
+const getArcSpan = (arcStart: number, arcEnd: number) => normalizeDegrees(arcEnd - arcStart) || spreadDegrees;
+const getDistanceBetweenDegrees = (from: number, to: number) => {
+    const distance = Math.abs(from - to);
+    return Math.min(distance, spreadDegrees - distance);
+};
+const constrainDegreesToArc = (degrees: number, arcStart: number, arcEnd: number) => {
+    const normalizedArcStart = normalizeDegrees(arcStart);
+    const normalizedArcEnd = normalizeDegrees(arcEnd);
+    const normalizedDegrees = normalizeDegrees(degrees);
+
+    if (normalizedArcStart === normalizedArcEnd) {
+        return normalizedDegrees;
+    }
+
+    if (normalizedArcEnd >= normalizedArcStart) {
+        return clamp(normalizedDegrees, normalizedArcStart, normalizedArcEnd);
+    }
+
+    if (normalizedDegrees > normalizedArcEnd && normalizedDegrees < normalizedArcStart) {
+        const distToStart = getDistanceBetweenDegrees(normalizedDegrees, normalizedArcStart);
+        const distToEnd = getDistanceBetweenDegrees(normalizedDegrees, normalizedArcEnd);
+        return distToStart <= distToEnd ? normalizedArcStart : normalizedArcEnd;
+    }
+
+    return normalizedDegrees;
+};
+const getDegreesInArc = (degrees: number, arcStart: number, arcEnd: number) => {
+    const normalizedDegrees = normalizeDegrees(degrees);
+    const normalizedArcStart = normalizeDegrees(arcStart);
+    const normalizedArcEnd = normalizeDegrees(arcEnd);
+
+    if (normalizedArcStart === normalizedArcEnd || normalizedArcEnd < normalizedArcStart) {
+        return normalizedDegrees >= normalizedArcStart
+            ? normalizedDegrees - normalizedArcStart
+            : (spreadDegrees - normalizedArcStart) + normalizedDegrees;
+    }
+
+    return normalizedDegrees - normalizedArcStart;
+};
 const getKnobOffsetAmount = (knobPosition: KnobPosition): number => {
     if (typeof knobPosition === 'string' && knobPosition in knobOffsetConsts) {
         return knobOffsetConsts[knobPosition as keyof typeof knobOffsetConsts];
     }
-    const parsed = typeof knobPosition === 'number' ? knobPosition : parseFloat(knobPosition);
-    return getRadians(parsed);
+    const parsed = typeof knobPosition === 'number' ? knobPosition : Number.parseFloat(knobPosition);
+    return Number.isFinite(parsed) ? getRadians(parsed) : knobOffsetConsts.top;
 };
 
 const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((props, ref) => {
@@ -90,7 +126,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         min = 0,
         max = 360,
         initialValue = 0,
-        value = null,
+        value,
         knobColor = '#4e63ea',
         knobSize = 36,
         knobPosition = 'top',
@@ -117,7 +153,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         data = [],
         dataIndex = 0,
         progressLineCap = 'round',
-        renderLabelValue = null,
+        renderLabelValue,
         children,
         onChange = () => {},
         isDragging = () => {},
@@ -154,8 +190,10 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     // Flag to prevent effect execution during specific operations
     const preventPositionResetRef = useRef(false);
 
-    // Initialize state with proper data
-    const dataArray = data.length > 0 ? [...data] : [...generateRange(min, max)];
+    const dataArray = useMemo(
+        () => (data.length > 0 ? [...data] : [...generateRange(min, max)]),
+        [data, min, max]
+    );
 
     const initialState = {
         mounted: false,
@@ -193,6 +231,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     const setKnobPosition = useCallback((radians: number, fromDrag = false) => {
         // Skip updates if disabled
         if (disableEffectsRef.current && !fromDrag) return;
+        if (state.data.length === 0) return;
 
         // Track if this position was set by dragging
         if (fromDrag) {
@@ -208,83 +247,37 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         const offsetRadians = radians + getKnobOffsetAmount(knobPosition);
 
         // Convert radians to degrees (0-360)
-        let degrees = ((offsetRadians > 0 ? offsetRadians : (2 * Math.PI) + offsetRadians) * spreadDegrees) / (2 * Math.PI);
+        let degrees = normalizeDegrees((offsetRadians * spreadDegrees) / (2 * Math.PI));
 
         // Apply direction
         degrees = getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees;
 
         // Handle arc constraints if defined
         if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
-            const arcSpan = arcEnd - arcStart;
-            const normalizedArcStart = (arcStart + 360) % 360;
-            const normalizedArcEnd = (arcEnd + 360) % 360;
-            
-            // Normalize degrees to 0-360 range
-            const normalizedDegrees = (degrees + 360) % 360;
-            
-            // Check if the arc crosses the 0/360 boundary
-            const arcCrossesBoundary = normalizedArcEnd < normalizedArcStart;
-            
-            let constrainedDegrees = normalizedDegrees;
-            
-            if (!arcCrossesBoundary) {
-                // Normal case: arc doesn't cross boundary
-                if (normalizedDegrees < normalizedArcStart) {
-                    constrainedDegrees = normalizedArcStart;
-                } else if (normalizedDegrees > normalizedArcEnd) {
-                    constrainedDegrees = normalizedArcEnd;
-                }
-            } else {
-                // Arc crosses 0/360 boundary
-                if (normalizedDegrees > normalizedArcEnd && normalizedDegrees < normalizedArcStart) {
-                    // Point is in the forbidden zone, snap to nearest boundary
-                    const distToStart = Math.min(Math.abs(normalizedDegrees - normalizedArcStart), 360 - Math.abs(normalizedDegrees - normalizedArcStart));
-                    const distToEnd = Math.min(Math.abs(normalizedDegrees - normalizedArcEnd), 360 - Math.abs(normalizedDegrees - normalizedArcEnd));
-                    constrainedDegrees = distToStart <= distToEnd ? normalizedArcStart : normalizedArcEnd;
-                }
-            }
-            
-            degrees = constrainedDegrees;
-            
-            // Recalculate radians based on constrained degrees
-            const constrainedRadians = getRadians(degrees) - getKnobOffsetAmount(knobPosition);
-            radians = constrainedRadians;
+            degrees = constrainDegreesToArc(degrees, arcStart, arcEnd);
+            radians = getRadians(degrees) - getKnobOffsetAmount(knobPosition);
         }
 
         // Calculate dash offset and data index
         const dataArrayLength = state.data.length;
-        const normalizedDegrees = (degrees + 360) % 360;
+        const normalizedDegrees = normalizeDegrees(degrees);
         let dashOffsetValue: number;
         let dataPointIndex: number;
 
         if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
             // Arc mode: map position within the arc to data and dash
-            const arcSpan = ((arcEnd - arcStart) + 360) % 360;
-            const normArcStart = (arcStart + 360) % 360;
-            const normArcEnd = (arcEnd + 360) % 360;
-            const arcCrosses = normArcEnd < normArcStart;
-
-            let degreesInArc: number;
-            if (arcCrosses) {
-                degreesInArc = normalizedDegrees >= normArcStart
-                    ? normalizedDegrees - normArcStart
-                    : (360 - normArcStart) + normalizedDegrees;
-            } else {
-                degreesInArc = normalizedDegrees - normArcStart;
-            }
-
-            const arcProgress = Math.max(0, Math.min(1, degreesInArc / arcSpan));
+            const arcProgress = clamp(getDegreesInArc(normalizedDegrees, arcStart, arcEnd) / getArcSpan(arcStart, arcEnd), 0, 1);
             dataPointIndex = Math.round(arcProgress * (dataArrayLength - 1));
             dashOffsetValue = state.dashFullArray - arcProgress * state.dashFullArray;
         } else {
             // Full circle mode
             const dashOffset = (degrees / spreadDegrees) * state.dashFullArray;
             dashOffsetValue = state.dashFullArray - dashOffset;
-            dataPointIndex = Math.round((normalizedDegrees / 360) * (dataArrayLength - 1));
+            dataPointIndex = Math.round((normalizedDegrees / spreadDegrees) * (dataArrayLength - 1));
         }
 
         // Ensure the index is within bounds
-        const safeIndex = Math.min(Math.max(0, dataPointIndex), dataArrayLength - 1);
+        const safeIndex = clamp(dataPointIndex, 0, dataArrayLength - 1);
         const labelValue = state.data[safeIndex];
 
         // Calculate the knob x,y position
@@ -311,7 +304,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             radians,
             label: labelValue,
             knob: knobXY,
-            dashOffset: finalDashOffset
+            dashOffset: finalDashOffset,
         };
 
         // Trigger onChange if needed and not in initial setup
@@ -330,6 +323,27 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         });
     }, [state, trackSize, knobPosition, direction, onChange, dataIndex, arcStart, arcEnd]);
 
+    const getRadiansForDataIndex = useCallback((targetDataIndex: number) => {
+        const maxIndex = Math.max(state.data.length - 1, 0);
+        const safeIndex = clamp(targetDataIndex, 0, maxIndex);
+        const progress = maxIndex === 0 ? 0 : safeIndex / maxIndex;
+
+        if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
+            const targetDegrees = normalizeDegrees(arcStart + progress * getArcSpan(arcStart, arcEnd));
+            return getRadians(targetDegrees) - state.knobOffset;
+        }
+
+        return getRadians(progress * spreadDegrees * getSliderRotation(direction)) - state.knobOffset;
+    }, [arcStart, arcEnd, direction, state.data.length, state.knobOffset]);
+
+    const getCurrentDataIndex = useCallback(() => {
+        const currentLabel = currentPositionRef.current?.label ?? state.label;
+        const currentIndex = state.data.findIndex((item) => item === currentLabel);
+        const maxIndex = Math.max(state.data.length - 1, 0);
+
+        return currentIndex >= 0 ? currentIndex : clamp(dataIndex, 0, maxIndex);
+    }, [dataIndex, state.data, state.label]);
+
     // Position the dataIndex to the correct position in the circle
     const positionForDataIndex = useCallback(() => {
         if (!state.mounted || state.data.length === 0) return;
@@ -340,30 +354,12 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         // Don't reposition if we're trying to prevent reset
         if (preventPositionResetRef.current) return;
 
-        // Ensure dataIndex is within bounds
-        const dataIndexSafe = Math.min(Math.max(0, dataIndex), state.data.length - 1);
-
-        let radians: number;
-
-        if (typeof arcStart === 'number' && typeof arcEnd === 'number') {
-            // Arc mode: map dataIndex to the arc span instead of full 360°
-            const arcSpan = ((arcEnd - arcStart) + 360) % 360;
-            const progress = dataIndexSafe / Math.max(state.data.length - 1, 1);
-            const targetDegrees = ((arcStart + progress * arcSpan) + 360) % 360;
-            // Convert to internal radians (setKnobPosition will add knobOffset back)
-            radians = getRadians(targetDegrees) - state.knobOffset;
-        } else {
-            // Full circle: map dataIndex to 0-360°
-            const degrees = (dataIndexSafe / (state.data.length - 1)) * 360 * getSliderRotation(direction);
-            radians = getRadians(degrees) - state.knobOffset;
-        }
-
         // Apply the position
-        setKnobPosition(radians);
+        setKnobPosition(getRadiansForDataIndex(dataIndex));
 
         // Update last known data index
         lastDataIndexRef.current = dataIndex;
-    }, [dataIndex, state.mounted, state.data.length, state.knobOffset, direction, setKnobPosition, arcStart, arcEnd]);
+    }, [dataIndex, getRadiansForDataIndex, setKnobPosition, state.mounted, state.data.length]);
 
     const onMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
         // Prevent clicking during ongoing drag operation
@@ -417,22 +413,23 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         }
     };
 
-    const onKeyDown = useCallback((event: KeyboardEvent) => {
+    const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
         if (!knobDraggable && !trackDraggable) return;
-        
-        const step = state.data.length > 1 ? 1 : (max - min) / 100;
-        let newIndex = dataIndex;
-        
+        if (state.data.length === 0) return;
+
+        const currentIndex = getCurrentDataIndex();
+        let newIndex = currentIndex;
+
         switch (event.key) {
             case 'ArrowRight':
             case 'ArrowUp':
                 event.preventDefault();
-                newIndex = Math.min(dataIndex + step, state.data.length - 1);
+                newIndex = Math.min(currentIndex + 1, state.data.length - 1);
                 break;
             case 'ArrowLeft':
             case 'ArrowDown':
                 event.preventDefault();
-                newIndex = Math.max(dataIndex - step, 0);
+                newIndex = Math.max(currentIndex - 1, 0);
                 break;
             case 'Home':
                 event.preventDefault();
@@ -449,13 +446,11 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             default:
                 return;
         }
-        
-        if (newIndex !== dataIndex) {
-            const degrees = (newIndex / (state.data.length - 1)) * 360 * getSliderRotation(direction);
-            const radians = getRadians(degrees) - state.knobOffset;
-            setKnobPosition(radians);
+
+        if (newIndex !== currentIndex) {
+            setKnobPosition(getRadiansForDataIndex(newIndex));
         }
-    }, [knobDraggable, trackDraggable, state.data.length, dataIndex, max, min, direction, state.knobOffset, setKnobPosition]);
+    }, [getCurrentDataIndex, getRadiansForDataIndex, knobDraggable, setKnobPosition, state.data.length, trackDraggable]);
 
     const onMouseMove = useCallback((event: MouseEvent | TouchEvent) => {
         if (!state.isDragging || (!knobDraggable && !trackDraggable) || (event.type === 'mousemove' && !useMouse)) return;
@@ -499,16 +494,17 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             // Calculate the target data index based on the angle
             const degrees = (normalizedRadians * 180) / Math.PI;
             const adjustedDegrees = getSliderRotation(direction) === -1 ? 360 - degrees : degrees;
-            const normalizedDegrees = (adjustedDegrees + 360) % 360;
+            const normalizedDegrees = normalizeDegrees(adjustedDegrees);
             const dataArrayLength = state.data.length;
-            const targetIndex = Math.round((normalizedDegrees / 360) * (dataArrayLength - 1));
+            const maxIndex = Math.max(dataArrayLength - 1, 0);
+            const targetIndex = Math.round((normalizedDegrees / spreadDegrees) * maxIndex);
             
             // Clamp the target index to valid range
-            const clampedIndex = Math.min(Math.max(0, targetIndex), dataArrayLength - 1);
+            const clampedIndex = clamp(targetIndex, 0, maxIndex);
             
             // Convert back to radians for the clamped position
-            const clampedDegrees = (clampedIndex / (dataArrayLength - 1)) * 360;
-            const adjustedClampedDegrees = getSliderRotation(direction) === -1 ? 360 - clampedDegrees : clampedDegrees;
+            const clampedDegrees = maxIndex === 0 ? 0 : (clampedIndex / maxIndex) * spreadDegrees;
+            const adjustedClampedDegrees = getSliderRotation(direction) === -1 ? spreadDegrees - clampedDegrees : clampedDegrees;
             radians = (adjustedClampedDegrees * Math.PI) / 180 - getKnobOffsetAmount(knobPosition);
         }
 
@@ -690,7 +686,6 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     useEventListener('mouseup', onMouseUp);
     useEventListener('touchmove', onMouseMove);
     useEventListener('mousemove', onMouseMove);
-    useEventListener('keydown', onKeyDown);
 
     const sanitizedLabel = label.replace(/[^a-zA-Z0-9-_]/g, '_');
     const sliderStyle: React.CSSProperties = {
@@ -702,21 +697,31 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     };
 
     // Prepare display value from either parent prop or internal state
-    const displayValue = typeof valueFromParentRef.current !== 'undefined'
-        ? `${valueFromParentRef.current}`
-        : `${state.label}`;
+    const displayValue = typeof value === 'number'
+        ? `${value}`
+        : typeof valueFromParentRef.current !== 'undefined'
+            ? `${valueFromParentRef.current}`
+            : `${state.label}`;
+    const hasCustomData = data.length > 0;
+    const numericDisplayValue = Number.parseFloat(displayValue);
+    const ariaValueNow = hasCustomData
+        ? getCurrentDataIndex()
+        : Number.isFinite(numericDisplayValue)
+            ? numericDisplayValue
+            : undefined;
 
     return (
-        <div 
-            style={sliderStyle} 
+        <div
+            style={sliderStyle}
             ref={circularSlider}
             role="slider"
             aria-label={`${label}: ${displayValue}`}
-            aria-valuemin={data.length > 0 ? 0 : min}
-            aria-valuemax={data.length > 0 ? data.length - 1 : max}
-            aria-valuenow={data.length > 0 ? dataIndex : parseFloat(displayValue)}
+            aria-valuemin={hasCustomData ? 0 : min}
+            aria-valuemax={hasCustomData ? state.data.length - 1 : max}
+            aria-valuenow={ariaValueNow}
             aria-valuetext={`${prependToValue}${displayValue}${appendToValue}`}
             tabIndex={0}
+            onKeyDown={onKeyDown}
         >
             <Svg
                 width={width}
@@ -729,7 +734,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 progressColorFrom={progressColorFrom}
                 progressColorTo={progressColorTo}
                 progressGradient={progressGradient}
-                progressLineCap={progressLineCap as 'round' | 'butt'}
+                progressLineCap={progressLineCap}
                 trackColor={trackColor}
                 trackGradient={trackGradient}
                 trackSize={trackSize}
@@ -748,7 +753,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 hideKnob={hideKnob}
                 hideKnobRing={hideKnobRing}
                 knobDraggable={knobDraggable}
-                onMouseDown={onMouseDown}
+                onMouseDown={knobDraggable ? onMouseDown : undefined}
             >
                 {children}
             </Knob>

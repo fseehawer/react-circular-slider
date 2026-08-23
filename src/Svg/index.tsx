@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 
 export type GradientStop = {
     offset?: string;
@@ -50,7 +50,10 @@ const Svg: React.FC<SvgProps> = ({
                                      arcStart,
                                      arcEnd,
                                  }) => {
-    const circleRef = useRef<SVGCircleElement | null>(null);
+    const trackRef = useRef<SVGGeometryElement | null>(null);
+    const setTrackRef = useCallback((element: SVGGeometryElement | null) => {
+        trackRef.current = element;
+    }, []);
 
     const halfTrack = trackSize / 2;
     const radius = width / 2 - halfTrack;
@@ -111,7 +114,7 @@ const Svg: React.FC<SvgProps> = ({
 
     const handleClick = (event: React.MouseEvent | React.TouchEvent) => {
         if (!onMouseDown) return;
-        const bounds = circleRef.current?.getBoundingClientRect();
+        const bounds = trackRef.current?.getBoundingClientRect();
         if (!bounds) return;
 
         const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
@@ -126,7 +129,7 @@ const Svg: React.FC<SvgProps> = ({
 
     // Create a stable unique gradient ID to avoid conflicts with multiple instances
     // Using useRef so the ID is generated once and remains stable across re-renders
-    const gradientIdRef = useRef(`radial-${label}-${Math.random().toString(36).substr(2, 9)}`);
+    const gradientIdRef = useRef(`radial-${label}-${Math.random().toString(36).slice(2, 11)}`);
     const gradientId = gradientIdRef.current;
     const trackGradientId = `track-${gradientId}`;
     const progressGradientId = `progress-${gradientId}`;
@@ -221,7 +224,7 @@ const Svg: React.FC<SvgProps> = ({
             </defs>
             {isArcMode ? (
                 <path
-                    ref={circleRef}
+                    ref={setTrackRef}
                     strokeWidth={trackSize}
                     fill="none"
                     stroke={actualTrackStroke}
@@ -230,7 +233,7 @@ const Svg: React.FC<SvgProps> = ({
                 />
             ) : (
                 <circle
-                    ref={circleRef}
+                    ref={setTrackRef}
                     strokeWidth={trackSize}
                     fill="none"
                     stroke={actualTrackStroke}
