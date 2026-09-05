@@ -1,6 +1,6 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.3.5-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.3.6-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
@@ -36,6 +36,13 @@ export default App;
 
 See the [live demos](https://fseehawer.github.io/react-circular-slider/) for copy-ready examples covering labels, colors, custom data, knob content, multi-stop gradients, and arc gauges.
 
+## Configuration Notes
+
+- Use `data` for custom labels or non-linear steps; use `min` and `max` for inclusive numeric ranges.
+- Use `dataIndex` to choose the selected item in `data`, and `value` only when controlling the slider by degrees.
+- Use `ariaLabel` when the visible `label` is abbreviated, hidden, or not descriptive enough for assistive technology.
+- Use `arcStart` and `arcEnd` for gauge-style sliders. Add `trackDraggable` when users should be able to click or drag the track.
+
 ## Props
 
 The table below lists all available props along with their TypeScript types, default values, and descriptions.
@@ -57,6 +64,7 @@ The table below lists all available props along with their TypeScript types, def
 | `knobDraggable`           | `boolean`                                               | `true`                                    | If `true`, the knob is draggable.                                                                        |
 | `knobPosition`            | `string \| number`                                      | `"top"`                                   | Starting position: accepts `"top"`, `"right"`, `"bottom"`, `"left"` or an angle (in degrees).            |
 | `label`                   | `string`                                                | `"ANGLE"`                                 | Text label displayed on the slider.                                                                      |
+| `ariaLabel`               | `string`                                                | `undefined`                               | Accessible label for the slider control. Falls back to `label`.                                          |
 | `labelColor`              | `string`                                                | `"#272b77"`                               | Color of the label and value text.                                                                       |
 | `labelBottom`             | `boolean`                                               | `false`                                   | If `true`, the label is positioned below the slider.                                                   |
 | `labelFontSize`           | `string`                                                | `"1rem"`                                  | Font size of the label.                                                                                  |
@@ -73,7 +81,7 @@ The table below lists all available props along with their TypeScript types, def
 | `useMouseAdditionalToTouch` | `boolean`                                             | `false`                                   | If `true`, also listens for mouse input on touch-capable devices.                                        |
 | `trackColor`              | `string`                                                | `"#DDDEFB"`                               | Color of the background track.                                                                           |
 | `trackSize`               | `number`                                                | `8`                                       | Thickness of the background track.                                                                       |
-| `trackDraggable`          | `boolean`                                               | `false`                                   | If `true`, allows dragging the background track.                                                       |
+| `trackDraggable`          | `boolean`                                               | `false`                                   | If `true`, clicking or dragging the background track updates the value.                                  |
 | `progressGradient`        | `(string \| GradientStop)[]`                            | `undefined`                               | Array of color stops for a multi-stop progress gradient. Overrides `progressColorFrom`/`To`. Each stop can be a color string or `{ offset, stopColor, stopOpacity }`. |
 | `trackGradient`           | `(string \| GradientStop)[]`                            | `undefined`                               | Array of color stops for a multi-stop track gradient. Overrides `trackColor`.                           |
 | `arcStart`                | `number`                                                | `undefined`                               | Start angle (in degrees) for arc mode. Use with `arcEnd` to create a partial-circle gauge (e.g. `225` for lower-left). |

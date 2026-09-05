@@ -15,17 +15,17 @@ export interface KnobProps {
 }
 
 const Knob: React.FC<KnobProps> = ({
-   isDragging,
-   knobPosition,
-   knobColor,
-   knobSize,
-   hideKnob = false,
-   hideKnobRing = false,
-   knobDraggable = true,
-   trackSize,
-   children,
-   onMouseDown,
-								   }) => {
+	isDragging,
+	knobPosition,
+	knobColor,
+	knobSize,
+	hideKnob = false,
+	hideKnobRing = false,
+	knobDraggable = true,
+	trackSize,
+	children,
+	onMouseDown,
+}) => {
 	const styles: { [key: string]: React.CSSProperties } = {
 		knob: {
 			position: 'absolute',

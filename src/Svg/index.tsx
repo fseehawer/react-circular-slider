@@ -30,26 +30,26 @@ export interface SvgProps {
 }
 
 const Svg: React.FC<SvgProps> = ({
-                                     width,
-                                     label,
-                                     direction,
-                                     strokeDasharray,
-                                     strokeDashoffset,
-                                     progressColorFrom,
-                                     progressColorTo,
-                                     progressGradient,
-                                     progressLineCap = 'round',
-                                     progressSize,
-                                     trackColor,
-                                     trackGradient,
-                                     trackSize,
-                                     radiansOffset,
-                                     svgFullPath,
-                                     onMouseDown,
-                                     isDragging,
-                                     arcStart,
-                                     arcEnd,
-                                 }) => {
+    width,
+    label,
+    direction,
+    strokeDasharray,
+    strokeDashoffset,
+    progressColorFrom,
+    progressColorTo,
+    progressGradient,
+    progressLineCap = 'round',
+    progressSize,
+    trackColor,
+    trackGradient,
+    trackSize,
+    radiansOffset,
+    svgFullPath,
+    onMouseDown,
+    isDragging,
+    arcStart,
+    arcEnd,
+}) => {
     const trackRef = useRef<SVGGeometryElement | null>(null);
     const setTrackRef = useCallback((element: SVGGeometryElement | null) => {
         trackRef.current = element;

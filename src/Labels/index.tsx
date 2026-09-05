@@ -14,16 +14,16 @@ export interface LabelsProps {
 }
 
 const Labels: React.FC<LabelsProps> = ({
-   label,
-   value,
-   labelColor = '#000',
-   labelBottom = false,
-   labelFontSize = '1rem',
-   valueFontSize = '3rem',
-   appendToValue = '',
-   prependToValue = '',
-   verticalOffset = '1.5rem',
-   hideLabelValue = false,
+	label,
+	value,
+	labelColor = '#000',
+	labelBottom = false,
+	labelFontSize = '1rem',
+	valueFontSize = '3rem',
+	appendToValue = '',
+	prependToValue = '',
+	verticalOffset = '1.5rem',
+	hideLabelValue = false,
 }) => {
 	const styles: { [key: string]: React.CSSProperties } = {
 		labels: {

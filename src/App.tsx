@@ -467,10 +467,11 @@ const App = () => {
 		{
 			title: 'Arc Gauge',
 			tagline: 'Partial-circle gauge with capped ends',
-			details: '`arcStart` and `arcEnd` turn the full circle into a gauge. Pair them with `progressLineCap="butt"` when you want clean gauge endpoints.',
-			highlights: ['arcStart', 'arcEnd', 'progressLineCap', 'progressGradient', 'trackSize'],
+			details: '`arcStart` and `arcEnd` turn the full circle into a gauge. Add `trackDraggable` when the track itself should behave like a control surface.',
+			highlights: ['arcStart', 'arcEnd', 'trackDraggable', 'ariaLabel', 'progressGradient'],
 			code: `<CircularSlider
   label="km/h"
+  ariaLabel="Vehicle speed"
   min={0}
   max={250}
   dataIndex={80}
@@ -479,13 +480,14 @@ const App = () => {
   knobColor="#dc2626"
   knobSize={40}
   progressGradient={[
-    { offset: '0%', stopColor: '#dc2626' },
+    { offset: '0%', stopColor: '#22c55e' },
     { offset: '50%', stopColor: '#eab308' },
-    { offset: '100%', stopColor: '#22c55e' },
+    { offset: '100%', stopColor: '#dc2626' },
   ]}
   progressSize={14}
   trackColor="#e5e7eb"
   trackSize={14}
+  trackDraggable={true}
   progressLineCap="butt"
   arcStart={225}
   arcEnd={135}
@@ -494,6 +496,7 @@ const App = () => {
 				<CircularSlider
 					ref={sliderRefs.current[5]}
 					label="km/h"
+					ariaLabel="Vehicle speed"
 					min={0}
 					max={250}
 					dataIndex={80}
@@ -503,13 +506,14 @@ const App = () => {
 					knobColor="#dc2626"
 					knobSize={isMobile ? 36 : 40}
 					progressGradient={[
-						{ offset: '0%', stopColor: '#dc2626' },
+						{ offset: '0%', stopColor: '#22c55e' },
 						{ offset: '50%', stopColor: '#eab308' },
-						{ offset: '100%', stopColor: '#22c55e' },
+						{ offset: '100%', stopColor: '#dc2626' },
 					]}
 					progressSize={14}
 					trackColor="#e5e7eb"
 					trackSize={14}
+					trackDraggable={true}
 					progressLineCap="butt"
 					arcStart={225}
 					arcEnd={135}
@@ -598,7 +602,9 @@ const App = () => {
 			appearance: 'none',
 			background: 'transparent',
 			border: 0,
-			borderBottom: '3px solid transparent',
+			borderBottomColor: 'transparent',
+			borderBottomStyle: 'solid',
+			borderBottomWidth: '3px',
 			color: '#64748b',
 			cursor: 'pointer',
 			font: 'inherit',

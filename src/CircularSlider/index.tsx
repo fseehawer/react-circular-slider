@@ -20,6 +20,7 @@ export type { GradientStop };
 
 export interface CircularSliderProps {
     label?: string;
+    ariaLabel?: string;
     width?: number;
     direction?: 1 | -1;
     min?: number;
@@ -68,7 +69,16 @@ export interface CircularSliderHandle {
 
 const getSliderRotation = (value: number) => (value < 0 ? -1 : 1);
 const getRadians = (degrees: number) => (degrees * Math.PI) / 180;
-const generateRange = (min: number, max: number) => Array.from({ length: max - min + 1 }, (_, i) => i + min);
+const generateRange = (min: number, max: number) => {
+    if (!Number.isFinite(min) || !Number.isFinite(max)) {
+        return [];
+    }
+
+    const step = min <= max ? 1 : -1;
+    const length = Math.floor(Math.abs(max - min)) + 1;
+
+    return Array.from({ length }, (_, i) => min + i * step);
+};
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(min, value), max);
 const normalizeDegrees = (degrees: number) => ((degrees % spreadDegrees) + spreadDegrees) % spreadDegrees;
 const getArcSpan = (arcStart: number, arcEnd: number) => normalizeDegrees(arcEnd - arcStart) || spreadDegrees;
@@ -118,9 +128,63 @@ const getKnobOffsetAmount = (knobPosition: KnobPosition): number => {
     return Number.isFinite(parsed) ? getRadians(parsed) : knobOffsetConsts.top;
 };
 
+type PointerEventLike = React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent;
+
+const getPointerPagePosition = (event: PointerEventLike) => {
+    if ('touches' in event && event.touches.length > 0) {
+        return {
+            pageX: event.touches[0].pageX,
+            pageY: event.touches[0].pageY,
+        };
+    }
+
+    if ('changedTouches' in event && event.changedTouches.length > 0) {
+        return {
+            pageX: event.changedTouches[0].pageX,
+            pageY: event.changedTouches[0].pageY,
+        };
+    }
+
+    const mouseEvent = event as React.MouseEvent | MouseEvent;
+
+    return {
+        pageX: mouseEvent.pageX,
+        pageY: mouseEvent.pageY,
+    };
+};
+
+const getElementOffset = (element: HTMLElement | null): { top: number; left: number } => {
+    if (!element) {
+        return { top: 0, left: 0 };
+    }
+
+    const rect = element.getBoundingClientRect();
+    const scrollLeft = window.pageXOffset ?? document.documentElement.scrollLeft ?? 0;
+    const scrollTop = window.pageYOffset ?? document.documentElement.scrollTop ?? 0;
+
+    return {
+        top: rect.top + scrollTop,
+        left: rect.left + scrollLeft,
+    };
+};
+
+const getRadiansFromPointerEvent = (
+    event: PointerEventLike,
+    element: HTMLElement | null,
+    radius: number,
+) => {
+    const pointer = getPointerPagePosition(event);
+    const offset = getElementOffset(element);
+    const mouseX = pointer.pageX - (offset.left + radius);
+    const mouseY = pointer.pageY - (offset.top + radius);
+
+    return Math.atan2(mouseY, mouseX);
+};
+
 const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((props, ref) => {
     const {
         label = 'ANGLE',
+        ariaLabel,
         width = 280,
         direction = 1,
         min = 0,
@@ -361,12 +425,40 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         lastDataIndexRef.current = dataIndex;
     }, [dataIndex, getRadiansForDataIndex, setKnobPosition, state.mounted, state.data.length]);
 
+    const constrainRadiansToDataRange = useCallback((radians: number) => {
+        if (!limitDragRange) {
+            return radians;
+        }
+
+        let normalizedRadians = radians;
+        while (normalizedRadians < 0) normalizedRadians += 2 * Math.PI;
+        while (normalizedRadians >= 2 * Math.PI) normalizedRadians -= 2 * Math.PI;
+
+        const degrees = (normalizedRadians * 180) / Math.PI;
+        const adjustedDegrees = getSliderRotation(direction) === -1 ? spreadDegrees - degrees : degrees;
+        const normalizedDegrees = normalizeDegrees(adjustedDegrees);
+        const maxIndex = Math.max(state.data.length - 1, 0);
+        const targetIndex = Math.round((normalizedDegrees / spreadDegrees) * maxIndex);
+        const clampedIndex = clamp(targetIndex, 0, maxIndex);
+        const clampedDegrees = maxIndex === 0 ? 0 : (clampedIndex / maxIndex) * spreadDegrees;
+        const adjustedClampedDegrees = getSliderRotation(direction) === -1
+            ? spreadDegrees - clampedDegrees
+            : clampedDegrees;
+
+        return getRadians(adjustedClampedDegrees) - getKnobOffsetAmount(knobPosition);
+    }, [direction, knobPosition, limitDragRange, state.data.length]);
+
+    const updatePositionFromPointer = useCallback((event: PointerEventLike) => {
+        const radians = getRadiansFromPointerEvent(event, circularSlider.current, state.radius);
+        setKnobPosition(constrainRadiansToDataRange(radians), true);
+    }, [constrainRadiansToDataRange, setKnobPosition, state.radius]);
+
     const onMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
         // Prevent clicking during ongoing drag operation
         if (clickInProgressRef.current) {
             event.preventDefault();
             event.stopPropagation();
-            return;
+            return false;
         }
 
         // Set flags to track dragging state
@@ -385,6 +477,14 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         setTimeout(() => {
             clickInProgressRef.current = false;
         }, 100);
+
+        return true;
+    };
+
+    const onTrackMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
+        if (onMouseDown(event)) {
+            updatePositionFromPointer(event);
+        }
     };
 
     const onMouseUp = () => {
@@ -457,60 +557,8 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
 
         // Prevent default to avoid browser behaviors
         event.preventDefault();
-
-        // Get mouse/touch position
-        const touch = (event as TouchEvent).type === 'touchmove' ? (event as TouchEvent).changedTouches[0] : null;
-        const getOffset = (ref: React.RefObject<HTMLElement | null>): { top: number; left: number } => {
-            const element = ref.current;
-            if (!element) {
-                return { top: 0, left: 0 };
-            }
-            const rect: DOMRect = element.getBoundingClientRect();
-            const scrollLeft = window.pageXOffset ?? document.documentElement.scrollLeft ?? 0;
-            const scrollTop = window.pageYOffset ?? document.documentElement.scrollTop ?? 0;
-            return {
-                top: rect.top + scrollTop,
-                left: rect.left + scrollLeft,
-            };
-        };
-
-        // Calculate mouse position relative to component center
-        const offset = getOffset(circularSlider);
-        const pageX = touch ? touch.pageX : (event as MouseEvent).pageX;
-        const pageY = touch ? touch.pageY : (event as MouseEvent).pageY;
-        const mouseX = pageX - (offset.left + state.radius);
-        const mouseY = pageY - (offset.top + state.radius);
-
-        // Convert to radians
-        let radians = Math.atan2(mouseY, mouseX);
-
-        // If limitDragRange is enabled, constrain the radians to prevent multiple rounds
-        if (limitDragRange) {
-            // Normalize radians to 0 to 2π range
-            let normalizedRadians = radians;
-            while (normalizedRadians < 0) normalizedRadians += 2 * Math.PI;
-            while (normalizedRadians >= 2 * Math.PI) normalizedRadians -= 2 * Math.PI;
-            
-            // Calculate the target data index based on the angle
-            const degrees = (normalizedRadians * 180) / Math.PI;
-            const adjustedDegrees = getSliderRotation(direction) === -1 ? 360 - degrees : degrees;
-            const normalizedDegrees = normalizeDegrees(adjustedDegrees);
-            const dataArrayLength = state.data.length;
-            const maxIndex = Math.max(dataArrayLength - 1, 0);
-            const targetIndex = Math.round((normalizedDegrees / spreadDegrees) * maxIndex);
-            
-            // Clamp the target index to valid range
-            const clampedIndex = clamp(targetIndex, 0, maxIndex);
-            
-            // Convert back to radians for the clamped position
-            const clampedDegrees = maxIndex === 0 ? 0 : (clampedIndex / maxIndex) * spreadDegrees;
-            const adjustedClampedDegrees = getSliderRotation(direction) === -1 ? spreadDegrees - clampedDegrees : clampedDegrees;
-            radians = (adjustedClampedDegrees * Math.PI) / 180 - getKnobOffsetAmount(knobPosition);
-        }
-
-        // Apply the new position, specifying it comes from drag
-        setKnobPosition(radians, true);
-    }, [state.isDragging, state.radius, knobDraggable, trackDraggable, useMouse, setKnobPosition, limitDragRange, state.data.length, direction, knobPosition]);
+        updatePositionFromPointer(event);
+    }, [state.isDragging, knobDraggable, trackDraggable, useMouse, updatePositionFromPointer]);
 
     // Function to recalculate and update values when resized
     const refresh = useCallback(() => {
@@ -715,7 +763,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             style={sliderStyle}
             ref={circularSlider}
             role="slider"
-            aria-label={`${label}: ${displayValue}`}
+            aria-label={`${ariaLabel ?? label}: ${displayValue}`}
             aria-valuemin={hasCustomData ? 0 : min}
             aria-valuemax={hasCustomData ? state.data.length - 1 : max}
             aria-valuenow={ariaValueNow}
@@ -739,7 +787,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
                 trackGradient={trackGradient}
                 trackSize={trackSize}
                 radiansOffset={state.radians}
-                onMouseDown={trackDraggable ? onMouseDown : undefined}
+                onMouseDown={trackDraggable ? onTrackMouseDown : undefined}
                 isDragging={state.isDragging}
                 arcStart={arcStart}
                 arcEnd={arcEnd}

@@ -10,6 +10,7 @@ export type KnobPosition = 'top' | 'right' | 'bottom' | 'left' | number | string
 
 export interface CircularSliderProps {
     label?: string;
+    ariaLabel?: string;
     width?: number;
     direction?: 1 | -1;
     min?: number;
