@@ -1,6 +1,6 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.3.6-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.3.7-green.svg)](https://github.com/fseehawer/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
@@ -42,6 +42,7 @@ See the [live demos](https://fseehawer.github.io/react-circular-slider/) for cop
 - Use `dataIndex` to choose the selected item in `data`, and `value` only when controlling the slider by degrees.
 - Use `ariaLabel` when the visible `label` is abbreviated, hidden, or not descriptive enough for assistive technology.
 - Use `arcStart` and `arcEnd` for gauge-style sliders. Add `trackDraggable` when users should be able to click or drag the track.
+- In arc mode, gradient stops run from `arcStart` to `arcEnd`, which keeps gauge colors in value order.
 
 ## Props
 

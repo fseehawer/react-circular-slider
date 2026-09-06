@@ -57,6 +57,7 @@ const Svg: React.FC<SvgProps> = ({
 
     const halfTrack = trackSize / 2;
     const radius = width / 2 - halfTrack;
+    const center = width / 2;
 
     // Calculate arc path if arcStart and arcEnd are defined
     const isArcMode = typeof arcStart === 'number' && typeof arcEnd === 'number';
@@ -86,25 +87,36 @@ const Svg: React.FC<SvgProps> = ({
     // Calculate arc path if arcStart and arcEnd are defined
     let trackPath = '';
     let progressPath = '';
+    let gradientProps: React.SVGProps<SVGLinearGradientElement> = {
+        x1: '100%',
+        x2: '0%',
+    };
     
     if (isArcMode) {
         const startAngle = (arcStart - 90) * Math.PI / 180; // Convert to radians, offset by -90° to start at top
         const endAngle = (arcEnd - 90) * Math.PI / 180;
         
-        const startX = width / 2 + radius * Math.cos(startAngle);
-        const startY = width / 2 + radius * Math.sin(startAngle);
-        const endX = width / 2 + radius * Math.cos(endAngle);
-        const endY = width / 2 + radius * Math.sin(endAngle);
+        const startX = center + radius * Math.cos(startAngle);
+        const startY = center + radius * Math.sin(startAngle);
+        const endX = center + radius * Math.cos(endAngle);
+        const endY = center + radius * Math.sin(endAngle);
         
         const arcSpan = ((arcEnd - arcStart) + 360) % 360;
         const largeArc = arcSpan > 180 ? 1 : 0;
         
         trackPath = `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArc} 1 ${endX} ${endY}`;
         progressPath = trackPath;
+        gradientProps = {
+            gradientUnits: 'userSpaceOnUse',
+            x1: startX,
+            y1: startY,
+            x2: endX,
+            y2: endY,
+        };
     } else {
         // Full circle path for non-arc mode
         trackPath = `
-            M ${width / 2}, ${width / 2}
+            M ${center}, ${center}
             m 0, -${radius}
             a ${radius},${radius} 0 0,1 0,${radius * 2}
             a -${radius},-${radius} 0 0,1 0,-${radius * 2}
@@ -175,7 +187,7 @@ const Svg: React.FC<SvgProps> = ({
         
         if (trackGradient && trackGradient.length > 0) {
             defs.push(
-                <linearGradient key="track" id={trackGradientId} x1="100%" x2="0%">
+                <linearGradient key="track" id={trackGradientId} {...gradientProps}>
                     {createColorStops(trackGradient)}
                 </linearGradient>
             );
@@ -183,14 +195,14 @@ const Svg: React.FC<SvgProps> = ({
         
         if (progressGradient && progressGradient.length > 0) {
             defs.push(
-                <linearGradient key="progress" id={progressGradientId} x1="100%" x2="0%">
+                <linearGradient key="progress" id={progressGradientId} {...gradientProps}>
                     {createColorStops(progressGradient)}
                 </linearGradient>
             );
         } else {
             // Default gradient for backward compatibility
             defs.push(
-                <linearGradient key="progress-default" id={gradientId} x1="100%" x2="0%">
+                <linearGradient key="progress-default" id={gradientId} {...gradientProps}>
                     <stop offset="0%" stopColor={progressColorFrom}/>
                     <stop offset="100%" stopColor={progressColorTo}/>
                 </linearGradient>
@@ -198,7 +210,7 @@ const Svg: React.FC<SvgProps> = ({
         }
         
         return defs;
-    }, [trackGradient, progressGradient, trackGradientId, progressGradientId, gradientId, progressColorFrom, progressColorTo]);
+    }, [trackGradient, progressGradient, trackGradientId, progressGradientId, gradientId, gradientProps, progressColorFrom, progressColorTo]);
 
     // Determine stroke colors
     const actualTrackStroke = trackGradient && trackGradient.length > 0 
@@ -237,8 +249,8 @@ const Svg: React.FC<SvgProps> = ({
                     strokeWidth={trackSize}
                     fill="none"
                     stroke={actualTrackStroke}
-                    cx={width / 2}
-                    cy={width / 2}
+                    cx={center}
+                    cy={center}
                     r={radius}
                 />
             )}
