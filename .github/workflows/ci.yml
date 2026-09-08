@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Angular workspace dependencies
+        run: npm --prefix angular ci
+
       - name: Build library
         run: npm run build
 
@@ -36,3 +39,44 @@ jobs:
 
       - name: Check TypeScript
         run: npx tsc --noEmit
+
+      - name: Check Angular behavior and server rendering
+        run: npm --prefix angular test
+
+  angular-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: angular/package-lock.json
+      - run: npm ci
+        working-directory: angular
+      - run: npx playwright install --with-deps chromium
+        working-directory: angular
+      - run: npm run test:browser
+        working-directory: angular
+
+  angular-consumers:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        angular-version: [21, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: angular/package-lock.json
+      - run: npm ci
+        working-directory: angular
+      - run: npm run build
+        working-directory: angular
+      - run: npx playwright install --with-deps chromium
+        if: matrix.angular-version == 22
+        working-directory: angular
+      - run: npm run test:consumer -- ${{ matrix.angular-version }} --browser
+        working-directory: angular

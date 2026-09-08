@@ -16,6 +16,8 @@ This project uses GitHub Actions for CI/CD and AI-powered automation.
 - **Trigger:** GitHub Release published, or manual with version bump selector
 - **What:** Builds the library and publishes `@fiojs/react-circular-slider` to npm with provenance
 
+The independent **Publish Angular package** workflow (`publish-angular.yml`) publishes `@fiojs/ng-circular-slider` from `master`. It has its own version bump selector and builds the Angular distribution before publishing. Its publishing token must also allow the Angular package.
+
 ### 4. AI Issue Fixer (`ai-fix-issue.yml`)
 - **Trigger:** Issue labeled `ai-fix`, or manual with issue number
 - **What:** Reads the issue, sends source code + issue context to an AI model, applies suggested fixes, verifies the build, and opens a PR
@@ -55,6 +57,8 @@ The publishing npm account must have access to the `fiojs` organization. A token
 | `AI_PROVIDER` | `anthropic` | AI provider: `anthropic` or `openai` |
 
 ### GitHub Pages Setup
+
+Both demos are built by `npm run build-demo`. Local builds require `npm ci` and `npm --prefix angular ci`; the Angular demo is added under `build/angular`. CI also runs Angular geometry, server-rendering, browser, and installed-consumer checks. See [`angular/README.md`](../angular/README.md) for development and release commands.
 
 1. Go to **Settings → Pages**
 2. Keep **Source** set to **Deploy from a branch**, using `gh-pages` and `/ (root)`, to support the `npm run gh-pages` script.

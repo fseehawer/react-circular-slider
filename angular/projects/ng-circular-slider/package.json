@@ -1,0 +1,22 @@
+{
+  "name": "@fiojs/ng-circular-slider",
+  "version": "1.0.0",
+  "description": "A native Angular circular slider with arc gauges, gradients, keyboard controls and forms support.",
+  "license": "MIT",
+  "homepage": "https://fseehawer.github.io/react-circular-slider/angular/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fseehawer/react-circular-slider.git",
+    "directory": "angular/projects/ng-circular-slider"
+  },
+  "bugs": { "url": "https://github.com/fseehawer/react-circular-slider/issues" },
+  "publishConfig": { "access": "public" },
+  "peerDependencies": {
+    "@angular/common": "^20.0.0 || ^21.0.0 || ^22.0.0",
+    "@angular/core": "^20.0.0 || ^21.0.0 || ^22.0.0",
+    "@angular/forms": "^20.0.0 || ^21.0.0 || ^22.0.0"
+  },
+  "dependencies": { "tslib": "^2.8.1" },
+  "sideEffects": false,
+  "keywords": ["angular", "circular-slider", "radial-slider", "gauge", "standalone", "forms", "typescript"]
+}

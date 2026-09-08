@@ -188,7 +188,7 @@ const CodeSample = ({ code, styles }: CodeSampleProps) => {
 };
 
 const App = () => {
-	const [isHot, setIsHot] = React.useState(true);
+	const [isHot, setIsHot] = React.useState(false);
 	const [activeTab, setActiveTab] = React.useState(0);
 	const [isMobile, setIsMobile] = React.useState(false);
 	const [showMobileCode, setShowMobileCode] = React.useState(false);
@@ -225,7 +225,7 @@ const App = () => {
   appendToValue="°"
   min={-100}
   max={100}
-  dataIndex={120}
+  dataIndex={80}
   progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
   progressColorTo={isHot ? '#F65749' : '#0284c7'}
   labelColor={isHot ? '#F0A367' : '#0284c7'}
@@ -240,7 +240,7 @@ const App = () => {
 					appendToValue="°"
 					min={-100}
 					max={100}
-					dataIndex={120}
+					dataIndex={80}
 					valueFontSize={isMobile ? '3.5rem' : '4rem'}
 					trackColor="#e2e8f0"
 					progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
@@ -527,7 +527,7 @@ const App = () => {
 	const handleTabChange = (index: number) => {
 		setActiveTab(index);
 		setShowMobileCode(false);
-		setIsHot(index === 0);
+		setIsHot(false);
 
 		setTimeout(() => {
 			sliderRefs.current[index]?.current?.refresh();
@@ -536,6 +536,7 @@ const App = () => {
 
 	const styles: Record<string, React.CSSProperties> = {
 		wrapper: {
+			borderTop: '4px solid #61dafb',
 			padding: isMobile ? '0.75rem 0.5rem' : '1rem',
 			background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
 			minHeight: '100vh',
@@ -559,7 +560,7 @@ const App = () => {
 			fontSize: isMobile ? '1.65rem' : '2.25rem',
 			fontWeight: 600,
 			margin: 0,
-			color: '#233047',
+			color: '#087ea4',
 			display: 'flex',
 			alignItems: 'center',
 			flexWrap: isMobile ? 'wrap' : 'nowrap',
@@ -580,6 +581,7 @@ const App = () => {
 			textAlign: isMobile ? 'center' : 'left',
 		},
 		install: {
+			borderLeft: '3px solid #61dafb',
 			margin: 0,
 			background: '#111827',
 			color: '#f9fafb',
@@ -615,8 +617,8 @@ const App = () => {
 			whiteSpace: 'nowrap',
 		},
 		activeTab: {
-			color: '#2563eb',
-			borderBottomColor: '#2563eb',
+			color: '#087ea4',
+			borderBottomColor: '#087ea4',
 		},
 		exampleShell: {
 			background: '#f8fafc',
@@ -659,10 +661,10 @@ const App = () => {
 			maxWidth: isMobile ? '100%' : '320px',
 		},
 		chip: {
-			background: '#eff6ff',
-			border: '1px solid #bfdbfe',
+			background: '#e6f7fc',
+			border: '1px solid #b5e6f2',
 			borderRadius: '999px',
-			color: '#1d4ed8',
+			color: '#087ea4',
 			fontFamily: '"Fira Code", "Roboto Mono", monospace',
 			fontSize: '0.76rem',
 			lineHeight: 1,
@@ -684,10 +686,10 @@ const App = () => {
 		},
 		button: {
 			alignItems: 'center',
-			backgroundColor: '#eef2ff',
-			border: '1px solid #c7d2fe',
+			backgroundColor: '#e6f7fc',
+			border: '1px solid #b5e6f2',
 			borderRadius: '0.5rem',
-			color: '#3730a3',
+			color: '#087ea4',
 			cursor: 'pointer',
 			display: 'inline-flex',
 			fontSize: isMobile ? '0.88rem' : '0.95rem',
@@ -748,9 +750,9 @@ const App = () => {
 			transition: 'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
 		},
 		copyButtonCopied: {
-			background: '#064e3b',
-			borderColor: '#047857',
-			color: '#d1fae5',
+			background: '#0b536d',
+			borderColor: '#087ea4',
+			color: '#e6f7fc',
 		},
 		copyIcon: {
 			flex: '0 0 auto',
@@ -816,6 +818,7 @@ const App = () => {
 						Interactive configuration examples for common dial patterns. Pick a tab, try the slider, and use the highlighted props with the code sample.
 					</p>
 					<pre style={styles.install}>npm install @fiojs/react-circular-slider</pre>
+					<a href="./angular/" style={{ ...styles.donateLink, color: '#c3002f' }}>Angular demos</a>
 				</header>
 
 				<nav style={styles.tabContainer} role="tablist" aria-label="Configuration examples">

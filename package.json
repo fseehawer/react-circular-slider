@@ -29,7 +29,11 @@
   "scripts": {
     "dev": "vite --config vite.demo.config.js",
     "build": "tsup",
-    "build-demo": "vite build --config vite.demo.config.js",
+    "build-demo": "npm run build-demo:react && npm run build-demo:angular",
+    "build-demo:react": "vite build --config vite.demo.config.js",
+    "build-demo:angular": "npm --prefix angular run build:demo",
+    "build:angular": "npm --prefix angular run build",
+    "publish:angular": "npm --prefix angular run publish:package",
     "gh-pages": "npm run build-demo && git add -f build && git commit -m \"Update demo\" && git subtree push --prefix build origin gh-pages",
     "build-publish": "npm run build && npm run gh-pages && npm publish --access public"
   },

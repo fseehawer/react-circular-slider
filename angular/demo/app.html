@@ -1,0 +1,85 @@
+<main>
+  <header>
+    <div class="topline"><span class="package">@fiojs/ng-circular-slider</span><nav aria-label="Project"><a class="react-link" href="../">React demos</a><a href="https://github.com/fseehawer/react-circular-slider/tree/master/angular/projects/ng-circular-slider">Documentation</a></nav></div>
+    <h1>Angular Circular Slider</h1>
+    <pre class="install">npm install @fiojs/ng-circular-slider</pre>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="Examples">
+    @for (tab of tabs; track tab) {
+      <button type="button" role="tab" [attr.aria-selected]="active() === tab" [attr.id]="'tab-' + $index" aria-controls="example" (click)="selectTab(tab)">{{ tab }}</button>
+    }
+  </nav>
+  <section id="example" role="tabpanel" [attr.aria-labelledby]="'tab-' + tabs.indexOf(active())">
+    <div class="workspace">
+      <div class="preview">
+        @switch (active()) {
+          @case ('Range') {
+            <fio-circular-slider [(value)]="value" [min]="min()" [max]="max()" [step]="step()" [direction]="direction()"
+              [trackDraggable]="trackDraggable()" [disabled]="disabled()" [readonly]="readonlyMode()" label="Value"
+              labelColor="#202326" knobColor="#c3002f" progressColorFrom="#f87171" progressColorTo="#c3002f"
+              (draggingChange)="dragging.set($event)" />
+          }
+          @case ('Arc Gauge') {
+            <fio-circular-slider [(value)]="speed" [max]="160" [arcStart]="225" [arcEnd]="135"
+              [trackGradient]="speedColors" [progressGradient]="speedColors" [trackDraggable]="true"
+              label="Speed" appendToValue=" km/h" labelColor="#202326" knobColor="#202326" />
+          }
+          @case ('Custom Data') {
+            <fio-circular-slider [data]="sizes" [(value)]="size" label="Size" [trackDraggable]="true"
+              labelColor="#202326" knobColor="#c026d3" progressColorFrom="#f472b6" progressColorTo="#c026d3" />
+          }
+          @case ('Forms') {
+            <fio-circular-slider [formControl]="formValue" [max]="100" label="Volume" appendToValue="%"
+              [trackDraggable]="true" labelColor="#202326" knobColor="#c3002f" progressColorFrom="#f87171" progressColorTo="#c3002f" />
+          }
+          @case ('Templates') {
+            <ng-template #center let-value><strong class="battery-value">{{ value }}%</strong><span>Battery</span></ng-template>
+            <ng-template #knob let-value><small>{{ value }}</small></ng-template>
+            <fio-circular-slider [(value)]="charge" [max]="100" [labelTemplate]="center" [knobTemplate]="knob"
+              [trackDraggable]="true" label="Battery" labelColor="#202326" knobColor="#16a34a" progressColorFrom="#86efac" progressColorTo="#16a34a" />
+          }
+        }
+      </div>
+      <div class="settings">
+        @switch (active()) {
+          @case ('Range') {
+            <h2>Numeric range</h2>
+            <div class="fields">
+              <label>Minimum<input type="number" [(ngModel)]="min"></label>
+              <label>Maximum<input type="number" [(ngModel)]="max"></label>
+              <label>Step<input type="number" min="0.01" step="0.1" [(ngModel)]="step"></label>
+              <label>Direction<select [(ngModel)]="direction"><option [ngValue]="1">Clockwise</option><option [ngValue]="-1">Counterclockwise</option></select></label>
+            </div>
+            <label class="check"><input type="checkbox" [(ngModel)]="trackDraggable">Track dragging</label>
+            <label class="check"><input type="checkbox" [(ngModel)]="readonlyMode">Read only</label>
+            <label class="check"><input type="checkbox" [(ngModel)]="disabled">Disabled</label>
+            <output data-testid="range-value">{{ value() }}</output><span class="status">{{ dragging() ? 'Dragging' : 'Selected value' }}</span>
+          }
+          @case ('Arc Gauge') {
+            <h2>Speed gauge</h2>
+            <dl><dt>Range</dt><dd>0 - 160 km/h</dd><dt>Start</dt><dd>225 degrees</dd><dt>End</dt><dd>135 degrees</dd><dt>Colors</dt><dd class="swatches"><i style="background:#22c55e"></i><i style="background:#eab308"></i><i style="background:#ef4444"></i></dd></dl>
+            <label>Speed<input aria-label="Set speed" type="number" min="0" max="160" [(ngModel)]="speed"></label>
+          }
+          @case ('Custom Data') {
+            <h2>Custom values</h2>
+            <label>Size<select [(ngModel)]="size">@for (item of sizes; track item) { <option>{{ item }}</option> }</select></label>
+            <output data-testid="data-value">{{ size() }}</output>
+          }
+          @case ('Forms') {
+            <h2>Reactive form</h2>
+            <dl><dt>Value</dt><dd data-testid="form-value">{{ formValue.value }}</dd><dt>Touched</dt><dd data-testid="form-touched">{{ formValue.touched }}</dd><dt>Dirty</dt><dd data-testid="form-dirty">{{ formValue.dirty }}</dd><dt>Status</dt><dd>{{ formValue.status }}</dd></dl>
+            <div class="actions"><button type="button" (click)="formValue.reset(40)">Reset to 40</button><button type="button" (click)="toggleFormDisabled()">{{ formValue.disabled ? 'Enable' : 'Disable' }}</button></div>
+          }
+          @case ('Templates') {
+            <h2>Custom templates</h2>
+            <label>Charge<input type="number" min="0" max="100" [(ngModel)]="charge"></label>
+            <output>{{ charge() }}%</output>
+          }
+        }
+      </div>
+    </div>
+    <div class="code-heading"><h2>Angular example</h2><button type="button" (click)="copyCode()" aria-live="polite">{{ copied() }}</button></div>
+    <pre class="code"><code>{{ code() }}</code></pre>
+  </section>
+  <footer>Copyright 2026 Circular Slider <a href="https://www.npmjs.com/package/@fiojs/ng-circular-slider">npm</a><a href="https://github.com/fseehawer/react-circular-slider">GitHub</a></footer>
+</main>

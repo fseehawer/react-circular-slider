@@ -1,0 +1,35 @@
+import { expect, test } from '@playwright/test';
+
+test('Angular 22 Signal Forms bind value, constraints, interaction state and reset', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('./');
+  const slider = page.getByRole('slider', { name: 'Volume', exact: true });
+  await expect(slider).toHaveAttribute('aria-valuenow', '40');
+  await expect(slider).toHaveAttribute('aria-valuemax', '100');
+  await expect(page.getByTestId('dirty')).toHaveText('false');
+  await slider.press('ArrowUp');
+  await expect(page.getByTestId('value')).toHaveText('41');
+  await expect(page.getByTestId('dirty')).toHaveText('true');
+  await slider.press('Tab');
+  await expect(page.getByTestId('touched')).toHaveText('true');
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  await expect(slider).toHaveAttribute('aria-valuenow', '40');
+  await expect(page.getByTestId('dirty')).toHaveText('false');
+  await expect(page.getByTestId('touched')).toHaveText('false');
+  await page.getByRole('button', { name: 'Toggle disabled' }).click();
+  await expect(slider).toHaveAttribute('aria-disabled', 'true');
+  await slider.press('ArrowUp');
+  await expect(page.getByTestId('value')).toHaveText('40');
+  await page.getByRole('button', { name: 'Toggle disabled' }).click();
+  await expect(slider).toHaveAttribute('aria-disabled', 'false');
+  await page.getByRole('button', { name: 'Toggle readonly' }).click();
+  await expect(slider).toHaveAttribute('aria-readonly', 'true');
+  await slider.press('ArrowUp');
+  await expect(page.getByTestId('value')).toHaveText('40');
+  await page.getByRole('button', { name: 'Toggle readonly' }).click();
+  await expect(slider).toHaveAttribute('aria-readonly', 'false');
+  await slider.press('ArrowUp');
+  await expect(page.getByTestId('value')).toHaveText('41');
+  expect(errors).toEqual([]);
+});

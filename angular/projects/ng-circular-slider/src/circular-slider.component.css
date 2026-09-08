@@ -1,0 +1,35 @@
+:host {
+  display: inline-block;
+  position: relative;
+  container-type: inline-size;
+  max-width: 100%;
+  aspect-ratio: 1;
+  vertical-align: middle;
+  touch-action: none;
+  user-select: none;
+  border-radius: 4px;
+  letter-spacing: 0;
+}
+:host(:focus-visible) { outline: 2px solid currentColor; outline-offset: 4px; }
+:host(.is-disabled) { opacity: 0.45; }
+.dial { display: block; width: 100%; height: 100%; overflow: visible; }
+.draggable { cursor: grab; }
+:host(.is-dragging) .draggable { cursor: grabbing; }
+:host(.is-disabled), :host([aria-readonly=true]) { touch-action: auto; }
+.labels {
+  position: absolute;
+  inset: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  min-width: 0;
+}
+.label, .value { max-width: 100%; overflow-wrap: anywhere; line-height: 1.15; }
+.label { font-size: min(var(--label-font-size, 1rem), 6cqi); }
+.value { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; font-size: min(var(--value-font-size, 3rem), 18cqi); font-variant-numeric: tabular-nums; gap: 0.12em; }
+.affix { font-size: 0.4em; }
+.affix:empty { display: none; }
+.knob-content { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; color: white; }

@@ -5,6 +5,8 @@
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
 
+Using Angular? The native [`@fiojs/ng-circular-slider`](https://www.npmjs.com/package/@fiojs/ng-circular-slider) package includes Angular forms support. See its [documentation](https://github.com/fseehawer/react-circular-slider/tree/master/angular/projects/ng-circular-slider) and [live demos](https://fseehawer.github.io/react-circular-slider/angular/).
+
 <img src="https://fseehawer.github.io/react-circular-slider/circular-slider.png" alt="An image showing the CircularSlider settings" width="100%" />
 
 ## TypeScript Support

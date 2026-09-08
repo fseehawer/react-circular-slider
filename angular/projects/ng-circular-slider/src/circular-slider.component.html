@@ -1,0 +1,55 @@
+<svg class="dial" [attr.viewBox]="'0 0 ' + size() + ' ' + size()" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient [attr.id]="gradientId() + '-progress'" gradientUnits="userSpaceOnUse"
+      [attr.x1]="gradientStart().x" [attr.y1]="gradientStart().y" [attr.x2]="gradientEnd().x" [attr.y2]="gradientEnd().y">
+      @for (stop of progressStops(); track $index) {
+        <stop [attr.offset]="stop.offset" [attr.stop-color]="stop.stopColor" [attr.stop-opacity]="stop.stopOpacity" />
+      }
+    </linearGradient>
+    <linearGradient [attr.id]="gradientId() + '-track'" gradientUnits="userSpaceOnUse"
+      [attr.x1]="gradientStart().x" [attr.y1]="gradientStart().y" [attr.x2]="gradientEnd().x" [attr.y2]="gradientEnd().y">
+      @for (stop of trackStops(); track $index) {
+        <stop [attr.offset]="stop.offset" [attr.stop-color]="stop.stopColor" [attr.stop-opacity]="stop.stopOpacity" />
+      }
+    </linearGradient>
+  </defs>
+  <path [attr.d]="path()" fill="none" [attr.stroke-width]="trackWidth()" [attr.stroke-linecap]="progressLineCap()"
+    [attr.stroke]="trackGradient().length ? 'url(#' + gradientId() + '-track)' : trackColor()" pointer-events="none" />
+  <path class="progress" [attr.d]="path()" fill="none" pathLength="100" stroke-dasharray="100"
+    [attr.stroke-dashoffset]="100 * (1 - progress())" [attr.stroke-width]="progressWidth()"
+    [attr.stroke-linecap]="progressLineCap()" [attr.stroke]="'url(#' + gradientId() + '-progress)'"
+    [attr.opacity]="progress() === 0 ? 0 : 1" pointer-events="none" />
+  <path data-track="" [attr.d]="path()" fill="none" stroke="transparent" [attr.stroke-width]="trackWidth() + 20"
+    [attr.pointer-events]="trackDraggable() ? 'stroke' : 'none'" [class.draggable]="trackDraggable() && !disabledState() && !readonly()" />
+  @if (!hideKnob()) {
+    <g data-knob="" [attr.transform]="'translate(' + knobPoint().x + ',' + knobPoint().y + ')'"
+      [class.draggable]="knobDraggable() && !disabledState() && !readonly()">
+      @if (!hideKnobRing()) {
+        <circle [attr.r]="knobDiameter() / 2" [attr.fill]="knobColor()" opacity="0.2" />
+      }
+      <circle [attr.r]="knobDiameter() / 3" [attr.fill]="knobColor()" />
+      @if (!knobTemplate()) {
+        <path d="M -4 -3 H 4 M -4 0 H 4 M -4 3 H 4" stroke="white" stroke-width="1" pointer-events="none" />
+      }
+    </g>
+  }
+</svg>
+@if (knobTemplate() && !hideKnob()) {
+  <div class="knob-content" data-knob="" [class.draggable]="knobDraggable() && !disabledState() && !readonly()" [style.left.%]="knobPoint().x / size() * 100" [style.top.%]="knobPoint().y / size() * 100"
+    [style.width.%]="knobDiameter() / size() * 100" [style.height.%]="knobDiameter() / size() * 100">
+    <ng-container [ngTemplateOutlet]="knobTemplate()" [ngTemplateOutletContext]="templateContext()" />
+  </div>
+}
+@if (!hideLabelValue()) {
+  <div class="labels" [style.color]="labelColor()" [style.gap]="verticalOffset()" [style.--label-font-size]="labelFontSize()" [style.--value-font-size]="valueFontSize()" aria-hidden="true">
+    @if (labelTemplate()) {
+      <ng-container [ngTemplateOutlet]="labelTemplate()" [ngTemplateOutletContext]="templateContext()" />
+    } @else {
+      @if (!labelBottom()) { <div class="label">{{ label() }}</div> }
+      <div class="value">
+        <span class="affix">{{ prependToValue() }}</span><span>{{ selectedValue() }}</span><span class="affix">{{ appendToValue() }}</span>
+      </div>
+      @if (labelBottom()) { <div class="label">{{ label() }}</div> }
+    }
+  </div>
+}
