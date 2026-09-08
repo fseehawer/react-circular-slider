@@ -11,10 +11,21 @@
   letter-spacing: 0;
 }
 :host(:focus-visible) { outline: 2px solid currentColor; outline-offset: 4px; }
+:host(.is-pointer-focused) { outline: none; }
 :host(.is-disabled) { opacity: 0.45; }
 .dial { display: block; width: 100%; height: 100%; overflow: visible; }
 .draggable { cursor: grab; }
 :host(.is-dragging) .draggable { cursor: grabbing; }
+.knob-ring { transform-box: fill-box; transform-origin: center; }
+.draggable .knob-ring { animation: knob-pulse 1500ms ease-out infinite; }
+:host(.is-dragging) .knob-ring { animation-play-state: paused; }
+@keyframes knob-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .draggable .knob-ring { animation: none; }
+}
 :host(.is-disabled), :host([aria-readonly=true]) { touch-action: auto; }
 .labels {
   position: absolute;
@@ -27,9 +38,14 @@
   pointer-events: none;
   min-width: 0;
 }
-.label, .value { max-width: 100%; overflow-wrap: anywhere; line-height: 1.15; }
-.label { font-size: min(var(--label-font-size, 1rem), 6cqi); }
-.value { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; font-size: min(var(--value-font-size, 3rem), 18cqi); font-variant-numeric: tabular-nums; gap: 0.12em; }
-.affix { font-size: 0.4em; }
+.default-labels { position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); justify-items: center; }
+.label, .value { max-width: 100%; overflow-wrap: anywhere; }
+.label { grid-row: 1; align-self: end; margin-bottom: var(--label-gap, 0.5rem); font-size: min(var(--label-font-size, 1rem), 6cqi); line-height: 1.15; }
+.label-bottom { grid-row: 3; align-self: start; margin-bottom: 0; margin-top: var(--label-gap, 0.5rem); }
+.value { grid-row: 2; position: relative; font-size: min(var(--value-font-size, 3rem), 18cqi); line-height: 1; font-variant-numeric: tabular-nums; }
+[data-slider-value] { display: block; }
+.affix { position: absolute; bottom: 0; width: max-content; max-width: max(0px, calc(42cqi - 50%)); font-size: 0.4em; }
+.prefix { right: 100%; margin-right: 0.3em; text-align: right; }
+.suffix { left: 100%; margin-left: 0.3em; text-align: left; }
 .affix:empty { display: none; }
 .knob-content { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; color: white; }

@@ -25,7 +25,7 @@
     <g data-knob="" [attr.transform]="'translate(' + knobPoint().x + ',' + knobPoint().y + ')'"
       [class.draggable]="knobDraggable() && !disabledState() && !readonly()">
       @if (!hideKnobRing()) {
-        <circle [attr.r]="knobDiameter() / 2" [attr.fill]="knobColor()" opacity="0.2" />
+        <circle class="knob-ring" [attr.r]="knobDiameter() / 2" [attr.fill]="knobColor()" opacity="0.2" />
       }
       <circle [attr.r]="knobDiameter() / 3" [attr.fill]="knobColor()" />
       @if (!knobTemplate()) {
@@ -41,15 +41,16 @@
   </div>
 }
 @if (!hideLabelValue()) {
-  <div class="labels" [style.color]="labelColor()" [style.gap]="verticalOffset()" [style.--label-font-size]="labelFontSize()" [style.--value-font-size]="valueFontSize()" aria-hidden="true">
+  <div class="labels" [style.color]="labelColor()" [style.gap]="verticalOffset()" [style.--label-gap]="verticalOffset()" [style.--label-font-size]="labelFontSize()" [style.--value-font-size]="valueFontSize()" aria-hidden="true">
     @if (labelTemplate()) {
       <ng-container [ngTemplateOutlet]="labelTemplate()" [ngTemplateOutletContext]="templateContext()" />
     } @else {
-      @if (!labelBottom()) { <div class="label">{{ label() }}</div> }
-      <div class="value">
-        <span class="affix">{{ prependToValue() }}</span><span>{{ selectedValue() }}</span><span class="affix">{{ appendToValue() }}</span>
+      <div class="default-labels">
+        <div class="label" [class.label-bottom]="labelBottom()">{{ label() }}</div>
+        <div class="value">
+          <span class="affix prefix">{{ prependToValue() }}</span><span data-slider-value>{{ selectedValue() }}</span><span class="affix suffix">{{ appendToValue() }}</span>
+        </div>
       </div>
-      @if (labelBottom()) { <div class="label">{{ label() }}</div> }
     }
   </div>
 }

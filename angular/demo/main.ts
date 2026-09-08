@@ -49,7 +49,7 @@ class AppComponent {
   readonly showCode = signal(false);
   readonly example = computed(() => {
     switch (this.active()) {
-      case 'Arc Gauge': return { title: 'Speed gauge', props: ['arcStart', 'arcEnd', 'trackGradient', 'progressGradient'] };
+      case 'Arc Gauge': return { title: 'Speed gauge', props: ['arcStart', 'arcEnd', 'trackColor', 'progressGradient'] };
       case 'Custom Data': return { title: 'Custom values', props: ['data', 'value', 'label', 'trackDraggable'] };
       case 'Forms': return { title: 'Signal form', props: ['formField', 'signal', 'form', 'disabled'] };
       case 'Templates': return { title: 'Custom templates', props: ['labelTemplate', 'knobTemplate', 'value'] };
@@ -68,10 +68,41 @@ class AppComponent {
   readonly code = computed(() => {
     const imports = "import { CircularSliderComponent } from '@fiojs/ng-circular-slider';\n";
     switch (this.active()) {
-      case 'Arc Gauge': return imports + `\n<fio-circular-slider\n  [(value)]="speed"\n  [max]="160"\n  [arcStart]="225"\n  [arcEnd]="135"\n  [trackGradient]="['#22c55e', '#eab308', '#ef4444']"\n  [progressGradient]="['#22c55e', '#eab308', '#ef4444']"\n  [trackDraggable]="true"\n  label="Speed"\n  appendToValue=" km/h"\n/>`;
+      case 'Arc Gauge': return imports + `\n<fio-circular-slider\n  [(value)]="speed"\n  [max]="160"\n  [arcStart]="225"\n  [arcEnd]="135"\n  trackColor="#e5e7eb"\n  [progressGradient]="['#22c55e', '#eab308', '#ef4444']"\n  [trackDraggable]="true"\n  label="Speed"\n  appendToValue=" km/h"\n/>`;
       case 'Custom Data': return imports + `\n<fio-circular-slider\n  [data]="['XS', 'S', 'M', 'L', 'XL']"\n  [(value)]="size"\n  label="Size"\n  [trackDraggable]="true"\n/>`;
       case 'Forms': return imports + "import { signal } from '@angular/core';\nimport { form, FormField, min, max } from '@angular/forms/signals';\n\nreadonly volume = signal(55);\nreadonly volumeForm = form(this.volume, path => {\n  min(path, 0);\n  max(path, 100);\n});\n\n<fio-circular-slider\n  [formField]=\"volumeForm\"\n  label=\"Volume\"\n  appendToValue=\"%\"\n  [trackDraggable]=\"true\"\n/>";
-      case 'Templates': return imports + `\n<ng-template #center let-value>\n  <strong>{{ value }}%</strong>\n  <span>Battery</span>\n</ng-template>\n\n<fio-circular-slider\n  [(value)]="charge"\n  [max]="100"\n  [labelTemplate]="center"\n  [trackDraggable]="true"\n  label="Battery"\n/>`;
+      case 'Templates': return imports + `import { signal } from '@angular/core';
+
+readonly charge = signal(65);
+
+// app.html
+<ng-template #center let-value>
+  <div class="battery-label">
+    <span class="battery-value" data-slider-value>{{ value }}</span>
+    <span class="battery-unit">%</span>
+    <span class="battery-caption">Battery</span>
+  </div>
+</ng-template>
+<ng-template #knob let-value><small>{{ value }}</small></ng-template>
+
+<fio-circular-slider
+  [(value)]="charge"
+  [max]="100"
+  [labelTemplate]="center"
+  [knobTemplate]="knob"
+  [trackDraggable]="true"
+  label="Battery"
+  labelColor="#202326"
+  knobColor="#16a34a"
+  progressColorFrom="#86efac"
+  progressColorTo="#16a34a"
+/>
+
+/* styles.css */
+.battery-label { position: relative; width: max-content; flex: none; line-height: 1; }
+.battery-value { display: block; font-size: 32px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.battery-unit { position: absolute; left: calc(100% + .15em); top: 50%; transform: translateY(-50%); font-size: 16px; line-height: 1; }
+.battery-caption { position: absolute; top: calc(100% + .5rem); left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 16px; line-height: 1.15; }`;
       default: return imports + `import { signal } from '@angular/core';\n\nreadonly value = signal(42);\n\n<fio-circular-slider\n  [(value)]="value"\n  [min]="${this.min()}"\n  [max]="${this.max()}"\n  [step]="${this.step()}"\n  [direction]="${this.direction()}"\n  [trackDraggable]="${this.trackDraggable()}"\n  [disabled]="${this.disabled()}"\n  [readonly]="${this.readonlyMode()}"\n  label="Value"\n/>`;
     }
   });

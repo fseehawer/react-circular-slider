@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "src/**/*.vue", "../shared/slider-math.ts"],
+  "exclude": ["demo", "tests", "dist", "node_modules"]
+}

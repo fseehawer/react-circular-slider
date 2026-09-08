@@ -8,6 +8,9 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
+*.tgz
 
 # production
 

@@ -188,7 +188,7 @@ const CodeSample = ({ code, styles }: CodeSampleProps) => {
 };
 
 const App = () => {
-	const [isHot, setIsHot] = React.useState(false);
+	const [isHot, setIsHot] = React.useState(true);
 	const [activeTab, setActiveTab] = React.useState(0);
 	const [isMobile, setIsMobile] = React.useState(false);
 	const [showMobileCode, setShowMobileCode] = React.useState(false);
@@ -225,7 +225,7 @@ const App = () => {
   appendToValue="°"
   min={-100}
   max={100}
-  dataIndex={80}
+  dataIndex={120}
   progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
   progressColorTo={isHot ? '#F65749' : '#0284c7'}
   labelColor={isHot ? '#F0A367' : '#0284c7'}
@@ -240,7 +240,7 @@ const App = () => {
 					appendToValue="°"
 					min={-100}
 					max={100}
-					dataIndex={80}
+					dataIndex={120}
 					valueFontSize={isMobile ? '3.5rem' : '4rem'}
 					trackColor="#e2e8f0"
 					progressColorFrom={isHot ? '#F0A367' : '#38bdf8'}
@@ -527,7 +527,7 @@ const App = () => {
 	const handleTabChange = (index: number) => {
 		setActiveTab(index);
 		setShowMobileCode(false);
-		setIsHot(false);
+		setIsHot(true);
 
 		setTimeout(() => {
 			sliderRefs.current[index]?.current?.refresh();

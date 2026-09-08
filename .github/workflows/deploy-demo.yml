@@ -38,6 +38,12 @@ jobs:
       - name: Install Angular 22 demo dependencies
         run: npm --prefix angular/demo ci
 
+      - name: Install Vue demo dependencies
+        run: npm --prefix vue ci
+
+      - name: Install Web Component demo dependencies
+        run: npm --prefix web-component ci
+
       - name: Build demo
         run: npm run build-demo
 

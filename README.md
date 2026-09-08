@@ -80,13 +80,13 @@ The table below lists all available props along with their TypeScript types, def
 | `label`                   | `string`                                                | `"ANGLE"`                                 | Text label displayed on the slider.                                                                      |
 | `ariaLabel`               | `string`                                                | `undefined`                               | Accessible label for the slider control. Falls back to `label`.                                          |
 | `labelColor`              | `string`                                                | `"#272b77"`                               | Color of the label and value text.                                                                       |
-| `labelBottom`             | `boolean`                                               | `false`                                   | If `true`, the label is positioned below the slider.                                                   |
+| `labelBottom`             | `boolean`                                               | `false`                                   | If `true`, the label is positioned below the centered value.                                             |
 | `labelFontSize`           | `string`                                                | `"1rem"`                                  | Font size of the label.                                                                                  |
 | `valueFontSize`           | `string`                                                | `"3rem"`                                  | Font size of the displayed value.                                                                        |
 | `appendToValue`           | `string`                                                | `""`                                      | Text appended to the value.                                                                              |
 | `prependToValue`          | `string`                                                | `""`                                      | Text prepended to the value.                                                                             |
 | `renderLabelValue`        | `React.ReactNode`                                       | `null`                                    | Custom JSX for rendering the label and value.                                                            |
-| `verticalOffset`          | `string`                                                | `"1.5rem"`                                | Vertical offset for the label/value display.                                                             |
+| `verticalOffset`          | `string`                                                | `"1.5rem"`                                | Gap between the label and value; does not move the value off center.                                      |
 | `hideLabelValue`          | `boolean`                                               | `false`                                   | If `true`, both the label and value are hidden.                                                          |
 | `progressColorFrom`       | `string`                                                | `"#80C3F3"`                               | Start color for the progress gradient.                                                                   |
 | `progressColorTo`         | `string`                                                | `"#4990E2"`                               | End color for the progress gradient.                                                                     |
@@ -104,6 +104,8 @@ The table below lists all available props along with their TypeScript types, def
 | `limitDragRange`          | `boolean`                                               | `false`                                   | If `true`, clamps drag movement to the configured data range.                                             |
 | `onChange`                | `(value: string \| number) => void`                     | `() => {}`                                | Callback fired when the value changes.                                                                   |
 | `isDragging`              | `(dragging: boolean) => void`                           | `() => {}`                                | Callback to signal whether the slider is being dragged.                                                |
+
+The default value stays centered horizontally and vertically in the dial. Labels sit above or below it, and prefixes/suffixes do not shift its center. Custom `renderLabelValue` content controls its own layout.
 
 ## License
 

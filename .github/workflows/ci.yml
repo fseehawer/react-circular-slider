@@ -41,6 +41,14 @@ jobs:
         if: matrix.node-version != 20
         run: npm --prefix angular/demo ci
 
+      - name: Install Vue demo dependencies
+        if: matrix.node-version != 20
+        run: npm --prefix vue ci
+
+      - name: Install Web Component demo dependencies
+        if: matrix.node-version != 20
+        run: npm --prefix web-component ci
+
       - name: Build demos
         if: matrix.node-version != 20
         run: npm run build-demo
@@ -54,6 +62,20 @@ jobs:
 
       - name: Check Angular behavior and server rendering
         run: npm --prefix angular test
+
+      - name: Check shared slider geometry
+        run: npm run test:shared
+
+      - name: Check framework README links and examples
+        run: npm run test:docs
+
+      - name: Install layout-test browser
+        if: matrix.node-version == 24
+        run: npx playwright install --with-deps chromium
+
+      - name: Check value centering across frameworks
+        if: matrix.node-version == 24
+        run: npm run test:layout
 
   angular-browser:
     runs-on: ubuntu-latest
@@ -96,3 +118,34 @@ jobs:
         working-directory: angular
       - run: npm run test:consumer -- ${{ matrix.angular-version }} --browser
         working-directory: angular
+
+  framework-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            vue/package-lock.json
+            web-component/package-lock.json
+      - run: npm ci
+      - run: npm ci
+        working-directory: vue
+      - run: npm ci
+        working-directory: web-component
+      - run: npm run build:vue
+      - run: npm run build:web-component
+      - run: npm run typecheck
+        working-directory: vue
+      - run: npm run typecheck
+        working-directory: web-component
+      - run: npm test
+        working-directory: vue
+      - run: npm test
+        working-directory: web-component
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:frameworks
+      - run: npm run test:consumers -- --browser

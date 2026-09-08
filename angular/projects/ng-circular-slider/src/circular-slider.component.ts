@@ -48,6 +48,7 @@ class SliderIds {
     '[style.width.px]': 'size()',
     '[class.is-disabled]': 'disabledState()',
     '[class.is-dragging]': 'dragging()',
+    '[class.is-pointer-focused]': 'pointerFocused()',
     '(pointerdown)': 'pointerDown($event)',
     '(pointermove)': 'pointerMove($event)',
     '(pointerup)': 'pointerEnd($event)',
@@ -111,6 +112,7 @@ export class CircularSliderComponent<T extends SliderValue = number> implements 
   private onFormChange: (value: SliderValue) => void = () => {};
   private onFormTouched: () => void = () => {};
   protected readonly dragging = signal(false);
+  protected readonly pointerFocused = signal(false);
 
   protected readonly hasData = computed(() => this.data().length > 0);
   protected readonly lowerBound = computed(() => finite(this.min(), 0));
@@ -196,6 +198,7 @@ export class CircularSliderComponent<T extends SliderValue = number> implements 
   }
 
   protected pointerDown(event: PointerEvent): void {
+    this.pointerFocused.set(true);
     if (this.disabledState() || this.readonly() || this.activePointer !== null || event.button !== 0 || !event.isPrimary) return;
     const target = event.target as Element;
     const isKnob = Boolean(target.closest('[data-knob]'));
@@ -247,6 +250,7 @@ export class CircularSliderComponent<T extends SliderValue = number> implements 
   }
 
   protected keyDown(event: KeyboardEvent): void {
+    this.pointerFocused.set(false);
     if (this.disabledState() || this.readonly()) return;
     let index = this.selectedIndex();
     switch (event.key) {
@@ -262,6 +266,6 @@ export class CircularSliderComponent<T extends SliderValue = number> implements 
     this.changeValue(() => this.setIndex(index));
   }
 
-  protected blur(): void { this.onFormTouched(); }
+  protected blur(): void { this.pointerFocused.set(false); this.onFormTouched(); }
   ngOnDestroy(): void { this.finishDrag(false, false); }
 }

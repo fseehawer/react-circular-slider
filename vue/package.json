@@ -1,0 +1,52 @@
+{
+  "name": "@fiojs/vue-circular-slider",
+  "version": "1.0.1",
+  "description": "Accessible native Vue 3 circular slider and arc gauge with TypeScript and scoped slots.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Florian Seehawer",
+  "homepage": "https://fseehawer.github.io/react-circular-slider/vue/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fseehawer/react-circular-slider.git",
+    "directory": "vue"
+  },
+  "keywords": ["vue", "vue3", "circular-slider", "slider", "gauge", "typescript", "accessible"],
+  "files": ["dist", "README.md", "LICENSE"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": ["**/*.css"],
+  "scripts": {
+    "build": "vite build && rollup --config rollup.types.config.mjs",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run && node tests/package.mjs",
+    "test:browser": "playwright test",
+    "build:demo": "npm run build && vite build --config vite.demo.config.ts",
+    "dev": "npm run build && vite --config vite.demo.config.ts --port 5187 --strictPort"
+  },
+  "peerDependencies": { "vue": "^3.5.0" },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/server-renderer": "^3.5.0",
+    "@vue/test-utils": "^2.4.6",
+    "highlight.js": "^11.11.1",
+    "jsdom": "^26.1.0",
+    "lucide-vue-next": "^0.468.0",
+    "rollup": "^4.50.0",
+    "rollup-plugin-dts": "^6.2.3",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.0",
+    "vue-tsc": "^3.0.6"
+  }
+}

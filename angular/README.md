@@ -48,14 +48,16 @@ npm --prefix angular run publish:package
 
 The `publish:package` script publishes `angular/dist/ng-circular-slider`, not the private workspace. The GitHub Actions **Publish Angular package** workflow can also bump and publish from `master`; its `NPM_TOKEN` needs write access to `@fiojs/ng-circular-slider`.
 
-To deploy both demo sites with the existing repository script, install both workspaces first:
+To deploy all demo sites with the existing repository script, install every workspace first:
 
 ```bash
 npm ci
 npm --prefix angular ci
 npm --prefix angular run build
 npm --prefix angular/demo ci
+npm --prefix vue ci
+npm --prefix web-component ci
 npm run gh-pages
 ```
 
-`npm run build-demo` builds the React demo first, then adds the Angular demo under `build/angular`, so each deployment retains both sites.
+`npm run build-demo` builds React first, then adds Angular, Vue, and Web Component demos under `build/angular`, `build/vue`, and `build/web-component`. Each deployment retains all four sites. See [`FRAMEWORKS.md`](../FRAMEWORKS.md) for the other packages.

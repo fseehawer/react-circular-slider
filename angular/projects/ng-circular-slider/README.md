@@ -45,34 +45,9 @@ Pass the writable signal itself to `[(value)]`, without parentheses. Read it wit
 
 ## Values and Forms
 
-Choose one value binding: `[(value)]`, `[(ngModel)]`, `[formControl]`, or `formControlName`. Do not combine them on the same slider. Import `FormsModule` for `ngModel`. `value` is the selected number or custom data item, **not an angle in degrees**.
+Use `[(value)]` for a writable signal, or `[formField]` with Angular 22 Signal Forms. Do not combine them on the same slider. `value` is the selected number or custom data item, **not an angle in degrees**.
 
 The component infers its output type from `value` and `data`, so a numeric `[(value)]` binding works with a normal `number` property under strict template checking. Custom string data produces string values.
-
-For reactive forms, import `ReactiveFormsModule` alongside `CircularSliderComponent`:
-
-```typescript
-import { FormControl } from '@angular/forms';
-
-readonly speed = new FormControl(80, { nonNullable: true });
-```
-
-```html
-<fio-circular-slider
-  [formControl]="speed"
-  [min]="0"
-  [max]="160"
-  [arcStart]="225"
-  [arcEnd]="135"
-  [trackGradient]="['#22c55e', '#eab308', '#ef4444']"
-  [progressGradient]="['#22c55e', '#eab308', '#ef4444']"
-  [trackDraggable]="true"
-  label="Speed"
-  appendToValue=" km/h"
-/>
-```
-
-`speed.setValue(100)` updates the slider. `speed.disable()` disables pointer and keyboard interaction. User changes update the form; programmatic writes do not emit `valueChange`. The control becomes touched on blur or when a pointer interaction ends. Resetting to `null` selects the minimum or first custom item. Put validators on the form control as usual.
 
 ### Angular 22 Signal Forms
 
@@ -100,6 +75,31 @@ readonly settingsForm = form(this.settings, path => {
 
 Value, bounds, disabled/readonly state, dirty/touched tracking, and resets are covered by an Angular 22 installed-package browser test. Do not also bind `value`, `ngModel`, or `formControl`. The library itself does not import `@angular/forms/signals`, keeping Angular 20 and 21 consumers compatible.
 
+User changes update the form; programmatic writes do not emit `valueChange`. The control becomes touched on blur or when a pointer interaction ends. Resetting to `null` selects the minimum or first custom item. Existing Angular forms remain supported through `ControlValueAccessor`.
+
+## Arc Gauge
+
+```typescript
+readonly speed = signal(80);
+```
+
+```html
+<fio-circular-slider
+  [(value)]="speed"
+  [min]="0"
+  [max]="160"
+  [arcStart]="225"
+  [arcEnd]="135"
+  trackColor="#e5e7eb"
+  [progressGradient]="['#22c55e', '#eab308', '#ef4444']"
+  [trackDraggable]="true"
+  label="Speed"
+  appendToValue=" km/h"
+/>
+```
+
+`speed.set(100)` updates the slider and the visible progress. The unfilled part stays neutral as the gauge fills from green toward red.
+
 ## Custom Data
 
 Pass a nonempty array of unique strings or numbers to `data`. These items are evenly spaced and override `min`, `max`, and `step`.
@@ -107,13 +107,13 @@ Pass a nonempty array of unique strings or numbers to `data`. These items are ev
 ```html
 <fio-circular-slider
   [data]="['XS', 'S', 'M', 'L', 'XL']"
-  [(ngModel)]="size"
+  [(value)]="size"
   label="Size"
   [trackDraggable]="true"
 />
 ```
 
-Initialize `size = 'M'`. Alternatively, use `[(dataIndex)]="index"` to bind the zero-based index, without a value or forms binding. Unknown values fall back to the first item; out-of-range indices are clamped.
+Initialize `readonly size = signal('M')`. Alternatively, use `[(dataIndex)]="index"` to bind the zero-based index, without a value or forms binding. Unknown values fall back to the first item; out-of-range indices are clamped.
 
 ## Inputs
 
@@ -147,6 +147,8 @@ Initialize `size = 'M'`. Alternatively, use `[(dataIndex)]="index"` to bind the 
 | `knobTemplate`, `labelTemplate` | `null` | Custom Angular `TemplateRef` content. |
 | `sliderId` | generated | Optional unique prefix for SVG gradient IDs; useful across independently bootstrapped applications. |
 
+The default value stays centered horizontally and vertically in the dial, independently of labels and prefixes/suffixes. `verticalOffset` sets the label-to-value gap without shifting the value. Custom `labelTemplate` content controls its own layout.
+
 ## Outputs
 
 | Output | Payload | When |
@@ -171,6 +173,10 @@ readonly colors: GradientStop[] = [
 
 Missing offsets are distributed evenly. Arc gradients are linear in SVG space from the start point to the end point, so the speed gauge starts green and ends red. They are not conic gradients: stop percentages describe the gradient axis, not distance around the curve.
 
+Use `progressGradient` with a neutral `trackColor` for a gauge that fills up to the selected value. `trackGradient` colors the entire background track, including the unfilled portion; using identical track and progress gradients makes the progress visually indistinguishable.
+
+The knob's translucent ring pulses while it is draggable and idle, pauses during dragging, and stops for disabled or read-only controls. It respects `prefers-reduced-motion`; use `hideKnobRing` to remove the ring entirely.
+
 ```html
 <ng-template #knob let-value>
   <span>{{ value }}</span>
@@ -181,7 +187,7 @@ Missing offsets are distributed evenly. Arc gradients are linear in SVG space fr
 </ng-template>
 
 <fio-circular-slider
-  [(ngModel)]="charge"
+  [(value)]="charge"
   [max]="100"
   label="Battery"
   [knobTemplate]="knob"
@@ -189,7 +195,7 @@ Missing offsets are distributed evenly. Arc gradients are linear in SVG space fr
 />
 ```
 
-Templates receive `{ $implicit: value, value, label }`. Keep projected content noninteractive because the component itself is the accessible slider control.
+Initialize `readonly charge = signal(65)`. Templates receive `{ $implicit: value, value, label }`. Keep projected content noninteractive because the component itself is the accessible slider control.
 
 ## React Version
 

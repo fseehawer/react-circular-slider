@@ -25,7 +25,7 @@
           }
           @case ('Arc Gauge') {
             <fio-circular-slider [(value)]="speed" [max]="160" [arcStart]="225" [arcEnd]="135"
-              [trackGradient]="speedColors" [progressGradient]="speedColors" [trackDraggable]="true"
+              trackColor="#e5e7eb" [progressGradient]="speedColors" [trackDraggable]="true"
               label="Speed" appendToValue=" km/h" labelColor="#202326" knobColor="#202326" />
           }
           @case ('Custom Data') {
@@ -37,7 +37,13 @@
               [trackDraggable]="true" labelColor="#202326" knobColor="#c3002f" progressColorFrom="#f87171" progressColorTo="#c3002f" />
           }
           @case ('Templates') {
-            <ng-template #center let-value><strong class="battery-value">{{ value }}%</strong><span>Battery</span></ng-template>
+            <ng-template #center let-value>
+              <div class="battery-label">
+                <span class="battery-value" data-slider-value>{{ value }}</span>
+                <span class="battery-unit">%</span>
+                <span class="battery-caption">Battery</span>
+              </div>
+            </ng-template>
             <ng-template #knob let-value><small>{{ value }}</small></ng-template>
             <fio-circular-slider [(value)]="charge" [max]="100" [labelTemplate]="center" [knobTemplate]="knob"
               [trackDraggable]="true" label="Battery" labelColor="#202326" knobColor="#16a34a" progressColorFrom="#86efac" progressColorTo="#16a34a" />

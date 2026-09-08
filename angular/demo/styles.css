@@ -52,7 +52,10 @@ dd { margin: 0; }
 .hljs-title, .hljs-name, .hljs-built_in { color: #67e8f9; }
 .hljs-property, .hljs-attribute { color: #93c5fd; }
 .hljs-comment, .hljs-punctuation { color: #94a3b8; }
-.battery-value { font-size: 32px; font-weight: 600; }
+.battery-label { position: relative; width: max-content; flex: none; line-height: 1; }
+.battery-value { display: block; font-size: 32px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.battery-unit { position: absolute; left: calc(100% + .15em); top: 50%; transform: translateY(-50%); font-size: 16px; line-height: 1; }
+.battery-caption { position: absolute; top: calc(100% + .5rem); left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 16px; line-height: 1.15; }
 .rotated { transform: rotate(180deg); }
 footer { text-align: center; color: #64748b; margin-top: 2rem; padding-bottom: .5rem; font-size: .9rem; line-height: 1.5; }
 footer p { margin: 0 0 .35rem; }

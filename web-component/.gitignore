@@ -1,0 +1,9 @@
+node_modules/
+.npm-cache/
+dist/
+.types/
+test-results/
+playwright-report/
+*.tgz
+demo/node_modules/
+demo/dist/

@@ -1,6 +1,6 @@
 {
   "name": "@fiojs/ng-circular-slider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A native Angular circular slider with arc gauges, gradients, keyboard controls and forms support.",
   "license": "MIT",
   "homepage": "https://fseehawer.github.io/react-circular-slider/angular/",

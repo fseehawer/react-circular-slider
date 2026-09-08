@@ -1,6 +1,6 @@
 {
   "name": "@fiojs/react-circular-slider",
-  "version": "3.3.8",
+  "version": "3.3.9",
   "files": [
     "dist",
     "public"
@@ -29,11 +29,22 @@
   "scripts": {
     "dev": "vite --config vite.demo.config.js",
     "build": "tsup",
-    "build-demo": "npm run build-demo:react && npm run build-demo:angular",
+    "build-demo": "npm run build-demo:react && npm run build-demo:angular && npm run build-demo:vue && npm run build-demo:web-component",
     "build-demo:react": "vite build --config vite.demo.config.js",
     "build-demo:angular": "npm --prefix angular run build:demo",
+    "build-demo:vue": "npm --prefix vue run build:demo",
+    "build-demo:web-component": "npm --prefix web-component run build:demo",
     "build:angular": "npm --prefix angular run build",
+    "build:vue": "npm --prefix vue run build",
+    "build:web-component": "npm --prefix web-component run build",
+    "test:shared": "node --import tsx --test tests/slider-math.test.ts",
+    "test:docs": "node --test tests/package-docs.test.mjs",
+    "test:frameworks": "playwright test --config playwright.frameworks.config.ts",
+    "test:layout": "playwright test --config playwright.layout.config.ts",
+    "test:consumers": "node scripts/check-framework-consumers.mjs",
     "publish:angular": "npm --prefix angular run publish:package",
+    "publish:vue": "npm run build:vue && npm publish ./vue --access public",
+    "publish:web-component": "npm run build:web-component && npm publish ./web-component --access public",
     "gh-pages": "npm run build-demo && git add -f build && git commit -m \"Update demo\" && git subtree push --prefix build origin gh-pages",
     "build-publish": "npm run build && npm run gh-pages && npm publish --access public"
   },
@@ -42,12 +53,14 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.7.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^6.4.1",
     "vite-plugin-svgr": "^4.5.0"

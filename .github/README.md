@@ -58,7 +58,7 @@ The publishing npm account must have access to the `fiojs` organization. A token
 
 ### GitHub Pages Setup
 
-Both demos are built by `npm run build-demo` on Node 24.15+. The Angular 22 Signal Forms demo has its own dependencies under `angular/demo`, separate from the backward-compatible library compiler. CI also runs Angular geometry, server-rendering, browser, and installed-consumer checks. See [`angular/README.md`](../angular/README.md) for installation, development, and release commands.
+All four demos are built by `npm run build-demo` on Node 24.15+. React is at the site root, with Angular, Vue, and Web Component demos in their own subdirectories. The Angular 22 Signal Forms demo has its own dependencies under `angular/demo`, separate from the backward-compatible library compiler. CI runs geometry, server-rendering, browser, and installed-consumer checks. See [`FRAMEWORKS.md`](../FRAMEWORKS.md) for installation, development, and independent release commands.
 
 1. Go to **Settings → Pages**
 2. Keep **Source** set to **Deploy from a branch**, using `gh-pages` and `/ (root)`, to support the `npm run gh-pages` script.

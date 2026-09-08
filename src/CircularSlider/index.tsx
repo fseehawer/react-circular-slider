@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useRef, forwardRef } from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, forwardRef } from 'react';
 import reducer from '../redux/reducer';
 import useEventListener from '../hooks/useEventListener';
 import useIsServer from '../hooks/useIsServer';
@@ -227,6 +227,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     } = props;
 
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
+    const [pointerFocused, setPointerFocused] = useState(false);
 
     // Reference to track dragging state internally
     const draggingRef = useRef(false);
@@ -514,6 +515,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
     };
 
     const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+        setPointerFocused(false);
         if (!knobDraggable && !trackDraggable) return;
         if (state.data.length === 0) return;
 
@@ -742,6 +744,7 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
         width: 'max-content',
         opacity: state.mounted ? 1 : 0,
         transition: 'opacity 1s ease-in',
+        outline: pointerFocused ? 'none' : undefined,
     };
 
     // Prepare display value from either parent prop or internal state
@@ -769,6 +772,8 @@ const CircularSlider = forwardRef<CircularSliderHandle, CircularSliderProps>((pr
             aria-valuenow={ariaValueNow}
             aria-valuetext={`${prependToValue}${displayValue}${appendToValue}`}
             tabIndex={0}
+            onPointerDown={() => setPointerFocused(true)}
+            onBlur={() => setPointerFocused(false)}
             onKeyDown={onKeyDown}
         >
             <Svg

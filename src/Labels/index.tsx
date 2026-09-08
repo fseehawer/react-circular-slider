@@ -32,35 +32,45 @@ const Labels: React.FC<LabelsProps> = ({
 			left: '0',
 			width: '100%',
 			height: '100%',
-			display: 'flex',
-			flexDirection: 'column',
-			justifyContent: 'center',
-			alignItems: 'center',
+			display: 'grid',
+			gridTemplateRows: 'minmax(0, 1fr) auto minmax(0, 1fr)',
+			justifyItems: 'center',
+			textAlign: 'center',
 			color: labelColor,
 			userSelect: 'none',
+			pointerEvents: 'none',
 			zIndex: 1,
 		},
-		codeTop: {
-			verticalAlign: 'text-top',
+		label: {
+			gridRow: labelBottom ? 3 : 1,
+			alignSelf: labelBottom ? 'start' : 'end',
+			fontSize: labelFontSize,
+			lineHeight: 1.15,
+			maxWidth: '70%',
+			overflowWrap: 'anywhere',
+			...(labelBottom ? { marginTop: verticalOffset } : { marginBottom: verticalOffset }),
 		},
 		value: {
+			gridRow: 2,
 			fontSize: valueFontSize,
+			lineHeight: 1,
+			maxWidth: '70%',
+			overflowWrap: 'anywhere',
 			position: 'relative',
 		},
-		bottomMargin: {
-			marginBottom: `calc(${verticalOffset})`,
+		code: {
+			display: 'block',
+			lineHeight: 'inherit',
 		},
 		appended: {
 			position: 'absolute',
-			right: '0',
+			left: '100%',
 			top: '0',
-			transform: 'translate(100%, 0)',
 		},
 		prepended: {
 			position: 'absolute',
-			left: '0',
+			right: '100%',
 			top: '0',
-			transform: 'translate(-100%, 0)',
 		},
 		hide: {
 			display: 'none',
@@ -69,15 +79,14 @@ const Labels: React.FC<LabelsProps> = ({
 
 	return (
 		<div style={{ ...styles.labels, ...(hideLabelValue ? styles.hide : {}) }}>
-			{!labelBottom && <div style={{ fontSize: labelFontSize }}>{label}</div>}
-			<div style={{ ...styles.value, ...(!labelBottom ? styles.bottomMargin : {}) }}>
-				<code style={styles.codeTop}>
+			<div style={styles.label}>{label}</div>
+			<div style={styles.value}>
+				<code style={styles.code}>
 					<span style={styles.prepended}>{prependToValue}</span>
-					{value}
+					<span data-slider-value="" style={{ display: 'block' }}>{value}</span>
 					<span style={styles.appended}>{appendToValue}</span>
 				</code>
 			</div>
-			{labelBottom && <div style={{ fontSize: labelFontSize, marginTop: '-0.5rem' }}>{label}</div>}
 		</div>
 	);
 };

@@ -1,0 +1,51 @@
+.fio-circular-slider {
+  display: inline-block;
+  position: relative;
+  container-type: inline-size;
+  max-width: 100%;
+  aspect-ratio: 1;
+  vertical-align: middle;
+  touch-action: none;
+  user-select: none;
+  border-radius: 4px;
+  letter-spacing: 0;
+}
+.fio-circular-slider:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.fio-circular-slider.is-pointer-focused { outline: none; }
+.fio-circular-slider.is-disabled { opacity: 0.45; }
+.fio-cs-dial { display: block; width: 100%; height: 100%; overflow: visible; }
+.fio-cs-draggable { cursor: grab; }
+.fio-circular-slider.is-dragging .fio-cs-draggable { cursor: grabbing; }
+.fio-cs-knob-ring { transform-box: fill-box; transform-origin: center; }
+.has-draggable-knob .fio-cs-knob-ring { animation: fio-cs-knob-pulse 1500ms ease-out infinite; }
+.fio-circular-slider:is(.is-dragging, .is-disabled, [aria-readonly=true]) .fio-cs-knob-ring { animation-play-state: paused; }
+@keyframes fio-cs-knob-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fio-circular-slider .fio-cs-knob-ring { animation: none; }
+}
+.fio-circular-slider:is(.is-disabled, [aria-readonly=true]) { touch-action: auto; }
+.fio-cs-labels {
+  position: absolute;
+  inset: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  min-width: 0;
+}
+.fio-cs-default-labels { position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); justify-items: center; }
+.fio-cs-label, .fio-cs-value { max-width: 100%; overflow-wrap: anywhere; }
+.fio-cs-label { grid-row: 1; align-self: end; margin-bottom: var(--label-gap, 0.5rem); font-size: min(var(--label-font-size, 1rem), 6cqi); line-height: 1.15; }
+.fio-cs-label-bottom { grid-row: 3; align-self: start; margin-bottom: 0; margin-top: var(--label-gap, 0.5rem); }
+.fio-cs-value { grid-row: 2; position: relative; font-size: min(var(--value-font-size, 3rem), 18cqi); line-height: 1; font-variant-numeric: tabular-nums; }
+.fio-cs-value [data-slider-value] { display: block; }
+.fio-cs-affix { position: absolute; bottom: 0; width: max-content; max-width: max(0px, calc(42cqi - 50%)); font-size: 0.4em; }
+.fio-cs-prefix { right: 100%; margin-right: 0.3em; text-align: right; }
+.fio-cs-suffix { left: 100%; margin-left: 0.3em; text-align: left; }
+.fio-cs-affix:empty { display: none; }
+.fio-cs-knob-content { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; color: white; }

@@ -9,6 +9,7 @@ for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 
     await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('color', 'rgb(8, 126, 164)');
     await expect(page.getByRole('tab', { name: 'Temperature', exact: true })).toHaveCSS('border-bottom-color', 'rgb(8, 126, 164)');
     await expect(page.getByRole('slider')).toBeVisible();
+    await expect(page.getByRole('slider')).toHaveAttribute('aria-valuenow', '20');
     await expect(page.getByRole('slider')).toHaveCSS('opacity', '1');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.screenshot({ path: `test-results/react-${viewport.width}.png`, fullPage: true });
@@ -29,6 +30,7 @@ for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 
     await expect(stops.last()).toHaveAttribute('stop-color', '#ef4444');
     await page.getByRole('link', { name: 'React demos' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('React Circular Slider');
+    await expect(page.getByRole('slider')).toHaveAttribute('aria-valuenow', '20');
     expect(errors).toEqual([]);
   });
 }
