@@ -6,7 +6,7 @@ This project uses GitHub Actions for CI/CD and AI-powered automation.
 
 ### 1. CI (`ci.yml`)
 - **Trigger:** Push to main/master, PRs
-- **What:** Builds the library and demo, runs TypeScript checks across Node 18/20/22
+- **What:** Builds the library and demo, runs TypeScript checks across Node 20/22/24
 
 ### 2. Deploy Demo (`deploy-demo.yml`)
 - **Trigger:** Push to main/master, manual
@@ -57,14 +57,17 @@ The publishing npm account must have access to the `fiojs` organization. A token
 ### GitHub Pages Setup
 
 1. Go to **Settings → Pages**
-2. Set **Source** to **GitHub Actions**
+2. Keep **Source** set to **Deploy from a branch**, using `gh-pages` and `/ (root)`, to support the `npm run gh-pages` script.
+3. Go to **Settings → Environments → github-pages**. Under **Deployment branches and tags**, choose **Selected branches and tags** and allow the branches `master` and `gh-pages`.
+
+These environment rules also allow the existing GitHub Actions workflow to deploy from `master`. Without them, Pages only accepts deployments from its configured source branch, and the workflow fails even when the script deployment succeeds.
 
 ### How to Configure
 
 1. **Add secrets** in your repo: Settings → Secrets and variables → Actions → New repository secret
 2. **Add variables** (optional): Settings → Secrets and variables → Actions → Variables tab
-3. **Enable GitHub Pages**: Settings → Pages → Source: GitHub Actions
-4. **Push to main** — CI and demo deployment will run automatically
+3. **Enable GitHub Pages** using the source branch and environment rules above
+4. **Push to master** — CI and demo deployment will run automatically
 
 ### Manual Triggers
 
