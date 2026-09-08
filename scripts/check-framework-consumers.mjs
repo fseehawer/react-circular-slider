@@ -95,7 +95,12 @@ if (process.argv.includes('--browser')) {
     await Promise.race([serverError, (async () => {
       for (let attempt = 0; attempt < 100; attempt++) {
         if (server.exitCode !== null) throw new Error(`Consumer preview exited: ${output}`);
-        if (output.includes('http://127.0.0.1:5192')) return;
+        try {
+          const response = await fetch('http://127.0.0.1:5192', { signal: AbortSignal.timeout(500) });
+          if (response.ok) return;
+        } catch {
+          // Connection failures are expected while the preview server starts.
+        }
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       throw new Error(`Consumer preview timed out: ${output}`);
