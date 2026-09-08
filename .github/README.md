@@ -58,7 +58,7 @@ The publishing npm account must have access to the `fiojs` organization. A token
 
 ### GitHub Pages Setup
 
-Both demos are built by `npm run build-demo`. Local builds require `npm ci` and `npm --prefix angular ci`; the Angular demo is added under `build/angular`. CI also runs Angular geometry, server-rendering, browser, and installed-consumer checks. See [`angular/README.md`](../angular/README.md) for development and release commands.
+Both demos are built by `npm run build-demo` on Node 24.15+. The Angular 22 Signal Forms demo has its own dependencies under `angular/demo`, separate from the backward-compatible library compiler. CI also runs Angular geometry, server-rendering, browser, and installed-consumer checks. See [`angular/README.md`](../angular/README.md) for installation, development, and release commands.
 
 1. Go to **Settings → Pages**
 2. Keep **Source** set to **Deploy from a branch**, using `gh-pages` and `/ (root)`, to support the `npm run gh-pages` script.

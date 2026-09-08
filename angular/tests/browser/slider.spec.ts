@@ -20,6 +20,7 @@ test('numeric values support keyboard, steps, direction and readonly', async ({ 
   await page.getByLabel('Direction').selectOption({ label: 'Counterclockwise' });
   await expect(slider).toHaveAttribute('aria-valuenow', '9');
   await page.getByLabel('Read only').check();
+  await expect(slider).toHaveAttribute('aria-readonly', 'true');
   await slider.press('Home');
   await expect(slider).toHaveAttribute('aria-valuenow', '9');
   await page.getByLabel('Disabled', { exact: true }).check();
@@ -39,6 +40,7 @@ test('track click and pointer capture update the value and end dragging', async 
   await page.mouse.up();
   await expect(page.locator('.status')).toHaveText('Selected value');
   await page.getByLabel('Track dragging').uncheck();
+  await expect(slider.locator('[data-track]')).toHaveAttribute('pointer-events', 'none');
   await page.mouse.click(box.x + box.width - 20, box.y + box.height / 2);
   await expect(slider).toHaveAttribute('aria-valuenow', '50');
 });
@@ -82,7 +84,7 @@ test('custom values use accessible index and value text', async ({ page }) => {
   await expect(slider).toHaveAttribute('aria-valuenow', '0');
 });
 
-test('reactive forms distinguish user changes, programmatic reset and disabled state', async ({ page }) => {
+test('signal forms distinguish user changes, programmatic reset and disabled state', async ({ page }) => {
   await page.getByRole('tab', { name: 'Forms', exact: true }).click();
   const slider = page.getByRole('slider', { name: 'Volume', exact: true });
   await expect(page.getByTestId('form-dirty')).toHaveText('false');
@@ -95,10 +97,12 @@ test('reactive forms distinguish user changes, programmatic reset and disabled s
   await expect(slider).toHaveAttribute('aria-valuenow', '40');
   await expect(page.getByTestId('form-dirty')).toHaveText('false');
   await page.getByRole('button', { name: 'Disable', exact: true }).click();
+  await expect(slider).toHaveAttribute('aria-disabled', 'true');
   await slider.press('ArrowUp');
   await expect(slider).toHaveAttribute('aria-valuenow', '40');
   await expect(slider).toHaveAttribute('aria-disabled', 'true');
   await page.getByRole('button', { name: 'Enable', exact: true }).click();
+  await expect(slider).toHaveAttribute('aria-disabled', 'false');
   await slider.press('ArrowUp');
   await expect(page.getByTestId('form-value')).toHaveText('41');
 });
@@ -152,5 +156,9 @@ test('copy code includes the Angular package import', async ({ page, context }) 
   await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   expect(copied).toContain("from '@fiojs/ng-circular-slider'");
-  expect(copied).toEqual(await page.locator('pre.code').innerText());
+  expect(copied).toEqual((await page.locator('.line-content').allTextContents()).map(line => line === ' ' ? '' : line).join('\n'));
+  await expect(page.locator('.line-number').first()).toHaveText('1');
+  expect(await page.locator('.line-content [class^="hljs-"]').count()).toBeGreaterThan(0);
+  await page.getByLabel('Step', { exact: true }).fill('2');
+  await expect(page.getByRole('button', { name: 'Copy code', exact: true })).toBeVisible();
 });

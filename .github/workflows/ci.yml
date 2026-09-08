@@ -34,8 +34,20 @@ jobs:
       - name: Build library
         run: npm run build
 
-      - name: Build demo
+      - name: Build Angular library
+        run: npm --prefix angular run build
+
+      - name: Install Angular 22 demo dependencies
+        if: matrix.node-version != 20
+        run: npm --prefix angular/demo ci
+
+      - name: Build demos
+        if: matrix.node-version != 20
         run: npm run build-demo
+
+      - name: Build React demo on Node 20
+        if: matrix.node-version == 20
+        run: npm run build-demo:react
 
       - name: Check TypeScript
         run: npx tsc --noEmit
@@ -54,6 +66,10 @@ jobs:
           cache-dependency-path: angular/package-lock.json
       - run: npm ci
         working-directory: angular
+      - run: npm run build
+        working-directory: angular
+      - run: npm ci
+        working-directory: angular/demo
       - run: npx playwright install --with-deps chromium
         working-directory: angular
       - run: npm run test:browser

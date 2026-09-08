@@ -1,5 +1,5 @@
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": { "outDir": "../dist/demo-types", "types": [] },
+  "compilerOptions": { "outDir": "./.angular/types", "types": [], "paths": {} },
   "files": ["main.ts"]
 }

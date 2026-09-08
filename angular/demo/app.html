@@ -1,7 +1,7 @@
-<main>
+<div class="page"><main>
   <header>
-    <div class="topline"><span class="package">@fiojs/ng-circular-slider</span><nav aria-label="Project"><a class="react-link" href="../">React demos</a><a href="https://github.com/fseehawer/react-circular-slider/tree/master/angular/projects/ng-circular-slider">Documentation</a></nav></div>
     <h1>Angular Circular Slider</h1>
+    <p class="intro">@fiojs/ng-circular-slider</p>
     <pre class="install">npm install @fiojs/ng-circular-slider</pre>
   </header>
   <nav class="tabs" role="tablist" aria-label="Examples">
@@ -10,6 +10,10 @@
     }
   </nav>
   <section id="example" role="tabpanel" [attr.aria-labelledby]="'tab-' + tabs.indexOf(active())">
+    <div class="example-header">
+      <h2>{{ example().title }}</h2>
+      <div class="chips" aria-label="Highlighted inputs">@for (prop of example().props; track prop) { <code>{{ prop }}</code> }</div>
+    </div>
     <div class="workspace">
       <div class="preview">
         @switch (active()) {
@@ -29,7 +33,7 @@
               labelColor="#202326" knobColor="#c026d3" progressColorFrom="#f472b6" progressColorTo="#c026d3" />
           }
           @case ('Forms') {
-            <fio-circular-slider [formControl]="formValue" [max]="100" label="Volume" appendToValue="%"
+            <fio-circular-slider [formField]="formValue" label="Volume" appendToValue="%"
               [trackDraggable]="true" labelColor="#202326" knobColor="#c3002f" progressColorFrom="#f87171" progressColorTo="#c3002f" />
           }
           @case ('Templates') {
@@ -43,43 +47,41 @@
       <div class="settings">
         @switch (active()) {
           @case ('Range') {
-            <h2>Numeric range</h2>
             <div class="fields">
-              <label>Minimum<input type="number" [(ngModel)]="min"></label>
-              <label>Maximum<input type="number" [(ngModel)]="max"></label>
-              <label>Step<input type="number" min="0.01" step="0.1" [(ngModel)]="step"></label>
-              <label>Direction<select [(ngModel)]="direction"><option [ngValue]="1">Clockwise</option><option [ngValue]="-1">Counterclockwise</option></select></label>
+              <label>Minimum<input type="number" [formField]="settingsForm.min"></label>
+              <label>Maximum<input type="number" [formField]="settingsForm.max"></label>
+              <label>Step<input type="number" step="0.1" [formField]="settingsForm.step"></label>
+              <label>Direction<select [formField]="settingsForm.direction"><option value="1">Clockwise</option><option value="-1">Counterclockwise</option></select></label>
             </div>
-            <label class="check"><input type="checkbox" [(ngModel)]="trackDraggable">Track dragging</label>
-            <label class="check"><input type="checkbox" [(ngModel)]="readonlyMode">Read only</label>
-            <label class="check"><input type="checkbox" [(ngModel)]="disabled">Disabled</label>
+            <div class="checks"><label class="check"><input type="checkbox" [formField]="settingsForm.trackDraggable">Track dragging</label>
+            <label class="check"><input type="checkbox" [formField]="settingsForm.readonlyMode">Read only</label>
+            <label class="check"><input type="checkbox" [formField]="settingsForm.disabled">Disabled</label></div>
             <output data-testid="range-value">{{ value() }}</output><span class="status">{{ dragging() ? 'Dragging' : 'Selected value' }}</span>
           }
           @case ('Arc Gauge') {
-            <h2>Speed gauge</h2>
             <dl><dt>Range</dt><dd>0 - 160 km/h</dd><dt>Start</dt><dd>225 degrees</dd><dt>End</dt><dd>135 degrees</dd><dt>Colors</dt><dd class="swatches"><i style="background:#22c55e"></i><i style="background:#eab308"></i><i style="background:#ef4444"></i></dd></dl>
-            <label>Speed<input aria-label="Set speed" type="number" min="0" max="160" [(ngModel)]="speed"></label>
+            <label>Speed<input aria-label="Set speed" type="number" [formField]="speedForm"></label>
           }
           @case ('Custom Data') {
-            <h2>Custom values</h2>
-            <label>Size<select [(ngModel)]="size">@for (item of sizes; track item) { <option>{{ item }}</option> }</select></label>
+            <label>Size<select [formField]="sizeForm">@for (item of sizes; track item) { <option [value]="item">{{ item }}</option> }</select></label>
             <output data-testid="data-value">{{ size() }}</output>
           }
           @case ('Forms') {
-            <h2>Reactive form</h2>
-            <dl><dt>Value</dt><dd data-testid="form-value">{{ formValue.value }}</dd><dt>Touched</dt><dd data-testid="form-touched">{{ formValue.touched }}</dd><dt>Dirty</dt><dd data-testid="form-dirty">{{ formValue.dirty }}</dd><dt>Status</dt><dd>{{ formValue.status }}</dd></dl>
-            <div class="actions"><button type="button" (click)="formValue.reset(40)">Reset to 40</button><button type="button" (click)="toggleFormDisabled()">{{ formValue.disabled ? 'Enable' : 'Disable' }}</button></div>
+            <dl><dt>Value</dt><dd data-testid="form-value">{{ formModel() }}</dd><dt>Touched</dt><dd data-testid="form-touched">{{ formValue().touched() }}</dd><dt>Dirty</dt><dd data-testid="form-dirty">{{ formValue().dirty() }}</dd><dt>Status</dt><dd>{{ formValue().disabled() ? 'DISABLED' : formValue().valid() ? 'VALID' : 'INVALID' }}</dd></dl>
+            <div class="actions"><button type="button" (click)="resetForm()">Reset to 40</button><button type="button" (click)="toggleFormDisabled()">{{ formValue().disabled() ? 'Enable' : 'Disable' }}</button></div>
           }
           @case ('Templates') {
-            <h2>Custom templates</h2>
-            <label>Charge<input type="number" min="0" max="100" [(ngModel)]="charge"></label>
+            <label>Charge<input type="number" [formField]="chargeForm"></label>
             <output>{{ charge() }}%</output>
           }
         }
       </div>
     </div>
-    <div class="code-heading"><h2>Angular example</h2><button type="button" (click)="copyCode()" aria-live="polite">{{ copied() }}</button></div>
-    <pre class="code"><code>{{ code() }}</code></pre>
+    <div class="code-actions"><button type="button" (click)="showCode.set(!showCode())" [attr.aria-expanded]="showCode()" aria-controls="code-sample">{{ showCode() ? 'Hide Code Sample' : 'View Code Sample' }}<svg lucideChevronDown [size]="15" [class.rotated]="showCode()" aria-hidden="true"></svg></button></div>
+    <div class="code-sample" id="code-sample" [class.is-open]="showCode()">
+      <div class="code-heading"><span>Angular</span><button type="button" (click)="copyCode()" [attr.aria-label]="copied()" [title]="copied()" [class.copied]="copied() === 'Copied'" aria-live="polite"><svg lucideCopy [size]="15" aria-hidden="true"></svg>{{ copied() === 'Copy code' ? 'Copy' : copied() }}</button></div>
+      <pre class="code"><code>@for (line of codeLines(); track $index) {<span class="code-line"><span class="line-number" aria-hidden="true">{{ $index + 1 }}</span><span class="line-content" [innerHTML]="line || ' '"></span></span>}</code></pre>
+    </div>
   </section>
-  <footer>Copyright 2026 Circular Slider <a href="https://www.npmjs.com/package/@fiojs/ng-circular-slider">npm</a><a href="https://github.com/fseehawer/react-circular-slider">GitHub</a></footer>
-</main>
+  <footer><p>&copy; 2026 Angular Circular Slider</p><nav aria-label="Project"><a href="https://github.com/fseehawer/react-circular-slider/tree/master/angular/projects/ng-circular-slider">Documentation</a><a href="https://www.npmjs.com/package/@fiojs/ng-circular-slider">npm</a><a href="https://github.com/fseehawer/react-circular-slider">GitHub</a><a href="../">React demos</a></nav><a href="https://www.paypal.com/donate?hosted_button_id=GGLRKKGFPTXJW" target="_blank" rel="noreferrer">Support maintenance</a></footer>
+</main></div>

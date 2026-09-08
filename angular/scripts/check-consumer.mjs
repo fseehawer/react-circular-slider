@@ -19,23 +19,29 @@ const dependencies = {
   '@fiojs/ng-circular-slider': `file:${join(consumer, packed[0].filename)}`,
   rxjs: '^7.8.2', tslib: '^2.8.1',
 };
+const demoPackage = JSON.parse(readFileSync(join(workspace, 'demo/package.json'), 'utf8'));
+for (const name of ['@lucide/angular', 'highlight.js']) dependencies[name] = demoPackage.dependencies[name];
 for (const name of ['common', 'compiler', 'core', 'forms', 'platform-browser', 'compiler-cli', 'build', 'cli']) {
   dependencies[`@angular/${name}`] = `^${major}.0.0`;
 }
 dependencies.typescript = major === 22 ? '~6.0.0' : '~5.9.3';
 writeFileSync(join(consumer, 'package.json'), JSON.stringify({ private: true, dependencies }, null, 2));
-cpSync(join(workspace, 'demo'), join(consumer, 'demo'), { recursive: true });
-const config = JSON.parse(readFileSync(join(workspace, 'angular.json'), 'utf8'));
+for (const file of ['main.ts', 'app.html', 'index.html', 'styles.css']) cpSync(join(workspace, 'demo', file), join(consumer, file));
+if (major < 22) cpSync(join(workspace, 'tests/fixtures/compatibility.ts'), join(consumer, 'main.ts'));
+const appTsconfig = JSON.parse(readFileSync(join(workspace, 'demo/tsconfig.app.json'), 'utf8'));
+appTsconfig.extends = './tsconfig.json';
+writeFileSync(join(consumer, 'tsconfig.app.json'), JSON.stringify(appTsconfig, null, 2));
+const config = JSON.parse(readFileSync(join(workspace, 'demo/angular.json'), 'utf8'));
 config.projects.demo.architect.build.options.outputPath = { base: 'dist', browser: '' };
 if (major === 22) {
-  cpSync(join(workspace, 'tests/fixtures/signal-forms.ts'), join(consumer, 'demo/signal-forms.ts'));
+  cpSync(join(workspace, 'tests/fixtures/signal-forms.ts'), join(consumer, 'signal-forms.ts'));
   config.projects.signals = structuredClone(config.projects.demo);
   const options = config.projects.signals.architect.build.options;
-  options.browser = 'demo/signal-forms.ts';
-  const signalTsconfig = JSON.parse(readFileSync(join(consumer, 'demo/tsconfig.app.json'), 'utf8'));
+  options.browser = 'signal-forms.ts';
+  const signalTsconfig = structuredClone(appTsconfig);
   signalTsconfig.files = ['signal-forms.ts'];
-  writeFileSync(join(consumer, 'demo/tsconfig.signals.json'), JSON.stringify(signalTsconfig, null, 2));
-  options.tsConfig = 'demo/tsconfig.signals.json';
+  writeFileSync(join(consumer, 'tsconfig.signals.json'), JSON.stringify(signalTsconfig, null, 2));
+  options.tsConfig = 'tsconfig.signals.json';
   options.outputPath = { base: 'dist/signals', browser: '' };
   options.baseHref = '/react-circular-slider/angular/signals/';
   config.projects.signals.architect.serve.options.buildTarget = 'signals:build:development';

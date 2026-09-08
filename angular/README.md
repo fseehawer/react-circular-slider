@@ -7,16 +7,18 @@ Native Angular implementation of `@fiojs/ng-circular-slider`. The React library 
 
 ## Development
 
-Use Node 20.19+, Node 22.12+, or Node 24 for the Angular 20 build toolchain. Consumer compatibility checks for Angular 22 require Node 22.22.3+ or Node 24.15+.
+Use Node 24.15+ (or Node 22.22.3+) for the Angular 22 Signal Forms demo. The separate Angular 20 library compiler preserves compatibility with Angular 20, 21, and 22; library-only checks also work on Node 20.19+.
 
 From the repository root:
 
 ```bash
 npm --prefix angular ci
+npm --prefix angular run build
+npm --prefix angular/demo ci
 npm --prefix angular run dev -- --port 5180
 ```
 
-The demo is served at `http://127.0.0.1:5180/react-circular-slider/angular/`. It imports the built library, never its TypeScript sources. The demo runs without Zone.js. After editing the library, rebuild it or run the library build with `--watch` in another terminal.
+The demo is served at `http://127.0.0.1:5180/react-circular-slider/angular/`. It uses Angular 22 Signal Forms for every form, without Zone.js, Reactive Forms, or `ngModel`. The demo imports a copy of the built library, never its TypeScript sources; `prepare-demo.mjs` refreshes that copy before development and production builds so peer dependencies resolve to the demo's own Angular runtime. Restart `dev` after changing the library.
 
 ## Verification
 
@@ -51,6 +53,8 @@ To deploy both demo sites with the existing repository script, install both work
 ```bash
 npm ci
 npm --prefix angular ci
+npm --prefix angular run build
+npm --prefix angular/demo ci
 npm run gh-pages
 ```
 
