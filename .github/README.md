@@ -14,7 +14,7 @@ This project uses GitHub Actions for CI/CD and AI-powered automation.
 
 ### 3. Publish to npm (`publish.yml`)
 - **Trigger:** GitHub Release published, or manual with version bump selector
-- **What:** Builds the library and publishes to npm with provenance
+- **What:** Builds the library and publishes `@fiojs/react-circular-slider` to npm with provenance
 
 ### 4. AI Issue Fixer (`ai-fix-issue.yml`)
 - **Trigger:** Issue labeled `ai-fix`, or manual with issue number
@@ -42,9 +42,11 @@ This project uses GitHub Actions for CI/CD and AI-powered automation.
 
 | Secret | Required For | How to Get |
 |--------|-------------|------------|
-| `NPM_TOKEN` | npm publish | [npm tokens](https://docs.npmjs.com/creating-and-viewing-access-tokens) |
+| `NPM_TOKEN` | npm publish; must allow writing `@fiojs/react-circular-slider` | [npm tokens](https://docs.npmjs.com/creating-and-viewing-access-tokens) |
 | `ANTHROPIC_API_KEY` | AI workflows (default) | [Anthropic Console](https://console.anthropic.com/) |
 | `OPENAI_API_KEY` | AI workflows (alternative) | [OpenAI Platform](https://platform.openai.com/) |
+
+The publishing npm account must have access to the `fiojs` organization. A token scoped only to the previous `@fseehawer` package cannot publish the new package. The first public release is `@fiojs/react-circular-slider@3.3.8`.
 
 ### Repository Variables
 

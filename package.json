@@ -1,11 +1,22 @@
 {
-  "name": "@fseehawer/react-circular-slider",
-  "version": "3.3.7",
+  "name": "@fiojs/react-circular-slider",
+  "version": "3.3.8",
   "files": [
     "dist",
     "public"
   ],
   "description": "A customizable circular slider with no dependencies.",
+  "homepage": "https://fseehawer.github.io/react-circular-slider/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fseehawer/react-circular-slider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fseehawer/react-circular-slider/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "./dist/index.d.ts",

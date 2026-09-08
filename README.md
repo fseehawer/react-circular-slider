@@ -1,6 +1,6 @@
 # react-circular-slider
 
-[![Version](https://img.shields.io/badge/version-3.3.7-green.svg)](https://github.com/fseehawer/react-circular-slider)
+[![Version](https://img.shields.io/badge/version-3.3.8-green.svg)](https://www.npmjs.com/package/@fiojs/react-circular-slider)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A highly customizable circular slider with **zero dependencies**. Check out the [live demos](https://fseehawer.github.io/react-circular-slider/)!
@@ -16,14 +16,25 @@ This component includes **TypeScript** types for the component props, ref handle
 ## Installation
 
 ```bash
-npm install @fseehawer/react-circular-slider
+npm install @fiojs/react-circular-slider
 ```
+
+### Migrating From `@fseehawer/react-circular-slider`
+
+Starting with version 3.3.8, new releases are published as `@fiojs/react-circular-slider`. Version 3.3.8 has the same component API and behavior as version 3.3.7 under the previous name.
+
+```bash
+npm uninstall @fseehawer/react-circular-slider
+npm install @fiojs/react-circular-slider
+```
+
+Update your imports to `@fiojs/react-circular-slider`, as shown below. Existing versions under the old name remain installable; `npm update` does not switch package names automatically.
 
 ## Example
 
 ```tsx
 import React from 'react';
-import CircularSlider from '@fseehawer/react-circular-slider';
+import CircularSlider from '@fiojs/react-circular-slider';
 
 const App = () => (
     <CircularSlider onChange={(value) => console.log(value)} />

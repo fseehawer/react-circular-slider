@@ -815,7 +815,7 @@ const App = () => {
 					<p style={styles.intro}>
 						Interactive configuration examples for common dial patterns. Pick a tab, try the slider, and use the highlighted props with the code sample.
 					</p>
-					<pre style={styles.install}>npm install @fseehawer/react-circular-slider</pre>
+					<pre style={styles.install}>npm install @fiojs/react-circular-slider</pre>
 				</header>
 
 				<nav style={styles.tabContainer} role="tablist" aria-label="Configuration examples">

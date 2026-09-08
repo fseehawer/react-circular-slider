@@ -70,7 +70,7 @@ function buildIssuePrompt(files) {
   const number = process.env.ISSUE_NUMBER || "?";
   const ctx = buildFileContext(files);
 
-  return `You are an expert React/TypeScript engineer. You maintain the open-source package "@fseehawer/react-circular-slider".
+  return `You are an expert React/TypeScript engineer. You maintain the open-source package "@fiojs/react-circular-slider".
 
 A user filed GitHub issue #${number}:
 
@@ -106,7 +106,7 @@ IMPORTANT:
 function buildImprovePrompt(files) {
   const ctx = buildFileContext(files);
 
-  return `You are an expert React/TypeScript engineer reviewing the open-source package "@fseehawer/react-circular-slider".
+  return `You are an expert React/TypeScript engineer reviewing the open-source package "@fiojs/react-circular-slider".
 
 Here is the full source code:
 
